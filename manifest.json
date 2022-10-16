@@ -1,10 +1,11 @@
 {
     "name": "Trading App",
     "short_name": "Trading App",
-    "start_url": "index.html",
+    "start_url": "/index.html",
     "display": "standalone",
     "background_color": "#000",
     "theme_color": "#000",
+    "scope": ".",
     "orientation": "portrait-primary",
     "icons": [
         {
