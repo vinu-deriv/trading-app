@@ -9,18 +9,17 @@ export default defineConfig({
   },
   build: {
     target: "esnext",
+    outDir: "./dist",
+    assetsDir: "./assets",
+    manifest: true,
     rollupOptions: {
       input: {
         app: "/index.html",
         sw: "/sw.js",
       },
       output: {
-        assetFileNames: (asset) => {
-          if (parse(asset.name).name === "externalImage") {
-            return "images/src/[name][extname]";
-          }
-          return "assets/[name].[hash][extname]";
-        },
+        entryFileNames: (assetInfo) =>
+          assetInfo.name === "sw" ? "[name].js" : "assets/js/[name]-[hash].js",
       },
     },
   },
