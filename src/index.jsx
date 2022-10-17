@@ -14,13 +14,6 @@ import logo192 from "./assets/icons/icon-192x192.png";
 import logo284 from "./assets/icons/icon-284x284.png";
 import logo512 from "./assets/icons/icon-512x512.png";
 
-if ("serviceWorker" in navigator) {
-  navigator.serviceWorker
-    .register("/sw.js")
-    .then(function () {})
-    .catch(function (err) {});
-}
-
 render(() => <App />, document.getElementById("root"));
 
 export {
