@@ -1,7 +1,12 @@
 import logo from "./logo.svg";
 import styles from "./App.module.scss";
+import Watchlist from "./components/watchlist";
+import { init } from "./mocks/favourites";
+import { For } from "solid-js";
+import { selectedMarkets } from "./stores";
 
 function App() {
+  init();
   return (
     <div class={styles.App}>
       <header class={styles.header}>
@@ -15,9 +20,23 @@ function App() {
           target="_blank"
           rel="noopener noreferrer"
         >
-          Learn Solid
+          Learn Solids
         </a>
       </header>
+      <br />
+      <br />
+      <For each={selectedMarkets()}>
+        {(marketInfo) => (
+          <Watchlist
+            name={marketInfo.display_name}
+            symbol={marketInfo.symbol}
+            market={marketInfo.market_display_name}
+            submarket={marketInfo.submarket_display_name}
+          />
+        )}
+      </For>
+      <br />
+      <br />
     </div>
   );
 }
