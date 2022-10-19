@@ -36,7 +36,7 @@ devDependencies:
   sass: 1.55.0
   vite: 3.1.8_sass@1.55.0
   vite-plugin-pwa: 0.13.1_vite@3.1.8
-  vite-plugin-solid: 2.3.9_solid-js@1.5.8+vite@3.1.8
+  vite-plugin-solid: 2.3.9_solid-js@1.5.1+vite@3.1.8
 
 packages:
 
@@ -3503,7 +3503,7 @@ packages:
     dependencies:
       csstype: 3.1.1
 
-  /solid-refresh/0.4.1_solid-js@1.5.8:
+  /solid-refresh/0.4.1_solid-js@1.5.1:
     resolution: {integrity: sha512-v3tD/OXQcUyXLrWjPW1dXZyeWwP7/+GQNs8YTL09GBq+5FguA6IejJWUvJDrLIA4M0ho9/5zK2e9n+uy+4488g==}
     peerDependencies:
       solid-js: ^1.3
@@ -3511,7 +3511,7 @@ packages:
       '@babel/generator': 7.19.5
       '@babel/helper-module-imports': 7.18.6
       '@babel/types': 7.19.4
-      solid-js: 1.5.8
+      solid-js: 1.5.1
     dev: true
 
   /source-map-js/1.0.2:
@@ -3797,7 +3797,7 @@ packages:
       - supports-color
     dev: true
 
-  /vite-plugin-solid/2.3.9_solid-js@1.5.8+vite@3.1.8:
+  /vite-plugin-solid/2.3.9_solid-js@1.5.1+vite@3.1.8:
     resolution: {integrity: sha512-+lprsYgt9DVNp0kbDj2d2HWAPI13L8ff5xslk9SjiPBcsY/YUZ/1Wj0J/Oj5aiVAhwfPm8IcM3bzyHJUPlmc8w==}
     peerDependencies:
       solid-js: ^1.3.17
@@ -3807,8 +3807,8 @@ packages:
       '@babel/preset-typescript': 7.18.6_@babel+core@7.19.3
       babel-preset-solid: 1.5.8_@babel+core@7.19.3
       merge-anything: 5.0.4
-      solid-js: 1.5.8
-      solid-refresh: 0.4.1_solid-js@1.5.8
+      solid-js: 1.5.1
+      solid-refresh: 0.4.1_solid-js@1.5.1
       vite: 3.1.8_sass@1.55.0
     transitivePeerDependencies:
       - supports-color
