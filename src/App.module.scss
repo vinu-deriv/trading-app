@@ -22,6 +22,11 @@ html, body {
   top: 0;
   width: 100%;
   display: flex;
+
+  > div {
+    margin: 0 1rem;
+    color: #ff444f;
+  }
 }
 
 footer {
@@ -39,11 +44,6 @@ footer {
 a {
   color: #ff444f;
   text-decoration: none;
-}
-
-.login {
-  margin: 0 1rem;
-  color: #ff444f;
 }
 
 @keyframes logo-spin {

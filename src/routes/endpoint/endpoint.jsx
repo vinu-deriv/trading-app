@@ -1,68 +1,66 @@
-import { useForm } from 'Utils/validation.js';
-import { createStore } from 'solid-js/store';
-
-const ErrorMessage = props => <div class='error-message'>{props.error}</div>;
+import { createStore } from "solid-js/store";
+import { endpoint, setEndpoint } from "Stores/base-store";
 
 const Endpoint = () => {
-    const [fields, setFields] = createStore();
-    const { errors, formSubmit, validate } = useForm({
-        errorClass: 'error-input',
+  const [form_fields, setFormFields] = createStore();
+
+  const onFormSubmit = (e) => {
+    e.preventDefault();
+
+    setEndpoint({
+      app_id: form_fields.app_id,
+      server_url: form_fields.server_url,
     });
 
-    const onFormSubmit = () => {
-        localStorage.setItem('config.app_id', fields.app_id);
-        localStorage.setItem('config.server_url', fields.server);
-        location.reload();
-    };
+    localStorage.setItem("config.app_id", endpoint.app_id);
+    localStorage.setItem("config.server_url", endpoint.server_url);
+    window.location.href = "/";
+  };
 
-    const onFormReset = () => {
-        // TODO: change to prod app_id
-        localStorage.setItem('config.app_id', '1022');
-        localStorage.setItem('config.server_url', 'qa10.deriv.dev');
-        location.reload();
-    };
+  const onFormReset = () => {
+    // TODO: change to prod app_id
+    setEndpoint({ app_id: "", server_url: "" });
 
-    return (
-        <div className='endpoint'>
-            <label>Change API endpoint</label>
-            <form use:formSubmit={onFormSubmit}>
-                <div>
-                    <input
-                        type='text'
-                        name='server'
-                        onInput={e => {
-                            setFields('server', e.target.value);
-                        }}
-                        placeholder='Server'
-                        value={localStorage.getItem('config.server_url')}
-                        required
-                        use:validate
-                    />
-                    <ErrorMessage error={errors.server} />
-                </div>
-                <div>
-                    <input
-                        type='text'
-                        name='app_id'
-                        onInput={e => {
-                            setFields('app_id', e.target.value);
-                        }}
-                        placeholder='App ID'
-                        value={localStorage.getItem('config.app_id')}
-                        required
-                        use:validate
-                    />
-                    <ErrorMessage error={errors.app_id} />
-                </div>
-                <div>
-                    <button type='submit'>Submit</button>
-                    <button type='button' onClick={onFormReset}>
-                        Reset
-                    </button>
-                </div>
-            </form>
+    localStorage.setItem("config.app_id", endpoint.app_id);
+    localStorage.setItem("config.server_url", endpoint.server_url);
+    window.location.href = "/";
+  };
+
+  return (
+    <div className="endpoint">
+      <label>Change API endpoint</label>
+      <form onSubmit={onFormSubmit}>
+        <div>
+          <input
+            type="text"
+            name="server"
+            onInput={(e) => {
+              setFormFields({ server: e.target.value });
+            }}
+            placeholder="Server"
+            required
+          />
         </div>
-    );
+        <div>
+          <input
+            type="text"
+            name="app_id"
+            onInput={(e) => {
+              setFormFields({ app_id: e.target.value });
+            }}
+            placeholder="App ID"
+            required
+          />
+        </div>
+        <div>
+          <button type="submit">Submit</button>
+          <button type="button" onClick={onFormReset}>
+            Reset
+          </button>
+        </div>
+      </form>
+    </div>
+  );
 };
 
 export default Endpoint;

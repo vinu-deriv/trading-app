@@ -13,6 +13,8 @@
     form {
         width: 30vw;
         min-width: 300px;
+        display: grid;
+        grid-gap: 1rem;
 
         input {
             background: none;
