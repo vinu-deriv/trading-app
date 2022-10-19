@@ -24,7 +24,7 @@ export default defineConfig({
         runtimeCaching: [
           {
             urlPattern: /.*(js|css|ico|png|html|svg)$/,
-            handler: "StaleWhileRevalidate",
+            handler: "CacheFirst",
             options: {
               cacheName: "project-files",
               expiration: {
