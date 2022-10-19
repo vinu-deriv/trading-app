@@ -5,7 +5,9 @@ import {
   selectedMarkets,
   setSelectedMarkets,
   watchList,
+  watchListRef,
 } from "../stores";
+import { sendRequest } from "../utils/socket-base";
 
 const MarketValue = (props) => {
   const difference = () => {
@@ -52,6 +54,7 @@ const Watchlist = (props) => {
     setSelectedMarkets(
       selectedMarkets().filter((mkt) => mkt.symbol !== symbol)
     );
+    sendRequest({ forget: watchListRef()[symbol] });
   };
 
   return (

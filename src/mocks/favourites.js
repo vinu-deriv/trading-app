@@ -1,12 +1,15 @@
 // Simulates favourites added by user
 
-import { fetchData, subscribe } from "../utils/socket-base";
+import { sendRequest, subscribe } from "../utils/socket-base";
 import {
   prevWatchList,
+  selectedMarkets,
   setPrevWatchList,
   setSelectedMarkets,
   setWatchList,
+  setWatchListRef,
   watchList,
+  watchListRef,
 } from "../stores";
 
 const init = async () => {
@@ -14,7 +17,7 @@ const init = async () => {
 
   const getFavs = JSON.parse(localStorage.getItem("favourites"));
 
-  const symbolResponse = await fetchData({
+  const symbolResponse = await sendRequest({
     active_symbols: "brief",
     product_type: "basic",
   });
@@ -40,6 +43,9 @@ const getMarketTick = (market) => {
         [market]: watchList()[market] ?? 0,
       });
       setWatchList({ ...watchList(), [market]: resp.tick.quote });
+      if (Object.values(watchListRef()).length !== selectedMarkets().length) {
+        setWatchListRef({ ...watchListRef(), [market]: resp.tick.id });
+      }
     }
   );
 };

@@ -5,6 +5,8 @@ import {
   setSelectedMarkets,
   prevWatchList,
   setPrevWatchList,
+  watchListRef,
+  setWatchListRef,
 } from "./watchlist.js";
 
 export {
@@ -14,4 +16,6 @@ export {
   setSelectedMarkets,
   prevWatchList,
   setPrevWatchList,
+  watchListRef,
+  setWatchListRef,
 };
