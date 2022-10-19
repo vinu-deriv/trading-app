@@ -10,6 +10,6 @@ const authorize = (authorizeToken) => derivApi.authorize(authorizeToken);
 const subscribe = (request, cb) =>
   derivApi.subscribe(request).subscribe(cb, cb);
 
-const fetchData = (request) => derivApi.send(request);
+const sendRequest = (request) => derivApi.send(request);
 
-export { authorize, fetchData, subscribe };
+export { authorize, sendRequest, subscribe };
