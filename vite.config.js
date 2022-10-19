@@ -17,9 +17,6 @@ export default defineConfig({
     solidPlugin(),
     VitePWA({
       base: "/",
-      // strategies: 'injectManifest',
-      // srcDir: 'src',
-      // filename: 'sw.js',
       strategies: 'generateSW',
       registerType: 'autoUpdate',
       workbox: {
