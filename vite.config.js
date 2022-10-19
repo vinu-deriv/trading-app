@@ -20,11 +20,10 @@ export default defineConfig({
       strategies: 'generateSW',
       registerType: 'autoUpdate',
       workbox: {
-        globPatterns: ['index.html'],
         runtimeCaching: [
           {
             urlPattern: /.*(js|css|ico|png|html|svg)$/,
-            handler: "CacheFirst",
+            handler: "StaleWhileRevalidate",
             options: {
               cacheName: "project-files",
               expiration: {
