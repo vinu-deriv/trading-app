@@ -29,6 +29,20 @@ html, body {
   }
 }
 
+.body {
+  margin-top: 80px;
+  padding: 0.4rem 0.8rem;
+}
+
+.disconnected {
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
+  background-color: #ff444f;
+  color: #fff;
+  text-align: left;
+  width: 8rem;
+}
+
 footer {
   border-top: 1px solid #f2f3f4;
   bottom: 0;
