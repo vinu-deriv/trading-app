@@ -9,7 +9,7 @@ const Endpoint = () => {
 
     setEndpoint({
       app_id: form_fields.app_id,
-      server_url: form_fields.server_url,
+      server_url: form_fields.server,
     });
 
     localStorage.setItem("config.app_id", endpoint.app_id);
