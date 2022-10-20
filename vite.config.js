@@ -1,12 +1,13 @@
 import { defineConfig } from "vite";
 import { VitePWA } from "vite-plugin-pwa";
 import solidPlugin from "vite-plugin-solid";
-import { dependencies } from './package.json';
+import { dependencies } from "./package.json";
+import path from "path";
 
 function renderChunks(deps) {
   let chunks = {};
   Object.keys(deps).forEach((key) => {
-    if (['@deriv/deriv-api', 'solid-js'].includes(key)) return;
+    if (["@deriv/deriv-api", "solid-js"].includes(key)) return;
     chunks[key] = [key];
   });
   return chunks;
@@ -17,10 +18,10 @@ export default defineConfig({
     solidPlugin(),
     VitePWA({
       base: "/",
-      strategies: 'generateSW',
-      registerType: 'autoUpdate',
+      strategies: "generateSW",
+      registerType: "autoUpdate",
       workbox: {
-        globPatterns: ['index.html'],
+        globPatterns: ["index.html"],
         runtimeCaching: [
           {
             urlPattern: /.*(js|css|ico|png|html|svg)$/,
@@ -110,11 +111,22 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: {
-          vendor: ['@deriv/deriv-api', 'solid-js'],
+          vendor: ["@deriv/deriv-api", "solid-js"],
           ...renderChunks(dependencies),
         },
       },
     },
   },
-  
+
+  resolve: {
+    alias: {
+      Assets: path.resolve(__dirname, "./src/assets"),
+      Components: path.resolve(__dirname, "./src/components"),
+      Constants: path.resolve(__dirname, "./src/constants"),
+      Containers: path.resolve(__dirname, "./src/containers"),
+      Routes: path.resolve(__dirname, "./src/routes"),
+      Stores: path.resolve(__dirname, "./src/stores"),
+      Utils: path.resolve(__dirname, "./src/utils"),
+    },
+  },
 });
