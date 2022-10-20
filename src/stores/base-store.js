@@ -5,11 +5,11 @@ export const [login_information, setLoginInformation] = createStore();
 export const [endpoint, setEndpoint] = createStore();
 
 export const init = () => {
-  let obj_params = {};
+  const obj_params = {};
   const search = window.location.search;
 
   if (search) {
-    let search_params = new URLSearchParams(window.location.search);
+    const search_params = new URLSearchParams(window.location.search);
 
     search_params.forEach((value, key) => {
       const account_keys = ["acct", "token", "cur"];

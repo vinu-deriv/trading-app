@@ -27,7 +27,7 @@ const Endpoint = () => {
   };
 
   return (
-    <div className="endpoint">
+    <div class="endpoint">
       <label>Change API endpoint</label>
       <form onSubmit={onFormSubmit}>
         <div>

@@ -1,4 +1,4 @@
-import Endpoint from './endpoint';
-import './endpoint.scss';
+import Endpoint from "./endpoint";
+import "./endpoint.scss";
 
 export default Endpoint;
