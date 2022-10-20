@@ -4,8 +4,11 @@ import { createEffect } from "solid-js";
 import { loginUrl } from "Constants/deriv-urls";
 import Endpoint from "Routes/endpoint";
 import { endpoint, init, login_information, logout } from "Stores/base-store";
+import monitorNetwork from "Utils/network-status";
 
 function App() {
+  const { network_status } = monitorNetwork();
+
   createEffect(() => {
     init();
   });
@@ -28,6 +31,11 @@ function App() {
       <Routes>
         <Route element={<Endpoint />} path="/endpoint" />
       </Routes>
+      <div class={styles.body}>
+        {network_status.is_disconnected && (
+          <div class={styles.disconnected}>Connection lost.</div>
+        )}
+      </div>
       <footer>
         {endpoint.server_url && (
           <div>
