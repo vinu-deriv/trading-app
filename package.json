@@ -4,7 +4,7 @@
   "description": "Lightweight version of DTrader app",
   "scripts": {
     "start": "vite",
-    "dev": "vite",
+    "dev": "http-server -c-1",
     "build": "vite build",
     "lint": "eslint \"./src/**/*.?(js|jsx|ts|tsx)\" --fix",
     "prepare": "husky install",
@@ -17,10 +17,12 @@
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-solid": "^0.7.3",
+    "http-server": "^14.1.1",
     "husky": "^8.0.1",
     "prettier": "^2.7.1",
     "sass": "^1.55.0",
     "vite": "^3.0.9",
+    "vite-plugin-pwa": "^0.13.1",
     "vite-plugin-solid": "^2.3.0"
   },
   "dependencies": {
