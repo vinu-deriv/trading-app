@@ -29,6 +29,7 @@ export default defineConfig({
       registerType: "autoUpdate",
       workbox: {
         globPatterns: ["index.html"],
+        cleanupOutdatedCaches: true,
         runtimeCaching: [
           {
             urlPattern: /.*(js|css|ico|png|html|svg)$/,
@@ -111,7 +112,7 @@ export default defineConfig({
     }),
   ],
   server: {
-    port: 3000,
+    port: 3003,
   },
   build: {
     target: "esnext",
