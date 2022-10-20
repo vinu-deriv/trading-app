@@ -3,9 +3,10 @@ import { VitePWA } from "vite-plugin-pwa";
 import solidPlugin from "vite-plugin-solid";
 import { dependencies } from "./package.json";
 import path from "path";
+import solidSvg from "vite-plugin-solid-svg";
 
 function renderChunks(deps) {
-  let chunks = {};
+  const chunks = {};
   Object.keys(deps).forEach((key) => {
     if (["@deriv/deriv-api", "solid-js"].includes(key)) return;
     chunks[key] = [key];
@@ -16,6 +17,12 @@ function renderChunks(deps) {
 export default defineConfig({
   plugins: [
     solidPlugin(),
+    solidSvg({
+      defaultExport: "component",
+      svgo: {
+        enabled: true, // optional, by default is true
+      },
+    }),
     VitePWA({
       base: "/",
       strategies: "generateSW",
