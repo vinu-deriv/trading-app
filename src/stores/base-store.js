@@ -1,5 +1,5 @@
 import { createStore } from "solid-js/store";
-import { authorize, fetchData } from "Utils/socket-base";
+import { authorize, sendRequest } from "Utils/socket-base";
 
 export const [login_information, setLoginInformation] = createStore();
 export const [endpoint, setEndpoint] = createStore();
@@ -58,7 +58,7 @@ const setLocalValues = () => {
 };
 
 export const logout = () => {
-  fetchData({ logout: 1 }).then(() => {
+  sendRequest({ logout: 1 }).then(() => {
     setLoginInformation({
       accounts: "",
       active_loginid: "",

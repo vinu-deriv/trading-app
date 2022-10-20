@@ -2,6 +2,7 @@ import { defineConfig } from "vite";
 import { VitePWA } from "vite-plugin-pwa";
 import solidPlugin from "vite-plugin-solid";
 import { dependencies } from "./package.json";
+import path from "path";
 
 function renderChunks(deps) {
   let chunks = {};
