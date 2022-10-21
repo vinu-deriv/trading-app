@@ -105,10 +105,10 @@ export default defineConfig({
           },
         ],
       },
-      devOptions: {
-        enabled: true,
-        /* other options */
-      },
+      // devOptions: {
+      //   enabled: true,
+      //   /* other options */
+      // },
     }),
   ],
   server: {
