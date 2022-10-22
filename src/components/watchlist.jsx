@@ -1,3 +1,4 @@
+import { Switch, Match } from "solid-js";
 import styles from "../styles/watchlist.module.scss";
 import classNames from "classnames";
 import {
@@ -8,6 +9,9 @@ import {
   watchListRef,
 } from "../stores";
 import { sendRequest } from "../utils/socket-base";
+import SVGWrapper from "./svg-wrapper";
+import CaretTop from "../assets/svg/caret-top.svg";
+import CaretBottom from "../assets/svg/caret-bottom.svg";
 
 const MarketValue = (props) => {
   const difference = () => {
@@ -40,6 +44,24 @@ const MarketValue = (props) => {
       </span>
       <span class={styles[`text--${difference().status}`]}>
         <b>{difference()["value"].toFixed(2)}</b>
+        <Switch>
+          <Match when={difference().status === "increase"}>
+            <SVGWrapper
+              id="increase"
+              fill="green"
+              stroke="green"
+              icon={CaretTop}
+            />
+          </Match>
+          <Match when={difference().status === "decrease"}>
+            <SVGWrapper
+              id="decrease"
+              fill="red"
+              stroke="red"
+              icon={CaretBottom}
+            />
+          </Match>
+        </Switch>
       </span>
     </section>
   );
