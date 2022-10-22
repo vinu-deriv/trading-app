@@ -1,4 +1,7 @@
-html, body {
+@import "./styles/colors";
+
+html,
+body {
   height: 100%;
 }
 
@@ -18,14 +21,14 @@ html, body {
   align-items: center;
   justify-content: end;
   color: #0e0e0e;
-  position: fixed;
+  // position: fixed;
   top: 0;
   width: 100%;
   display: flex;
 
   > div {
     margin: 0 1rem;
-    color: #ff444f;
+    color: $disconnected;
   }
 }
 
@@ -34,13 +37,42 @@ html, body {
   padding: 0.4rem 0.8rem;
 }
 
-.disconnected {
-  padding: 0.4rem 0.8rem;
-  border-radius: 4px;
-  background-color: #ff444f;
-  color: #fff;
-  text-align: left;
-  width: 8rem;
+.banner {
+  position: fixed;
+  top: 5rem;
+  left: 50%;
+
+  .caret {
+    width: 0;
+    height: 0;
+    border-left: 1rem solid transparent;
+    border-right: 1rem solid transparent;
+    border-bottom: 1rem solid $disconnected;
+    position: relative;
+  }
+
+  .disconnected {
+    position: relative;
+    padding: 0.4rem 0.8rem;
+    border-radius: 4px;
+    background-color: $disconnected;
+    color: #fff;
+    text-align: left;
+    -moz-transition: all 0.5s ease-in-out;
+    -webkit-transition: all 0.5s ease-in-out;
+    -o-transition: all 0.5s ease-in-out;
+    -ms-transition: all 0.5s ease-in-out;
+    transition: all 0.5s ease-in-out;
+    -moz-animation: blink normal 1.5s infinite ease-in-out;
+    /* Firefox */
+    -webkit-animation: blink normal 1.5s infinite ease-in-out;
+    /* Webkit */
+    -ms-animation: blink normal 1.5s infinite ease-in-out;
+    /* IE */
+    animation: blink normal 1.5s infinite ease-in-out;
+    /* Opera */
+    right: 40%;
+  }
 }
 
 footer {
@@ -56,7 +88,7 @@ footer {
 }
 
 a {
-  color: #ff444f;
+  color: $disconnected;
   text-decoration: none;
 }
 
@@ -67,4 +99,31 @@ a {
   to {
     transform: rotate(360deg);
   }
+}
+
+@keyframes blink {
+  0% {
+    background-color: rgba(255, 0, 0, 1);
+  }
+  50% {
+    background-color: rgba(255, 0, 0, 0.5);
+  }
+  100% {
+    background-color: rgba(255, 0, 0, 1);
+  }
+}
+@-webkit-keyframes blink {
+  0% {
+    background-color: rgba(255, 0, 0, 1);
+  }
+  50% {
+    background-color: rgba(255, 0, 0, 0.5);
+  }
+  100% {
+    background-color: rgba(255, 0, 0, 1);
+  }
+}
+
+.content {
+  height: calc(100% - 80px);
 }

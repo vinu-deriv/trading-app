@@ -1,0 +1,47 @@
+.accordion {
+  width: 800px;
+  margin: 90px auto;
+  color: black;
+  background-color: white;
+  padding: 45px 45px;
+
+  .container {
+    position: relative;
+    margin: 10px 10px;
+  }
+
+  .label {
+    position: relative;
+    padding: 10px 0;
+    font-size: 30px;
+    color: black;
+    cursor: pointer;
+
+    &::before {
+      content: "+";
+      color: black;
+      position: absolute;
+      top: 50%;
+      right: -5px;
+      font-size: 30px;
+      transform: translateY(-50%);
+    }
+  }
+
+  .content {
+    position: relative;
+    background: white;
+    height: 0;
+    font-size: 20px;
+    text-align: justify;
+    width: 780px;
+    overflow: hidden;
+    transition: 0.5s;
+  }
+
+  hr {
+    width: 100;
+    margin-left: 0;
+    border: 1px solid grey;
+  }
+}

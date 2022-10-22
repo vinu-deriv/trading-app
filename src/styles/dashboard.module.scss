@@ -1,0 +1,22 @@
+.no-list {
+  padding: 1rem;
+  top: 40%;
+  position: relative;
+  border: solid 1px #ecd2d4;
+  box-sizing: border-box;
+  margin: 1rem;
+  border-radius: 8px;
+  background: #ecd2d4;
+}
+
+.trade--button {
+  background-color: #04aa6d;
+  color: white;
+  padding: 6px 25px;
+  margin-top: 4px;
+  border-radius: 5px;
+
+  &:hover {
+    background-color: #059862;
+  }
+}
