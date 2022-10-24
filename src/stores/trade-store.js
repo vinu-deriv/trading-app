@@ -2,6 +2,7 @@ import { createSignal } from "solid-js";
 import { sendRequest } from "../utils/socket-base";
 
 const [activeSymbols, setActiveSymbols] = createSignal([]);
+const [selectedTradeType, setSelectedTradeType] = createSignal({});
 
 const fetchActiveSymbols = async () => {
   try {
@@ -16,4 +17,10 @@ const fetchActiveSymbols = async () => {
   }
 };
 
-export { activeSymbols, setActiveSymbols, fetchActiveSymbols };
+export {
+  activeSymbols,
+  setActiveSymbols,
+  fetchActiveSymbols,
+  selectedTradeType,
+  setSelectedTradeType,
+};

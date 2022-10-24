@@ -9,9 +9,6 @@ import {
   watchListRef,
 } from "../stores";
 import { sendRequest } from "../utils/socket-base";
-import SVGWrapper from "./svg-wrapper";
-import CaretTop from "../assets/svg/caret-top.svg";
-import CaretBottom from "../assets/svg/caret-bottom.svg";
 
 const MarketValue = (props) => {
   const difference = () => {
@@ -42,24 +39,16 @@ const MarketValue = (props) => {
       >
         {watchList()[props.symbol]}
       </span>
-      <span class={styles[`text--${difference().status}`]}>
+      <span
+        class={classNames(styles.text, styles[`text--${difference().status}`])}
+      >
         <b>{difference()["value"].toFixed(2)}</b>
         <Switch>
           <Match when={difference().status === "increase"}>
-            <SVGWrapper
-              id="increase"
-              fill="green"
-              stroke="green"
-              icon={CaretTop}
-            />
+            <div class={styles["arrow-up"]} />
           </Match>
           <Match when={difference().status === "decrease"}>
-            <SVGWrapper
-              id="decrease"
-              fill="red"
-              stroke="red"
-              icon={CaretBottom}
-            />
+            <div class={styles["arrow-down"]} />
           </Match>
         </Switch>
       </span>
