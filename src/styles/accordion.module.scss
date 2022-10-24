@@ -1,6 +1,4 @@
 .accordion {
-  width: 800px;
-  margin: 90px auto;
   color: black;
   background-color: white;
   padding: 45px 45px;
@@ -8,6 +6,12 @@
   .container {
     position: relative;
     margin: 10px 10px;
+  }
+
+  hr {
+    width: 100;
+    margin-left: 0;
+    border: 1px solid grey;
   }
 
   .label {
@@ -34,14 +38,59 @@
     height: 0;
     font-size: 20px;
     text-align: justify;
-    width: 780px;
-    overflow: hidden;
+    overflow: auto;
     transition: 0.5s;
   }
 
-  hr {
-    width: 100;
-    margin-left: 0;
-    border: 1px solid grey;
+  .active {
+    .label::before {
+      content: "-";
+      font-size: 30px;
+    }
+
+    .content {
+      height: 150px;
+    }
+  }
+}
+
+.item-list {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  background: rgba(255, 255, 255, 0.9);
+  text-align: center;
+  border-radius: 5px;
+  float: left;
+  width: 100%;
+  margin-bottom: 0.5rem;
+  cursor: pointer;
+  transition: 0.3s;
+  width: 88%;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  &:hover {
+    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+  }
+}
+
+.action {
+  gap: 1rem;
+  display: flex;
+}
+
+.button {
+  display: flex;
+  height: fit-content;
+  align-items: center;
+  border-radius: 4px;
+
+  &--trade {
+    border: 1px solid greenyellow;
+  }
+
+  &--favourite {
+    border: 1px solid coral;
   }
 }

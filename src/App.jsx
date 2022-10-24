@@ -6,9 +6,12 @@ import Endpoint from "Routes/endpoint";
 import { endpoint, init, login_information, logout } from "Stores/base-store";
 import { onMount } from "solid-js";
 import { Portal } from "solid-js/web";
-import { fetchActiveSymbols } from "./stores";
+import { fetchActiveSymbols, watchListRef } from "./stores";
 import Dashboard from "./routes/dashboard/dashboard";
 import monitorNetwork from "Utils/network-status";
+import Trade from "./routes/trade/trade";
+import { onCleanup } from "solid-js";
+import { sendRequest } from "./utils/socket-base";
 
 function App() {
   const { network_status } = monitorNetwork();
@@ -19,6 +22,13 @@ function App() {
 
   createEffect(() => {
     init();
+  });
+
+  onCleanup(() => {
+    localStorage.removeItem("favourites");
+    watchListRef().forEach((symbol) =>
+      sendRequest({ forget: watchListRef()[symbol] })
+    );
   });
 
   return (
@@ -48,6 +58,7 @@ function App() {
         <Routes>
           <Route element={<Endpoint />} path="/endpoint" />
           <Route path="/" element={<Dashboard />} />
+          <Route path="/trade" element={<Trade />} />
         </Routes>
       </section>
       <footer>

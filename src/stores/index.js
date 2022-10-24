@@ -12,6 +12,8 @@ import {
   activeSymbols,
   setActiveSymbols,
   fetchActiveSymbols,
+  selectedTradeType,
+  setSelectedTradeType,
 } from "./trade-store";
 
 export {
@@ -26,4 +28,6 @@ export {
   activeSymbols,
   setActiveSymbols,
   fetchActiveSymbols,
+  selectedTradeType,
+  setSelectedTradeType,
 };
