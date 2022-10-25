@@ -8,6 +8,13 @@ import {
   watchListRef,
   setWatchListRef,
 } from "./watchlist.js";
+import {
+  activeSymbols,
+  setActiveSymbols,
+  fetchActiveSymbols,
+  selectedTradeType,
+  setSelectedTradeType,
+} from "./trade-store";
 
 export {
   watchList,
@@ -18,4 +25,9 @@ export {
   setPrevWatchList,
   watchListRef,
   setWatchListRef,
+  activeSymbols,
+  setActiveSymbols,
+  fetchActiveSymbols,
+  selectedTradeType,
+  setSelectedTradeType,
 };
