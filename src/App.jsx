@@ -31,7 +31,7 @@ function App() {
       <footer>
         {endpoint.server_url && (
           <div>
-            The server <a href="/endpoint">endpoint</a> is:
+            The server <a href="/endpoint">endpoint</a> is
             <span>{endpoint.server_url}</span>
           </div>
         )}
