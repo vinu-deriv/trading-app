@@ -1,3 +1,4 @@
+import { Switch, Match } from "solid-js";
 import styles from "../styles/watchlist.module.scss";
 import classNames from "classnames";
 import {
@@ -38,8 +39,18 @@ const MarketValue = (props) => {
       >
         {watchList()[props.symbol]}
       </span>
-      <span class={styles[`text--${difference().status}`]}>
+      <span
+        class={classNames(styles.text, styles[`text--${difference().status}`])}
+      >
         <b>{difference()["value"].toFixed(2)}</b>
+        <Switch>
+          <Match when={difference().status === "increase"}>
+            <div class={styles["arrow-up"]} />
+          </Match>
+          <Match when={difference().status === "decrease"}>
+            <div class={styles["arrow-down"]} />
+          </Match>
+        </Switch>
       </span>
     </section>
   );
