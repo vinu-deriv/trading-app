@@ -1,9 +1,8 @@
 import styles from "./App.module.scss";
 import { Routes, Route } from "solid-app-router";
 import { createEffect } from "solid-js";
-import { loginUrl } from "Constants/deriv-urls";
 import Endpoint from "Routes/endpoint";
-import { endpoint, init, login_information, logout } from "Stores/base-store";
+import { endpoint, init } from "Stores/base-store";
 import monitorNetwork from "Utils/network-status";
 import NavBar from "./components/nav";
 
