@@ -5,6 +5,7 @@ import { loginUrl } from "Constants/deriv-urls";
 import Endpoint from "Routes/endpoint";
 import { endpoint, init, login_information, logout } from "Stores/base-store";
 import monitorNetwork from "Utils/network-status";
+import NavBar from "./components/nav";
 
 function App() {
   const { network_status } = monitorNetwork();
@@ -15,19 +16,7 @@ function App() {
 
   return (
     <div class={styles.App}>
-      <header class={styles.header}>
-        {login_information.is_logged_in ? (
-          <div onClick={logout}>Sign Out</div>
-        ) : (
-          <div
-            onClick={() =>
-              (window.location.href = loginUrl({ language: "en" }))
-            }
-          >
-            Log In
-          </div>
-        )}
-      </header>
+      <NavBar />
       <Routes>
         <Route element={<Endpoint />} path="/endpoint" />
       </Routes>
