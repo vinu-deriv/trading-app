@@ -58,12 +58,10 @@ function App() {
         </Routes>
       </section>
       <footer>
-        {endpoint.server_url && (
-          <div>
-            The server <a href="/endpoint">endpoint</a> is:
-            <span>{endpoint.server_url}</span>
-          </div>
-        )}
+        <div>
+          The server <a href="/endpoint">endpoint</a> is:
+          <span>{endpoint.server_url}</span>
+        </div>
       </footer>
     </div>
   );

@@ -26,8 +26,21 @@ export const init = () => {
       if (!response?.error) {
         const { account_list, loginid } = response.authorize;
 
+        let i = 1;
+        while (obj_params[`acct${i}`]) {
+          const loginid = obj_params[`acct${i}`];
+          const token = obj_params[`token${i}`];
+          const active_account = account_list.find(
+            (account) => account.loginid === loginid
+          );
+
+          if (active_account && token) active_account.token = token;
+
+          i++;
+        }
+
         setLoginInformation({
-          accounts: account_list,
+          accounts: JSON.stringify(account_list),
           active_loginid: loginid,
           is_logged_in: true,
         });
