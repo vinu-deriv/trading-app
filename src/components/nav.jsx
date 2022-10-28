@@ -1,4 +1,3 @@
-import Logo from "../../src/assets/favicon.ico";
 import styles from "../styles/navbar.module.scss";
 import { loginUrl } from "Constants/deriv-urls";
 import { login_information, logout } from "Stores/base-store";
