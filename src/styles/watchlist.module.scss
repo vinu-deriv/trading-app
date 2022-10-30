@@ -17,7 +17,7 @@
     &-symbol {
       font-size: medium;
       font-weight: bold;
-      color: gray;
+      color: var(--text-sub);
       font-style: italic;
     }
   }
@@ -99,7 +99,6 @@
   height: 0;
   border-left: 15px solid transparent;
   border-right: 15px solid transparent;
-
   border-bottom: 15px solid green;
 }
 
@@ -108,6 +107,5 @@
   height: 0;
   border-left: 15px solid transparent;
   border-right: 15px solid transparent;
-
   border-top: 15px solid #f00;
 }

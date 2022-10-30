@@ -7,18 +7,20 @@
     --button-disabled: #{$brand-disabled-1};
     --button-green: #{$brand-green};
     --text-main: #{$text-black};
-    --text-sub: #{$brand-disabled-1};
+    --text-sub: #{$brand-disabled-2};
     --section-background-1: #{$text-white};
     --section-background-2: #{$card-gradient-1};
+    --section-background-3: #{$card-background-2};
   }
 
   .theme-dark {
     --button-red: #{$brand-red-coral};
     --button-disabled: #{$brand-disabled-1};
     --button-green: #{$brand-green};
-    --text-main: #{$text-black};
-    --text-sub: #{$brand-disabled-1};
-    --section-background-1: #{$text-white};
-    --section-background-2: #{$card-gradient-2};
+    --text-main: #{$text-white};
+    --text-sub: #{$brand-disabled-3};
+    --section-background-1: #{$general-background-1};
+    --section-background-2: #{$card-gradient-1};
+    --section-background-3: #{$card-background-1};
   }
 }
