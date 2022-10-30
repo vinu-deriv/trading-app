@@ -16,6 +16,8 @@ import {
   setSelectedTradeType,
 } from "./trade-store";
 
+import { is_light_theme, setIsLightTheme } from "./client-store";
+
 export {
   watchList,
   setWatchList,
@@ -30,4 +32,6 @@ export {
   fetchActiveSymbols,
   selectedTradeType,
   setSelectedTradeType,
+  is_light_theme,
+  setIsLightTheme,
 };
