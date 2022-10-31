@@ -6,12 +6,17 @@ import NavBar from "./components/nav";
 import { endpoint, init } from "Stores/base-store";
 import { onMount } from "solid-js";
 import { Portal } from "solid-js/web";
-import { fetchActiveSymbols, watchListRef } from "./stores";
+import {
+  fetchActiveSymbols,
+  watchListRef,
+  showAccountSwitcher,
+} from "./stores";
 import Dashboard from "./routes/dashboard/dashboard";
 import monitorNetwork from "Utils/network-status";
 import Trade from "./routes/trade/trade";
 import { onCleanup } from "solid-js";
 import { sendRequest } from "./utils/socket-base";
+import { AccountSwitcher } from "./components";
 
 function App() {
   const { network_status } = monitorNetwork();
@@ -51,6 +56,7 @@ function App() {
             </div>
           )}
         </Portal>
+        {showAccountSwitcher() && <AccountSwitcher />}
         <Routes>
           <Route element={<Endpoint />} path="/endpoint" />
           <Route path="/" element={<Dashboard />} />

@@ -15,7 +15,7 @@ import {
   selectedTradeType,
   setSelectedTradeType,
 } from "./trade-store";
-
+import { showAccountSwitcher, setshowAccountSwitcher } from "./ui-store";
 export {
   watchList,
   setWatchList,
@@ -30,4 +30,6 @@ export {
   fetchActiveSymbols,
   selectedTradeType,
   setSelectedTradeType,
+  showAccountSwitcher,
+  setshowAccountSwitcher,
 };
