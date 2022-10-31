@@ -90,3 +90,21 @@
     border: 1px solid coral;
   }
 }
+
+.disabled {
+  color: var(--text-sub);
+  cursor: pointer;
+}
+
+.closed {
+  border: 1px solid var(--button-red);
+  border-radius: 4px;
+  color: var(--button-red);
+  font-size: 0.5em;
+  padding: 4px 3px;
+}
+
+.market-title {
+  display: flex;
+  justify-content: space-between;
+}
