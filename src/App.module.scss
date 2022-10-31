@@ -3,6 +3,8 @@
 html,
 body {
   height: 100%;
+  color: var(--text-main);
+  background-color: var(--section-background-1);
 }
 
 .App {
@@ -30,11 +32,6 @@ body {
     margin: 0 1rem;
     color: $disconnected;
   }
-}
-
-.body {
-  margin-top: 80px;
-  padding: 0.4rem 0.8rem;
 }
 
 .banner {
@@ -126,4 +123,5 @@ a {
 
 .content {
   height: calc(100% - 80px);
+  background-color: var(--section-background-1);
 }

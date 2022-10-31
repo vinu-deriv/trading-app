@@ -6,12 +6,13 @@ import NavBar from "./components/nav";
 import { endpoint, init } from "Stores/base-store";
 import { onMount } from "solid-js";
 import { Portal } from "solid-js/web";
-import { fetchActiveSymbols, watchListRef } from "./stores";
+import { fetchActiveSymbols, is_light_theme, watchListRef } from "./stores";
 import Dashboard from "./routes/dashboard/dashboard";
 import monitorNetwork from "Utils/network-status";
 import Trade from "./routes/trade/trade";
 import { onCleanup } from "solid-js";
 import { sendRequest } from "./utils/socket-base";
+import classNames from "classnames";
 
 function App() {
   const { network_status } = monitorNetwork();
@@ -32,16 +33,16 @@ function App() {
   });
 
   return (
-    <div class={styles.App}>
+    <div
+      class={classNames(styles.App, {
+        "theme-light": is_light_theme(),
+        "theme-dark": !is_light_theme(),
+      })}
+    >
       <NavBar />
       <Routes>
         <Route element={<Endpoint />} path="/endpoint" />
       </Routes>
-      <div class={styles.body}>
-        {network_status.is_disconnected && (
-          <div class={styles.disconnected}>Connection lost.</div>
-        )}
-      </div>
       <section class={styles.content}>
         <Portal>
           {network_status.is_disconnected && (

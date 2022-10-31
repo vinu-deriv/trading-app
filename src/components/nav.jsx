@@ -2,8 +2,11 @@ import Logo from "../../src/assets/favicon.ico";
 import styles from "../styles/navbar.module.scss";
 import { loginUrl } from "Constants/deriv-urls";
 import { login_information, logout } from "Stores/base-store";
+import classNames from "classnames";
+import { is_light_theme, setIsLightTheme } from "../stores";
 
 const account_balance = 100000;
+
 const NavBar = () => {
   return (
     <>
@@ -57,6 +60,9 @@ const NavBar = () => {
                 Log In
               </li>
             )}
+            <li>
+              <ThemeToggle />
+            </li>
           </ul>
           <a href="#" class={styles.logo}>
             <img src={Logo} class={styles.logo} />
@@ -71,6 +77,23 @@ const NavBar = () => {
         </section>
       </div>
     </>
+  );
+};
+
+const toggleThemeHandler = (event) => {
+  setIsLightTheme(event.target.checked);
+};
+
+const ThemeToggle = () => {
+  return (
+    <label class={styles["switch"]}>
+      <input
+        type={"checkbox"}
+        checked={is_light_theme()}
+        onChange={toggleThemeHandler}
+      />
+      <span class={classNames(styles["slider"], styles["round"])} />
+    </label>
   );
 };
 
