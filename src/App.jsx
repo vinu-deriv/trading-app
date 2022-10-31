@@ -40,9 +40,6 @@ function App() {
       })}
     >
       <NavBar />
-      <Routes>
-        <Route element={<Endpoint />} path="/endpoint" />
-      </Routes>
       <section class={styles.content}>
         <Portal>
           {network_status.is_disconnected && (
