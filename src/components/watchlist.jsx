@@ -76,8 +76,10 @@ const Watchlist = (props) => {
       </div>
       <div class={styles["container"]}>
         <section class={styles["market-info"]}>
-          <p>Market: {props.market}</p>
-          <p>Sub market: {props.submarket}</p>
+          <p class={styles["market-info-data"]}>Market: {props.market}</p>
+          <p class={styles["market-info-data"]}>
+            Sub market: {props.submarket}
+          </p>
         </section>
         <MarketValue symbol={props.symbol} />
       </div>
