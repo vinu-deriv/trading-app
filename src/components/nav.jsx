@@ -2,14 +2,23 @@ import Logo from "../../src/assets/logo.png";
 import styles from "../styles/navbar.module.scss";
 import { loginUrl } from "Constants/deriv-urls";
 import { login_information, logout } from "Stores/base-store";
+import { setshowAccountSwitcher } from "Stores/ui-store";
 import classNames from "classnames";
 import { is_light_theme, setIsLightTheme } from "../stores";
 import { isDesktop } from "Utils/responsive";
 import { isMobile } from "../utils/responsive";
 
-const account_balance = 100000;
-
 const NavBar = () => {
+  const AccountHeader = () => (
+    <>
+      <div>{JSON.parse(login_information?.active_account)?.loginid}</div>
+      <div>
+        {JSON.parse(login_information?.active_account)?.balance}
+        {JSON.parse(login_information?.active_account)?.currency}
+        <i class={styles.arrow_down} />
+      </div>
+    </>
+  );
   return (
     <section class={isDesktop() ? styles.topnav_desktop : styles.topnav_mobile}>
       {isMobile() && (
@@ -32,12 +41,12 @@ const NavBar = () => {
         <img src={Logo} class={styles.logo} />
       </a>
       {login_information.is_logged_in ? (
-        <button class={styles.account_info}>
+        <button
+          class={styles.account_info}
+          onClick={() => setshowAccountSwitcher(true)}
+        >
           <div class={styles.account_wrapper}>
-            {account_balance} USD
-            <span>
-              <i class={styles.arrow_down} />
-            </span>
+            <AccountHeader />
           </div>
         </button>
       ) : (
