@@ -1,6 +1,6 @@
 .accordion {
-  color: black;
-  background-color: white;
+  color: var(--text-main);
+  background-color: var(--section-background-1);
   padding: 45px 45px;
 
   .container {
@@ -11,19 +11,17 @@
   hr {
     width: 100;
     margin-left: 0;
-    border: 1px solid grey;
+    border: 1px solid var(--text-sub);
   }
 
   .label {
     position: relative;
     padding: 10px 0;
     font-size: 30px;
-    color: black;
     cursor: pointer;
 
     &::before {
       content: "+";
-      color: black;
       position: absolute;
       top: 50%;
       right: -5px;
@@ -34,7 +32,6 @@
 
   .content {
     position: relative;
-    background: white;
     height: 0;
     font-size: 20px;
     text-align: justify;
@@ -55,8 +52,7 @@
 }
 
 .item-list {
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 4px 8px 0 var(--section-background-3);
   text-align: center;
   border-radius: 5px;
   float: left;
@@ -93,4 +89,22 @@
   &--favourite {
     border: 1px solid coral;
   }
+}
+
+.disabled {
+  color: var(--text-sub);
+  cursor: pointer;
+}
+
+.closed {
+  border: 1px solid var(--button-red);
+  border-radius: 4px;
+  color: var(--button-red);
+  font-size: 0.5em;
+  padding: 4px 3px;
+}
+
+.market-title {
+  display: flex;
+  justify-content: space-between;
 }
