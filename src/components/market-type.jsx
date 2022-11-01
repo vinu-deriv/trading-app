@@ -50,7 +50,10 @@ const Accordion = () => {
     setMarketList(Object.keys(markets()));
   });
 
-  const expand = (section) => {
+  const expand = (section, check) => {
+    if (check === 0) {
+      return;
+    }
     if (activeSection().includes(section)) {
       setActiveSection(activeSection().filter((sect) => sect !== section));
     } else {
@@ -108,7 +111,7 @@ const Accordion = () => {
         class={classNames(styles["container"], {
           [styles["active"]]: activeSection().includes("markets"),
         })}
-        onClick={() => expand("markets")}
+        onClick={() => expand("markets", true)}
       >
         <div class={styles["label"]}>Markets</div>
         <div class={styles["content"]}>
@@ -128,8 +131,9 @@ const Accordion = () => {
       <div
         class={classNames(styles["container"], {
           [styles["active"]]: activeSection().includes("submarkets"),
+          [styles["disabled"]]: !submarketList().length,
         })}
-        onClick={() => expand("submarkets")}
+        onClick={() => expand("submarkets", submarketList().length)}
       >
         <div class={styles["label"]}>Submarkets</div>
         <div class={styles["content"]}>
@@ -149,19 +153,26 @@ const Accordion = () => {
       <div
         class={classNames(styles["container"], {
           [styles["active"]]: activeSection().includes("trades"),
+          [styles["disabled"]]: !tradeList().length,
         })}
-        onClick={() => expand("trades")}
+        onClick={() => expand("trades", tradeList().length)}
       >
         <div class={styles["label"]}>Trade types</div>
         <div class={styles["content"]}>
           <Index each={tradeList()}>
             {(tradeTypes, index) => (
               <div class={styles["item-list"]}>
-                <div>{tradeTypes().display_name}</div>
+                <div class={styles["market-title"]}>
+                  <span>{tradeTypes().display_name}</span>
+                  {Boolean(!tradeTypes().exchange_is_open) && (
+                    <span class={styles.closed}>CLOSED</span>
+                  )}
+                </div>
                 <div class={styles.action}>
                   <button
                     class={classNames(styles.button, styles["button--trade"])}
                     onClick={(evnt) => selectTrade(evnt, index)}
+                    disabled={!tradeTypes().exchange_is_open}
                   >
                     <SVGWrapper
                       id={`trade-icon-${index}`}
