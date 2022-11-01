@@ -30,10 +30,6 @@ const AccountSwitcher = () => {
       subscribe({ balance: 1, account: "all" }, (value) => {
         setBalanceOfAllAccounts(value.balance.accounts);
       });
-
-      // sendRequest.then((value) => {
-      //   setBalanceOfAllAccounts(value.balance.accounts);
-      // });
     });
   };
 
