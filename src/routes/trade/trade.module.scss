@@ -1,0 +1,125 @@
+.trading-layout {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  background-color: #f2f3f4;
+  width: 40%;
+  margin: 20px auto;
+  padding: 10px;
+
+  @media (max-width: 768px) {
+    width: 90%;
+  }
+}
+
+.duration-dropdown {
+  padding: 10px;
+  margin: 10px;
+  width: 100%;
+  :hover {
+    background-color: #e6e9e9;
+  }
+}
+
+.button {
+  display: flex;
+  flex: 1 0 50%;
+  gap: 10px;
+  width: 100%;
+
+  button {
+    padding: 10px;
+    margin: 10px 0px;
+    width: 100%;
+    border: 1px solid;
+  }
+}
+
+.stake-payout {
+  :hover {
+    cursor: pointer;
+  }
+
+  &--selected {
+    background-color: #939797;
+  }
+}
+
+.slider {
+  width: 100%;
+  height: 60px;
+  display: flex;
+  align-items: center;
+
+  input[type="range"] {
+    width: 100%;
+    margin: 0 20px;
+  }
+}
+
+.buy-sell {
+  &__stake-payout {
+    font-size: small;
+    font-weight: 300;
+
+    &--strong {
+      font-weight: bold;
+    }
+  }
+  &__buy {
+    background-color: #3d9494;
+    cursor: pointer;
+
+    &--disabled {
+      background-color: #88a4a4;
+      cursor: not-allowed;
+    }
+  }
+
+  &__sell {
+    background-color: #d33636;
+    cursor: pointer;
+    
+    &--disabled {
+      background-color: #af7e7e;
+      cursor: not-allowed;
+    }
+  }
+
+  &__buy-wrapper, &__sell-wrapper {
+    width: 100%;
+    text-align: initial;
+  }
+}
+
+.amount {
+  width: 100%;
+  margin: 10px auto;
+  align-items: center;
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+
+  &__input {
+    width: 90%;
+    height: 30px;
+    padding: 0 10px;
+  }
+}
+
+.duration {
+  &__input {
+    width: 100%;
+    margin: 10px auto;
+    height: 35px;
+    box-sizing: border-box;
+    padding: 0 10px;
+  }
+}
+
+.error-message {
+  color: #d33636;
+  margin-right: auto;
+  line-height: 12px;
+  font-size: small;
+}

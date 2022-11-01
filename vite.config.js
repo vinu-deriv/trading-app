@@ -100,6 +100,7 @@ export default defineConfig({
       Containers: path.resolve(__dirname, "./src/containers"),
       Routes: path.resolve(__dirname, "./src/routes"),
       Stores: path.resolve(__dirname, "./src/stores"),
+      Styles: path.resolve(__dirname, "./src/styles"),
       Utils: path.resolve(__dirname, "./src/utils"),
     },
   },
