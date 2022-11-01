@@ -42,11 +42,12 @@ export const init = () => {
           accounts: JSON.stringify(account_list),
           active_loginid: loginid,
           is_logged_in: true,
-          active_account: {
+          active_account: JSON.stringify({
             balance,
             ...account_list.find((account) => account.loginid === loginid),
-          },
+          }),
         });
+
         setLocalValues();
       }
     });
@@ -81,6 +82,7 @@ export const logout = () => {
       accounts: "",
       active_loginid: "",
       is_logged_in: false,
+      active_account: "",
     });
     setLocalValues();
 

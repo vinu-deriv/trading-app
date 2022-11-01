@@ -1,4 +1,4 @@
-import { For } from "solid-js";
+import { For, onMount } from "solid-js";
 import { createEffect, createSignal } from "solid-js";
 import {
   login_information,
@@ -9,7 +9,7 @@ import { currency_config } from "Constants/currency";
 import { Portal } from "solid-js/web";
 import styles from "../styles/account-switcher.module.scss";
 import { authorize, sendRequest } from "Utils/socket-base";
-
+import { setshowAccountSwitcher } from "Stores/ui-store";
 const getCurrencyDisplayCode = (currency = "") => {
   if (currency !== "eUSDT" && currency !== "tUSDT") {
     currency = currency.toUpperCase();
@@ -22,19 +22,24 @@ const AccountSwitcher = () => {
   const [real_accounts, setRealAccounts] = createSignal([]);
   const [balance_of_all_accounts, setBalanceOfAllAccounts] = createSignal({});
 
-  const getBalanceOfAllAccounts = async () => {
-    authorize(login_information?.active_account?.token).then((response) => {
+  const getBalanceOfAllAccounts = () => {
+    const active_account = JSON.parse(login_information?.active_account);
+    authorize(active_account.token).then(() => {
       sendRequest({ balance: 1, account: "all" }).then((value) => {
         setBalanceOfAllAccounts(value.balance.accounts);
       });
     });
   };
+
+  onMount(async () => {
+    await getBalanceOfAllAccounts();
+  });
+
   createEffect(() => {
     const accounts = JSON.parse(login_information?.accounts);
     if (accounts) {
       setDemoAccounts(accounts.filter((acc) => acc.is_virtual === 1));
       setRealAccounts(accounts.filter((acc) => acc.is_virtual === 0));
-      getBalanceOfAllAccounts();
     }
   });
 
@@ -46,14 +51,15 @@ const AccountSwitcher = () => {
       );
       authorize(token).then((response) => {
         const { loginid, balance } = response.authorize;
+        const active_acc = {
+          balance,
+          ...JSON.parse(localStorage.getItem("accounts")).find(
+            (account) => account.loginid === loginid
+          ),
+        };
         setLoginInformation({
           active_loginid: loginid,
-          active_account: {
-            balance,
-            ...JSON.parse(localStorage.getItem("accounts")).find(
-              (account) => account.loginid === loginid
-            ),
-          },
+          active_account: JSON.stringify(active_acc),
         });
         setLocalValues();
       });
@@ -82,6 +88,12 @@ const AccountSwitcher = () => {
       <div class={styles["dc-modal__container"]}>
         <div class={styles["dc-modal-header"]}>
           <h3>Deriv Accounts</h3>
+          <div
+            class={styles["close"]}
+            onClick={() => {
+              setshowAccountSwitcher(false);
+            }}
+          />
           <div class={styles["separator"]} />
         </div>
         {demo_accounts()?.length && (

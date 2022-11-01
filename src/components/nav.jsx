@@ -3,7 +3,15 @@ import styles from "../styles/navbar.module.scss";
 import { loginUrl } from "Constants/deriv-urls";
 import { login_information, logout } from "Stores/base-store";
 import { setshowAccountSwitcher } from "Stores/ui-store";
+
 const NavBar = () => {
+  const AccountHeader = () => (
+    <>
+      <div>{JSON.parse(login_information?.active_account)?.loginid}</div>
+      <div>{JSON.parse(login_information?.active_account)?.balance}</div>
+      <div>{JSON.parse(login_information?.active_account)?.currency}</div>
+    </>
+  );
   return (
     <>
       <div id={styles.desktop}>
@@ -32,9 +40,7 @@ const NavBar = () => {
               onClick={() => setshowAccountSwitcher(true)}
             >
               <div class={styles.account_wrapper}>
-                <div>{login_information?.active_account?.loginid}</div>
-                <div>{login_information?.active_account?.balance}</div>
-                <div>{login_information?.active_account?.currency}</div>
+                <AccountHeader />
               </div>
               <i class={styles.arrow_down} />
             </button>
@@ -74,9 +80,7 @@ const NavBar = () => {
               }}
             >
               <div class={styles.account_wrapper}>
-                <div>{login_information?.active_account?.loginid}</div>
-                <div>{login_information?.active_account?.balance}</div>
-                <div>{login_information?.active_account?.currency}</div>
+                <AccountHeader />
               </div>
               <i class={styles.arrow_down} />
             </button>
