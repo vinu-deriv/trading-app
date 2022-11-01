@@ -24,7 +24,7 @@ export const init = () => {
 
     authorize(obj_params.token1).then((response) => {
       if (!response?.error) {
-        const { account_list, loginid } = response.authorize;
+        const { account_list, loginid, balance } = response.authorize;
 
         let i = 1;
         while (obj_params[`acct${i}`]) {
@@ -38,12 +38,16 @@ export const init = () => {
 
           i++;
         }
-
         setLoginInformation({
           accounts: JSON.stringify(account_list),
           active_loginid: loginid,
           is_logged_in: true,
+          active_account: JSON.stringify({
+            balance,
+            ...account_list.find((account) => account.loginid === loginid),
+          }),
         });
+
         setLocalValues();
       }
     });
@@ -56,6 +60,7 @@ export const init = () => {
         localStorage.getItem("accounts")
           ? true
           : false,
+      active_account: localStorage.getItem("active_account"),
     });
   }
 
@@ -65,9 +70,10 @@ export const init = () => {
   });
 };
 
-const setLocalValues = () => {
+export const setLocalValues = () => {
   localStorage.setItem("accounts", login_information.accounts);
   localStorage.setItem("active_loginid", login_information.active_loginid);
+  localStorage.setItem("active_account", login_information.active_account);
 };
 
 export const logout = () => {
@@ -76,6 +82,7 @@ export const logout = () => {
       accounts: "",
       active_loginid: "",
       is_logged_in: false,
+      active_account: "",
     });
     setLocalValues();
 

@@ -2,12 +2,18 @@ import Logo from "../../src/assets/favicon.ico";
 import styles from "../styles/navbar.module.scss";
 import { loginUrl } from "Constants/deriv-urls";
 import { login_information, logout } from "Stores/base-store";
+import { setshowAccountSwitcher } from "Stores/ui-store";
 import classNames from "classnames";
 import { is_light_theme, setIsLightTheme } from "../stores";
 
-const account_balance = 100000;
-
 const NavBar = () => {
+  const AccountHeader = () => (
+    <>
+      <div>{JSON.parse(login_information?.active_account)?.loginid}</div>
+      <div>{JSON.parse(login_information?.active_account)?.balance}</div>
+      <div>{JSON.parse(login_information?.active_account)?.currency}</div>
+    </>
+  );
   return (
     <>
       <div id={styles.desktop}>
@@ -30,13 +36,17 @@ const NavBar = () => {
               </li>
             )}
           </ul>
-          <button class={styles.account_info}>
-            <div class={styles.account_wrapper}>
-              {account_balance}
-              <span>USD</span>
-            </div>
-            <i class={styles.arrow_down} />
-          </button>
+          {login_information.is_logged_in && (
+            <button
+              class={styles.account_info}
+              onClick={() => setshowAccountSwitcher(true)}
+            >
+              <div class={styles.account_wrapper}>
+                <AccountHeader />
+              </div>
+              <i class={styles.arrow_down} />
+            </button>
+          )}
         </section>
       </div>
 
@@ -67,13 +77,19 @@ const NavBar = () => {
           <a href="#" class={styles.logo}>
             <img src={Logo} class={styles.logo} />
           </a>
-          <button class={styles.account_info}>
-            <div class={styles.account_wrapper}>
-              {account_balance}
-              <span>USD</span>
-            </div>
-            <i class={styles.arrow_down} />
-          </button>
+          {login_information.is_logged_in && (
+            <button
+              class={styles.account_info}
+              onClick={() => {
+                setshowAccountSwitcher(true);
+              }}
+            >
+              <div class={styles.account_wrapper}>
+                <AccountHeader />
+              </div>
+              <i class={styles.arrow_down} />
+            </button>
+          )}
         </section>
       </div>
     </>
