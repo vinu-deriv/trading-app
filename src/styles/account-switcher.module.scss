@@ -27,14 +27,27 @@
           list-style-type: none;
           transition: 0.2s;
           
-         
+          .selected{
+            background-color:grey;
+          }
           .account{
               font-size: x-small;
-              border-bottom: 0.5px solid grey;
-              height: 3rem;
+              border: 0.5px solid grey;
+              padding: 0.5rem;
+              display: flex;
+              flex-direction: row;
+              
               &:hover {
                   opacity: 0.7;
                   background-color:grey;
+                }
+                .account_info{
+                  display: flex;
+              flex-direction: column;
+                }
+                .account_balance{
+                  margin-left: auto;
+                  text-align: right;
                 }
           }
 

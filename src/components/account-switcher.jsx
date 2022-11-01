@@ -1,5 +1,6 @@
 import { For, onMount } from "solid-js";
 import { createEffect, createSignal } from "solid-js";
+import classNames from "classnames";
 import {
   login_information,
   setLoginInformation,
@@ -8,8 +9,9 @@ import {
 import { currency_config } from "Constants/currency";
 import { Portal } from "solid-js/web";
 import styles from "../styles/account-switcher.module.scss";
-import { authorize, sendRequest } from "Utils/socket-base";
+import { authorize, subscribe } from "Utils/socket-base";
 import { setshowAccountSwitcher } from "Stores/ui-store";
+
 const getCurrencyDisplayCode = (currency = "") => {
   if (currency !== "eUSDT" && currency !== "tUSDT") {
     currency = currency.toUpperCase();
@@ -25,9 +27,13 @@ const AccountSwitcher = () => {
   const getBalanceOfAllAccounts = () => {
     const active_account = JSON.parse(login_information?.active_account);
     authorize(active_account.token).then(() => {
-      sendRequest({ balance: 1, account: "all" }).then((value) => {
+      subscribe({ balance: 1, account: "all" }, (value) => {
         setBalanceOfAllAccounts(value.balance.accounts);
       });
+
+      // sendRequest.then((value) => {
+      //   setBalanceOfAllAccounts(value.balance.accounts);
+      // });
     });
   };
 
@@ -72,12 +78,23 @@ const AccountSwitcher = () => {
 
       <For each={props.accounts}>
         {(acc) => (
-          <div class={styles["account"]} onClick={() => doSwitch(acc.loginid)}>
-            <div>
+          <div
+            class={classNames(styles["account"], {
+              [styles["selected"]]:
+                acc.loginid === login_information.active_loginid,
+            })}
+            onClick={() => doSwitch(acc.loginid)}
+          >
+            <div class={styles["account_info"]}>
               <div>{getCurrencyDisplayCode(acc.currency)}</div>
-              <div>{balance_of_all_accounts()[`${acc.loginid}`]?.balance}</div>
+              <div>{acc.loginid}</div>
             </div>
-            <div>{acc.loginid}</div>
+            <div class={styles["account_balance"]}>
+              <span>
+                {balance_of_all_accounts()[`${acc.loginid}`]?.balance}{" "}
+                {balance_of_all_accounts()[`${acc.loginid}`]?.currency}
+              </span>
+            </div>
           </div>
         )}
       </For>
