@@ -30,6 +30,8 @@ export default defineConfig({
       workbox: {
         globPatterns: ["index.html"],
         cleanupOutdatedCaches: true,
+        clientsClaim: true,
+        skipWaiting: true,
         runtimeCaching: [
           {
             urlPattern: /.*(js|css|ico|png|html|svg)$/,
@@ -56,46 +58,10 @@ export default defineConfig({
             purpose: "maskable",
           },
           {
-            src: "icon-48x48.png",
-            sizes: "48x48",
-            type: "image/png",
-            purpose: "maskable",
-          },
-          {
-            src: "icon-72x72.png",
-            sizes: "72x72",
-            type: "image/png",
-            purpose: "maskable",
-          },
-          {
-            src: "icon-96x96.png",
-            sizes: "96x96",
-            type: "image/png",
-            purpose: "maskable",
-          },
-          {
-            src: "icon-152x152.png",
-            sizes: "152x152",
-            type: "image/png",
-            purpose: "maskable",
-          },
-          {
-            src: "icon-128x128.png",
-            sizes: "128x128",
-            type: "image/png",
-            purpose: "maskable",
-          },
-          {
             src: "icon-144x144.png",
             sizes: "144x144",
             type: "image/png",
             purpose: "any",
-          },
-          {
-            src: "icon-284x284.png",
-            sizes: "284x284",
-            type: "image/png",
-            purpose: "maskable",
           },
           {
             src: "icon-512x512.png",
