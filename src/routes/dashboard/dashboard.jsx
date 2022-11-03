@@ -52,7 +52,7 @@ const Dashboard = () => {
   return (
     <Show
       when={!is_loading()}
-      fallback={<Loader className={styles["loader-position"]} />}
+      fallback={<Loader class={styles["loader-position"]} />}
     >
       <Show
         when={is_watchlist()}
