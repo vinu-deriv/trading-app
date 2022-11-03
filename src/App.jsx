@@ -11,6 +11,9 @@ import {
   is_light_theme,
   watchListRef,
   showAccountSwitcher,
+  activeSymbols,
+  selectedMarkets,
+  setSelectedMarkets,
 } from "./stores";
 import Dashboard from "./routes/dashboard/dashboard";
 import monitorNetwork from "Utils/network-status";
@@ -19,12 +22,20 @@ import { onCleanup } from "solid-js";
 import { sendRequest } from "./utils/socket-base";
 import classNames from "classnames";
 import { AccountSwitcher } from "./components";
+import { mapMarket } from "./utils/map-markets";
 
 function App() {
   const { network_status } = monitorNetwork();
 
   onMount(async () => {
     await fetchActiveSymbols();
+    const map_market = mapMarket(activeSymbols());
+    const getFavs = JSON.parse(localStorage.getItem("favourites"));
+    if (getFavs?.length) {
+      getFavs.forEach((marketSymbol) =>
+        setSelectedMarkets([...selectedMarkets(), map_market[marketSymbol]])
+      );
+    }
   });
 
   createEffect(() => {
@@ -32,8 +43,7 @@ function App() {
   });
 
   onCleanup(() => {
-    localStorage.removeItem("favourites");
-    watchListRef().forEach((symbol) =>
+    Object.values(watchListRef()).forEach((symbol) =>
       sendRequest({ forget: watchListRef()[symbol] })
     );
   });
