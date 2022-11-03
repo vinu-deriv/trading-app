@@ -11,6 +11,7 @@
     --section-background-1: #{$text-white};
     --section-background-2: #{$card-gradient-1};
     --section-background-3: #{$card-background-2};
+    --trade-block-background: #{$trade-block-light};
   }
 
   .theme-dark {
@@ -22,5 +23,10 @@
     --section-background-1: #{$general-background-1};
     --section-background-2: #{$card-gradient-1};
     --section-background-3: #{$card-background-1};
+    --trade-block-background: #{$trade-block-dark};
   }
+}
+
+* {
+  box-sizing: border-box;
 }

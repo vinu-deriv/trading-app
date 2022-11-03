@@ -1,10 +1,11 @@
 .trading-layout {
+  color: var(--text-main);
   display: flex;
   align-items: center;
   flex-direction: column;
-  background-color: #f2f3f4;
-  width: 40%;
-  margin: 20px auto;
+  background-color: var(--trade-block-background);
+  width: 100%;
+  margin: 10px auto;
   padding: 10px;
 
   @media (max-width: 768px) {
@@ -12,13 +13,21 @@
   }
 }
 
-.duration-dropdown {
+@mixin dropdown-mixin {
+  color: var(--text-main);
+  background-color: var(--section-background-1);
   padding: 10px;
-  margin: 10px;
   width: 100%;
-  :hover {
-    background-color: #e6e9e9;
-  }
+  height: 40px;
+}
+
+.duration-dropdown {
+  @include dropdown-mixin();
+  margin: 10px;
+}
+
+.trade-type-dropdown {
+  @include dropdown-mixin();
 }
 
 .button {
@@ -32,6 +41,7 @@
     margin: 10px 0px;
     width: 100%;
     border: 1px solid;
+    border: none;
   }
 }
 
@@ -72,21 +82,24 @@
 
     &--disabled {
       background-color: #88a4a4;
+      color: var(--text-main);
       cursor: not-allowed;
     }
   }
 
   &__sell {
     background-color: #d33636;
+    color: var(--text-main);
     cursor: pointer;
-    
+
     &--disabled {
       background-color: #af7e7e;
       cursor: not-allowed;
     }
   }
 
-  &__buy-wrapper, &__sell-wrapper {
+  &__buy-wrapper,
+  &__sell-wrapper {
     width: 100%;
     text-align: initial;
   }
@@ -104,6 +117,9 @@
     width: 90%;
     height: 30px;
     padding: 0 10px;
+    color: var(--text-main);
+    background-color: var(--section-background-1);
+    border: 0.5px solid;
   }
 }
 
@@ -114,6 +130,9 @@
     height: 35px;
     box-sizing: border-box;
     padding: 0 10px;
+    color: var(--text-main);
+    background-color: var(--section-background-1);
+    border: 0.5px solid;
   }
 }
 
@@ -122,4 +141,36 @@
   margin-right: auto;
   line-height: 12px;
   font-size: small;
+}
+
+.select-trade {
+  flex-basis: 60%;
+  color: var(--text-main);
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  align-items: center;
+  justify-content: center;
+
+  select {
+    flex-basis: 50%;
+  }
+}
+
+.trade-flex-layout {
+  display: flex;
+  width: 100%;
+
+  &__accordion {
+    flex-basis: 40%;
+  }
+
+  &__trade {
+    flex-basis: 60%;
+    padding: 20px;
+  }
+
+  @media (max-width: 768px) {
+    display: block;
+  }
 }

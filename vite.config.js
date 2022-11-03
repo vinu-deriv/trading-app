@@ -8,7 +8,8 @@ import solidSvg from "vite-plugin-solid-svg";
 function renderChunks(deps) {
   const chunks = {};
   Object.keys(deps).forEach((key) => {
-    if (["@deriv/deriv-api", "solid-js"].includes(key)) return;
+    if (["@deriv/deriv-api", "solid-js", "solid-app-router"].includes(key))
+      return;
     chunks[key] = [key];
   });
   return chunks;
