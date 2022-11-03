@@ -69,7 +69,7 @@ const Watchlist = (props) => {
   };
 
   return (
-    <div class={styles["card"]}>
+    <div class={styles["card"]} onClick={() => props.onClick()}>
       <div class={styles["card--title"]}>
         <span class={styles["card--title-name"]}>{props.name}</span>
         <span class={styles["card--title-symbol"]}>{props.symbol}</span>
