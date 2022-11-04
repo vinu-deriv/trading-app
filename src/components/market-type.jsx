@@ -12,7 +12,6 @@ import HeartIcon from "../assets/svg/heart.svg";
 import ActivityIcon from "../assets/svg/activity.svg";
 import { SVGWrapper } from "../components";
 import { createEffect } from "solid-js";
-import { useNavigate } from "solid-app-router";
 
 const generateData = (data_set = {}, prop, item) =>
   prop in data_set ? [...data_set[prop], item] : [item];
@@ -42,8 +41,6 @@ const Accordion = () => {
   const [tradeList, setTradeList] = createSignal([]);
 
   const [activeSection, setActiveSection] = createSignal([]);
-
-  const navigate = useNavigate();
 
   createEffect(() => {
     setMarkets(getMarketTypes(activeSymbols()));
@@ -75,7 +72,6 @@ const Accordion = () => {
   const selectTrade = (evnt, index) => {
     setSelectedTradeType(tradeList()[index]);
     evnt.stopImmediatePropagation();
-    navigate("/", { replace: true });
   };
 
   const addToWatchlist = (evnt, index) => {
