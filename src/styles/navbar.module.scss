@@ -1,5 +1,5 @@
 .logo {
-  width: 100px;
+  width: 75px;
 }
 .header {
   display: flex;
@@ -7,7 +7,6 @@
   align-items: center;
   background-color: #0e0e0e;
   height: 100px;
-
 }
 
 .topnav_mobile {
@@ -18,13 +17,14 @@
   background: #0e0e0e;
   /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
   color: #fff;
-  padding: 1em;
+  padding: 0 1em;
   border: 1px solid grey;
-  position: fixed;
   top: 0;
   left: 0;
   right: 0;
   z-index: 2;
+  min-height: 80px;
+  box-sizing: border-box;
 
   .menu {
     display: flex;
@@ -95,7 +95,7 @@
     display: flex;
   }
   .menu {
-    position: absolute;
+    position: fixed;
     top: 0;
     margin-top: 80px;
     left: 0;
