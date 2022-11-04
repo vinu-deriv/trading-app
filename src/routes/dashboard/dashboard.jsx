@@ -1,6 +1,6 @@
-import { Show, For } from "solid-js";
+import { Show, For, onMount, createSignal } from "solid-js";
 import { useNavigate } from "solid-app-router";
-import Watchlist from "../../components/watchlist";
+import { Watchlist, Loader } from "../../components";
 import {
   selectedMarkets,
   setPrevWatchList,
@@ -9,9 +9,9 @@ import {
   setWatchList,
   setWatchListRef,
   watchListRef,
+  setSelectedTradeType,
 } from "../../stores";
 import styles from "../../styles/dashboard.module.scss";
-import { createEffect } from "solid-js";
 import { subscribe } from "../../utils/socket-base";
 
 const Dashboard = () => {
@@ -19,13 +19,17 @@ const Dashboard = () => {
 
   const is_watchlist = () => selectedMarkets().length || null;
 
+  const [is_loading, setIsLoading] = createSignal(false);
+
   const getMarketTick = (market) => {
+    setIsLoading(true);
     subscribe(
       {
         ticks: market,
         subscribe: 1,
       },
       (resp) => {
+        setIsLoading(false);
         setPrevWatchList({
           ...prevWatchList(),
           [market]: watchList()[market] ?? 0,
@@ -38,7 +42,7 @@ const Dashboard = () => {
     );
   };
 
-  createEffect(() => {
+  onMount(() => {
     const getFavs = JSON.parse(localStorage.getItem("favourites"));
     if (getFavs?.length) {
       getFavs.forEach((marketSymbol) => getMarketTick(marketSymbol));
@@ -47,30 +51,39 @@ const Dashboard = () => {
 
   return (
     <Show
-      when={is_watchlist()}
-      fallback={
-        <div class={styles["no-list"]}>
-          <div>You have not added anything to your Watchlist</div>
-          <button
-            class={styles["trade--button"]}
-            onClick={() => navigate("/trade", { replace: true })}
-          >
-            {" "}
-            Go to Trading
-          </button>
-        </div>
-      }
+      when={!is_loading()}
+      fallback={<Loader class={styles["loader-position"]} />}
     >
-      <For each={selectedMarkets()}>
-        {(marketInfo) => (
-          <Watchlist
-            name={marketInfo.display_name}
-            symbol={marketInfo.symbol}
-            market={marketInfo.market_display_name}
-            submarket={marketInfo.submarket_display_name}
-          />
-        )}
-      </For>
+      <Show
+        when={is_watchlist()}
+        fallback={
+          <div class={styles["no-list"]}>
+            <div>You have not added anything to your Watchlist</div>
+            <button
+              class={styles["trade--button"]}
+              onClick={() => navigate("/trade", { replace: true })}
+            >
+              {" "}
+              Go to Trading
+            </button>
+          </div>
+        }
+      >
+        <For each={selectedMarkets()}>
+          {(marketInfo) => (
+            <Watchlist
+              name={marketInfo.display_name}
+              symbol={marketInfo.symbol}
+              market={marketInfo.market_display_name}
+              submarket={marketInfo.submarket_display_name}
+              onClick={() => {
+                setSelectedTradeType(marketInfo);
+                navigate("/trade", { replace: true });
+              }}
+            />
+          )}
+        </For>
+      </Show>
     </Show>
   );
 };
