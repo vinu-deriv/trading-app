@@ -25,16 +25,4 @@ export const getContractTypesConfig = (symbol) => ({
     basis: [],
     components: [],
   },
-  // multiplier: {
-  //     title: localize('Multipliers'),
-  //     trade_types: ['MULTUP', 'MULTDOWN'],
-  //     basis: ['stake'],
-  //     components: [
-  //         'take_profit',
-  //         'stop_loss',
-  //         ...(shouldShowCancellation(symbol) ? ['cancellation'] : []),
-  //         ...(shouldShowExpiration(symbol) ? ['expiration'] : []),
-  //     ],
-  //     config: { hide_duration: true },
-  // },
 });

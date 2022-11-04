@@ -15,6 +15,7 @@ import {
   buyContract,
 } from "../../stores";
 import { useNavigate } from "solid-app-router";
+import classNames from "classnames";
 
 const [slider_value, setSliderValue] = createSignal(1);
 const [duration_unit, setDurationUnit] = createSignal("");
@@ -192,19 +193,21 @@ const OptionsTrade = () => {
             <p>{slider_value()}</p>
           </div>
         </Show>
-        <div class={`${styles["button"]} ${styles["stake-payout"]}`}>
+        <div class={`${classNames(styles["button"], styles["stake-payout"])}`}>
           <button
-            class={`${styles["stake-payout__button"]} ${
+            class={`${classNames(
+              styles["stake-payout__button"],
               is_stake() ? styles["stake-payout--selected"] : ""
-            }`}
+            )}`}
             onClick={() => setIsStake(true)}
           >
             Stake
           </button>
           <button
-            class={`${styles["stake-payout__button"]} ${
+            class={`${classNames(
+              styles["stake-payout__button"],
               is_stake() ? "" : styles["stake-payout--selected"]
-            }`}
+            )}`}
             onClick={() => setIsStake(false)}
           >
             Payout
@@ -221,13 +224,14 @@ const OptionsTrade = () => {
           <p>USD</p>
         </div>
 
-        <div class={`${styles["button"]} ${styles["buy-sell"]}`}>
+        <div class={`${classNames(styles["button"], styles["buy-sell"])}`}>
           <div class={styles["buy-sell__buy-wrapper"]}>
             {buySellButtonWrapper(proposal_buy)}
             <button
-              class={`${styles["buy-sell__buy"]} ${
+              class={`${classNames(
+                styles["buy-sell__buy"],
                 !proposal_buy.id ? styles["buy-sell__buy--disabled"] : ""
-              }`}
+              )}`}
               disabled={!proposal_buy.id}
               onClick={() => {
                 handleBuyContractClicked(proposal_buy?.id);
@@ -239,9 +243,10 @@ const OptionsTrade = () => {
           <div class={styles["buy-sell__sell-wrapper"]}>
             {buySellButtonWrapper(proposal_sell)}
             <button
-              class={`${styles["buy-sell__sell"]} ${
+              class={`${classNames(
+                styles["buy-sell__sell"],
                 !proposal_sell.id ? styles["buy-sell__sell--disabled"] : ""
-              }`}
+              )}`}
               disabled={!proposal_sell.id}
               onClick={() => handleBuyContractClicked(proposal_sell?.id)}
             >

@@ -1,5 +1,10 @@
 const Reports = () => {
-  return <div>Will be implemented soon</div>;
+  // TODO will be implemented soon
+  return (
+    <div>
+      <p>Reports</p>
+    </div>
+  );
 };
 
 export default Reports;
