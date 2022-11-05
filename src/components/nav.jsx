@@ -45,7 +45,11 @@ const NavBar = () => {
           <ThemeToggle />
         </li>
       </ul>
-      <a href="#" class={styles.logo}>
+      <a
+        href="#"
+        class={styles.logo}
+        onClick={() => navigate("/", { replace: true })}
+      >
         <img src={Logo} class={styles.logo} />
       </a>
       {login_information.is_logged_in ? (

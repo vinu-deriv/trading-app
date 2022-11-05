@@ -206,22 +206,30 @@ const Accordion = () => {
                       )}
                       onClick={(evnt) => addToWatchlist(evnt, index)}
                     >
-                      <SVGWrapper
-                        id={`heart-icon-${index}`}
-                        icon={
-                          selectedMarkets().find(
-                            (mkt) => mkt.symbol === tradeList()[index].symbol
-                          )
-                            ? TrashBinIcon
-                            : HeartIcon
+                      <Show
+                        when={selectedMarkets().find(
+                          (mkt) => mkt.symbol === tradeList()[index].symbol
+                        )}
+                        fallback={
+                          <>
+                            <SVGWrapper
+                              id={`watch-icon-${index}`}
+                              icon={HeartIcon}
+                              stroke="red"
+                            />
+                            <span>Add to Watchlist</span>
+                          </>
                         }
-                        stroke="red"
-                      />
-                      {selectedMarkets().find(
-                        (mkt) => mkt.symbol === tradeList()[index].symbol
-                      )
-                        ? "Remove from Watchlist"
-                        : "Add to Watchlist"}
+                      >
+                        <>
+                          <SVGWrapper
+                            id={`watch-icon-${index}`}
+                            icon={TrashBinIcon}
+                            stroke="red"
+                          />
+                          <span>Remove from Watchlist</span>
+                        </>
+                      </Show>
                     </button>
                   </div>
                 </div>
