@@ -1,7 +1,6 @@
 import styles from "./App.module.scss";
 import { Routes, Route } from "solid-app-router";
-import { createEffect } from "solid-js";
-import Endpoint from "Routes/endpoint";
+import { createEffect, lazy } from "solid-js";
 import NavBar from "./components/nav";
 import { endpoint, init } from "Stores/base-store";
 import { onMount } from "solid-js";
@@ -15,14 +14,17 @@ import {
   selectedMarkets,
   setSelectedMarkets,
 } from "./stores";
-import Dashboard from "./routes/dashboard/dashboard";
 import monitorNetwork from "Utils/network-status";
-import Trade from "./routes/trade/trade";
 import { onCleanup } from "solid-js";
 import { sendRequest } from "./utils/socket-base";
 import classNames from "classnames";
 import { AccountSwitcher } from "./components";
 import { mapMarket } from "./utils/map-markets";
+
+const Endpoint = lazy(() => import("Routes/endpoint"));
+const Dashboard = lazy(() => import("Routes/dashboard/dashboard"));
+const Trade = lazy(() => import("Routes/trade/trade"));
+const Reports = lazy(() => import("Routes/reports/reports"));
 
 function App() {
   const { network_status } = monitorNetwork();
@@ -70,6 +72,7 @@ function App() {
           <Route element={<Endpoint />} path="/endpoint" />
           <Route path="/" element={<Dashboard />} />
           <Route path="/trade" element={<Trade />} />
+          <Route path="/reports" element={<Reports />} />
         </Routes>
       </section>
       <footer>

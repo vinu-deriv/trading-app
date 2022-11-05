@@ -1,7 +1,6 @@
 import styles from "../styles/accordion.module.scss";
 import shared from "../styles/shared.module.scss";
-import { Index } from "solid-js";
-import { createSignal } from "solid-js";
+import { createSignal, createEffect, Show, Index } from "solid-js";
 import {
   activeSymbols,
   setSelectedTradeType,
@@ -16,9 +15,6 @@ import HeartIcon from "../assets/svg/heart.svg";
 import TrashBinIcon from "../assets/svg/trash.svg";
 import ActivityIcon from "../assets/svg/activity.svg";
 import { SVGWrapper, Loader } from "../components";
-import { createEffect } from "solid-js";
-import { useNavigate } from "solid-app-router";
-import { Show } from "solid-js";
 
 const generateData = (data_set = {}, prop, item) =>
   prop in data_set ? [...data_set[prop], item] : [item];
@@ -48,8 +44,6 @@ const Accordion = () => {
   const [tradeList, setTradeList] = createSignal([]);
 
   const [activeSection, setActiveSection] = createSignal([]);
-
-  const navigate = useNavigate();
 
   createEffect(() => {
     setMarkets(getMarketTypes(activeSymbols()));
@@ -87,7 +81,6 @@ const Accordion = () => {
       ...selectedTrade(),
       trade_type: selectedTradeType().display_name,
     });
-    navigate("/", { replace: true });
   };
 
   const addToWatchlist = (evnt, index) => {
