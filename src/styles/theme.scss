@@ -11,6 +11,7 @@
     --section-background-1: #{$text-white};
     --section-background-2: #{$card-gradient-1};
     --section-background-3: #{$card-background-2};
+    --card-highlight: #{$card-highlight-1};
   }
 
   .theme-dark {
@@ -22,5 +23,6 @@
     --section-background-1: #{$general-background-1};
     --section-background-2: #{$card-gradient-1};
     --section-background-3: #{$card-background-1};
+    --card-highlight: #{$card-highlight-2};
   }
 }

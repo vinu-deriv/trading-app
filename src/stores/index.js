@@ -14,6 +14,8 @@ import {
   fetchActiveSymbols,
   selectedTradeType,
   setSelectedTradeType,
+  selectedTrade,
+  setSelectedTrade,
 } from "./trade-store";
 import { showAccountSwitcher, setshowAccountSwitcher } from "./ui-store";
 
@@ -37,4 +39,6 @@ export {
   setshowAccountSwitcher,
   is_light_theme,
   setIsLightTheme,
+  selectedTrade,
+  setSelectedTrade,
 };

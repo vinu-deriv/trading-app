@@ -3,6 +3,11 @@ import { sendRequest } from "../utils/socket-base";
 
 const [activeSymbols, setActiveSymbols] = createSignal([]);
 const [selectedTradeType, setSelectedTradeType] = createSignal({});
+const [selectedTrade, setSelectedTrade] = createSignal({
+  market: "",
+  sub_market: "",
+  trade_type: "",
+});
 
 const fetchActiveSymbols = async () => {
   try {
@@ -23,4 +28,6 @@ export {
   fetchActiveSymbols,
   selectedTradeType,
   setSelectedTradeType,
+  selectedTrade,
+  setSelectedTrade,
 };
