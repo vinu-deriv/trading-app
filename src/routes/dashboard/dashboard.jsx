@@ -13,6 +13,7 @@ import {
 } from "../../stores";
 import styles from "../../styles/dashboard.module.scss";
 import { subscribe } from "../../utils/socket-base";
+import { login_information } from "Stores/base-store";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -51,7 +52,7 @@ const Dashboard = () => {
 
   return (
     <Show
-      when={!is_loading()}
+      when={!login_information.is_logging_in && !is_loading()}
       fallback={<Loader class={styles["loader-position"]} />}
     >
       <Show

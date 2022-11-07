@@ -5,8 +5,7 @@ import { login_information, logout } from "Stores/base-store";
 import { setshowAccountSwitcher } from "Stores/ui-store";
 import classNames from "classnames";
 import { is_light_theme, setIsLightTheme } from "../stores";
-import { isDesktop } from "Utils/responsive";
-import { isMobile } from "../utils/responsive";
+import { isDesktop, isMobile } from "Utils/responsive";
 
 const NavBar = () => {
   const AccountHeader = () => (
