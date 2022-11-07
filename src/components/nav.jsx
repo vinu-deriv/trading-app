@@ -1,4 +1,4 @@
-import Logo from "../../src/assets/logo.png";
+import Logo from "../../src/assets/logo2.png";
 import styles from "../styles/navbar.module.scss";
 import { loginUrl } from "Constants/deriv-urls";
 import { login_information, logout } from "Stores/base-store";
@@ -7,18 +7,22 @@ import classNames from "classnames";
 import { is_light_theme, setIsLightTheme } from "../stores";
 import { isDesktop } from "Utils/responsive";
 import { isMobile } from "../utils/responsive";
+import { useNavigate } from "solid-app-router";
+
+const AccountHeader = () => (
+  <>
+    <div>{JSON.parse(login_information?.active_account)?.loginid}</div>
+    <div>
+      {JSON.parse(login_information?.active_account)?.balance}
+      {JSON.parse(login_information?.active_account)?.currency}
+      <i class={styles.arrow_down} />
+    </div>
+  </>
+);
 
 const NavBar = () => {
-  const AccountHeader = () => (
-    <>
-      <div>{JSON.parse(login_information?.active_account)?.loginid}</div>
-      <div>
-        {JSON.parse(login_information?.active_account)?.balance}
-        {JSON.parse(login_information?.active_account)?.currency}
-        <i class={styles.arrow_down} />
-      </div>
-    </>
-  );
+  const navigate = useNavigate();
+
   return (
     <section class={isDesktop() ? styles.topnav_desktop : styles.topnav_mobile}>
       {isMobile() && (
@@ -30,14 +34,22 @@ const NavBar = () => {
         </>
       )}
       <ul class={styles.menu}>
-        <li>Trade</li>
-        <li>Report</li>
+        <li onClick={() => navigate("/trade", { replace: true })}>Trade</li>
+        {login_information.is_logged_in && (
+          <li onClick={() => navigate("/reports", { replace: true })}>
+            Report
+          </li>
+        )}
         {login_information.is_logged_in && <li onClick={logout}> Sign Out</li>}
         <li>
           <ThemeToggle />
         </li>
       </ul>
-      <a href="#" class={styles.logo}>
+      <a
+        href="#"
+        class={styles.logo}
+        onClick={() => navigate("/", { replace: true })}
+      >
         <img src={Logo} class={styles.logo} />
       </a>
       {login_information.is_logged_in ? (
