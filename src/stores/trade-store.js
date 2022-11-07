@@ -4,6 +4,11 @@ import { sendRequest, authorize } from "../utils/socket-base";
 
 const [activeSymbols, setActiveSymbols] = createSignal([]);
 const [selectedTradeType, setSelectedTradeType] = createSignal({});
+const [selectedTrade, setSelectedTrade] = createSignal({
+  market: "",
+  sub_market: "",
+  trade_type: "",
+});
 
 const [is_stake, setIsStake] = createSignal(true);
 const [symbol, setSymbol] = createSignal();
@@ -47,6 +52,8 @@ export {
   fetchActiveSymbols,
   selectedTradeType,
   setSelectedTradeType,
+  selectedTrade,
+  setSelectedTrade,
   is_stake,
   setIsStake,
   symbol,

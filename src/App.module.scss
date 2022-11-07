@@ -77,26 +77,17 @@ footer {
   border-top: 1px solid #f2f3f4;
   bottom: 0;
   box-sizing: border-box;
-  color: #333;
   justify-content: flex-end;
   padding: 1rem;
   position: fixed;
   width: 100%;
   z-index: 3;
+  color: var(--text-main);
 }
 
 a {
   color: $disconnected;
   text-decoration: none;
-}
-
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
 }
 
 @keyframes blink {
@@ -127,5 +118,3 @@ a {
   background-color: var(--section-background-1);
   overflow: auto;
 }
-
-

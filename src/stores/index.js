@@ -14,6 +14,8 @@ import {
   fetchActiveSymbols,
   selectedTradeType,
   setSelectedTradeType,
+  selectedTrade,
+  setSelectedTrade,
   is_stake,
   setIsStake,
   symbol,
@@ -55,4 +57,6 @@ export {
   setshowAccountSwitcher,
   is_light_theme,
   setIsLightTheme,
+  selectedTrade,
+  setSelectedTrade,
 };

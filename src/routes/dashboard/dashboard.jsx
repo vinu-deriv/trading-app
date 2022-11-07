@@ -24,21 +24,26 @@ const Dashboard = () => {
 
   const getMarketTick = (market) => {
     setIsLoading(true);
+    setWatchList({ ...watchList(), [market]: 0 });
     subscribe(
       {
         ticks: market,
         subscribe: 1,
       },
       (resp) => {
+        const prev_value = watchList()[market];
+        const new_value = resp.tick.quote;
         setIsLoading(false);
         setPrevWatchList({
           ...prevWatchList(),
-          [market]: watchList()[market] ?? 0,
+          [market]: prev_value ?? 0,
         });
-        setWatchList({ ...watchList(), [market]: resp.tick.quote });
         if (Object.values(watchListRef()).length !== selectedMarkets().length) {
           setWatchListRef({ ...watchListRef(), [market]: resp.tick.id });
         }
+        setTimeout(() => {
+          setWatchList({ ...watchList(), [market]: new_value });
+        });
       }
     );
   };
