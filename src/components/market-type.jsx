@@ -111,7 +111,7 @@ const Accordion = () => {
 
   return (
     <>
-      <h3>What would you like to trade with?</h3>
+      <h3 class={styles["title"]}>What would you like to trade with?</h3>
       <div class={styles["accordion"]}>
         <hr />
         <div
