@@ -30,7 +30,7 @@ export default defineConfig({
       registerType: "autoUpdate",
       includeAssets: ["offline.html"],
       injectManifest: {
-        globPatterns: ["**/*.{css,html,js}"],
+        globPatterns: ["**/*.{css,html,js,png}"],
       },
       manifest: {
         name: "Trading App",
