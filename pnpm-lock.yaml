@@ -18,6 +18,9 @@ specifiers:
   vite-plugin-pwa: ^0.13.1
   vite-plugin-solid: ^2.3.0
   vite-plugin-solid-svg: ^0.5.0
+  workbox-core: ^6.5.4
+  workbox-precaching: ^6.5.4
+  workbox-routing: ^6.5.4
 
 dependencies:
   '@deriv/deriv-api': 1.0.11
@@ -39,6 +42,9 @@ devDependencies:
   vite-plugin-pwa: 0.13.1_vite@3.1.8
   vite-plugin-solid: 2.3.9_solid-js@1.5.1+vite@3.1.8
   vite-plugin-solid-svg: 0.5.0_solid-js@1.5.1+vite@3.1.8
+  workbox-core: 6.5.4
+  workbox-precaching: 6.5.4
+  workbox-routing: 6.5.4
 
 packages:
 

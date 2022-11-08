@@ -26,25 +26,11 @@ export default defineConfig({
     }),
     VitePWA({
       base: "/",
-      strategies: "generateSW",
+      strategies: "injectManifest",
       registerType: "autoUpdate",
-      workbox: {
-        globPatterns: ["index.html"],
-        cleanupOutdatedCaches: true,
-        clientsClaim: true,
-        skipWaiting: true,
-        runtimeCaching: [
-          {
-            urlPattern: /.*(js|css|ico|png|html|svg)$/,
-            handler: "CacheFirst",
-            options: {
-              cacheName: "project-files",
-              expiration: {
-                maxAgeSeconds: 60 * 60 * 24,
-              },
-            },
-          },
-        ],
+      includeAssets: ["offline.html"],
+      injectManifest: {
+        globPatterns: ["**/*.{css,html,js,png}"],
       },
       manifest: {
         name: "Trading App",
@@ -72,10 +58,10 @@ export default defineConfig({
           },
         ],
       },
-      // devOptions: {
-      //   enabled: true,
-      //   /* other options */
-      // },
+      devOptions: {
+        enabled: true,
+        /* other options */
+      },
     }),
   ],
   server: {
@@ -92,7 +78,6 @@ export default defineConfig({
       },
     },
   },
-
   resolve: {
     alias: {
       Assets: path.resolve(__dirname, "./src/assets"),

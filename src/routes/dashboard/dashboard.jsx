@@ -14,6 +14,7 @@ import {
 import styles from "../../styles/dashboard.module.scss";
 import { subscribe } from "../../utils/socket-base";
 import { login_information } from "Stores/base-store";
+import monitorNetwork from "Utils/network-status";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -21,6 +22,8 @@ const Dashboard = () => {
   const is_watchlist = () => selectedMarkets().length || null;
 
   const [is_loading, setIsLoading] = createSignal(false);
+
+  const { network_status } = monitorNetwork();
 
   const getMarketTick = (market) => {
     setIsLoading(true);
@@ -49,9 +52,11 @@ const Dashboard = () => {
   };
 
   onMount(() => {
-    const getFavs = JSON.parse(localStorage.getItem("favourites"));
-    if (getFavs?.length) {
-      getFavs.forEach((marketSymbol) => getMarketTick(marketSymbol));
+    if (!network_status.is_disconnected) {
+      const getFavs = JSON.parse(localStorage.getItem("favourites"));
+      if (getFavs?.length) {
+        getFavs.forEach((marketSymbol) => getMarketTick(marketSymbol));
+      }
     }
   });
 
