@@ -1,0 +1,128 @@
+.card-alignment {
+  display: flex;
+  flex-direction: column;
+  align-items: baseline;
+}
+
+.open-position {
+  display: grid;
+  box-shadow: 0 2px 0px 0 rgb(0 0 0 / 20%);
+  transition: 0.3s;
+  grid-template-areas:
+    "type time"
+    "ref currency"
+    "buy indicative"
+    "payout profit";
+  padding: 0.5rem;
+  box-sizing: border-box;
+  background-color: var(--report-card-background);
+  color: var(--text-main);
+  gap: 1rem;
+  margin: 1rem;
+
+  &:hover {
+    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+  }
+}
+
+.type {
+  grid-area: type;
+}
+
+.time {
+  grid-area: time;
+  @extend .card-alignment;
+}
+
+.ref-id {
+  grid-area: ref;
+  @extend .card-alignment;
+}
+
+.currency {
+  grid-area: currency;
+  @extend .card-alignment;
+}
+
+.buy {
+  grid-area: buy;
+  @extend .card-alignment;
+}
+
+.indicative {
+  grid-area: indicative;
+  @extend .card-alignment;
+}
+
+.payout {
+  grid-area: payout;
+  @extend .card-alignment;
+}
+
+.profit {
+  grid-area: profit;
+  @extend .card-alignment;
+}
+
+.no-list {
+  top: 40%;
+  position: relative;
+  border: solid 1px #ecd2d4;
+  box-sizing: border-box;
+  margin: 1rem;
+  border-radius: 8px;
+}
+
+.statement {
+  grid-template-areas:
+    ". type"
+    "trans currency"
+    "date credit"
+    "btext bvalue";
+}
+
+.trans-id {
+  grid-area: trans;
+  @extend .card-alignment;
+}
+
+.date-time {
+  grid-area: date;
+  @extend .card-alignment;
+}
+
+.credit {
+  grid-area: credit;
+  @extend .card-alignment;
+}
+
+.balance {
+  &--text {
+    grid-area: btext;
+    @extend .card-alignment;
+  }
+
+  &--value {
+    grid-area: bvalue;
+    @extend .card-alignment;
+  }
+}
+
+.action {
+  border-radius: 5px;
+  border: 1px solid var(--button-green);
+  color: var(--button-green);
+  &--buy {
+    border-radius: 5px;
+    border: 1px solid var(--button-red);
+    color: var(--button-red);
+  }
+}
+
+.profit {
+  color: var(--button-green);
+}
+
+.loss {
+  color: var(--button-red);
+}

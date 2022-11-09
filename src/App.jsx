@@ -20,6 +20,7 @@ import { sendRequest } from "./utils/socket-base";
 import classNames from "classnames";
 import { AccountSwitcher } from "./components";
 import { mapMarket } from "./utils/map-markets";
+import DemoTable from "./components/demo-table";
 
 const Endpoint = lazy(() => import("Routes/endpoint"));
 const Dashboard = lazy(() => import("Routes/dashboard/dashboard"));
@@ -73,6 +74,7 @@ function App() {
           <Route path="/" element={<Dashboard />} />
           <Route path="/trade" element={<Trade />} />
           <Route path="/reports" element={<Reports />} />
+          <Route path="/demo" element={<DemoTable />} />
         </Routes>
       </section>
       <footer>
