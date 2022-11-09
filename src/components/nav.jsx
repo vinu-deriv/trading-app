@@ -9,14 +9,11 @@ import { isDesktop, isMobile } from "Utils/responsive";
 import { useNavigate } from "solid-app-router";
 
 const AccountHeader = () => (
-  <>
-    <div>{JSON.parse(login_information?.active_account)?.loginid}</div>
-    <div>
-      {JSON.parse(login_information?.active_account)?.balance}
-      {JSON.parse(login_information?.active_account)?.currency}
-      <i class={styles.arrow_down} />
-    </div>
-  </>
+  <div>
+    {JSON.parse(login_information?.active_account)?.balance}
+    {JSON.parse(login_information?.active_account)?.currency}
+    <i class={styles.arrow_down} />
+  </div>
 );
 
 const NavBar = () => {
@@ -30,27 +27,31 @@ const NavBar = () => {
           <label class={styles.menu_button_container} for={styles.menu_toggle}>
             <div class={styles.menu_button} />
           </label>
+          <a href="/" class={styles.logo}>
+            <img src={Logo} class={styles.logo} />
+          </a>
         </>
       )}
       <ul class={styles.menu}>
+        {isDesktop() && (
+          <li>
+            <a href="/" class={styles.logo}>
+              <img src={Logo} class={styles.logo} />
+            </a>
+          </li>
+        )}
         <li onClick={() => navigate("/trade", { replace: true })}>Trade</li>
         {login_information.is_logged_in && (
           <li onClick={() => navigate("/reports", { replace: true })}>
             Report
           </li>
         )}
-        {login_information.is_logged_in && <li onClick={logout}> Sign Out</li>}
         <li>
+          Theme &nbsp;
           <ThemeToggle />
         </li>
+        {login_information.is_logged_in && <li onClick={logout}> Sign Out</li>}
       </ul>
-      <a
-        href="#"
-        class={styles.logo}
-        onClick={() => navigate("/", { replace: true })}
-      >
-        <img src={Logo} class={styles.logo} />
-      </a>
       {login_information.is_logged_in ? (
         <button
           class={styles.account_info}
@@ -61,11 +62,15 @@ const NavBar = () => {
           </div>
         </button>
       ) : (
-        <div
-          onClick={() => (window.location.href = loginUrl({ language: "en" }))}
-        >
-          <b>Log In</b>
-        </div>
+        !login_information.is_logging_in && (
+          <div
+            onClick={() =>
+              (window.location.href = loginUrl({ language: "en" }))
+            }
+          >
+            <b>Log In</b>
+          </div>
+        )
       )}
     </section>
   );
