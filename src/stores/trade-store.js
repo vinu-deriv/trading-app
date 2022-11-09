@@ -48,8 +48,6 @@ const buyContract = async (id, amount, token) => {
     if (response?.buy) {
       setOpenContractId(response.buy.contract_id);
     }
-
-    console.log(response);
   } catch (error) {
     setBuyErrorMessage(error.error.message);
   }
