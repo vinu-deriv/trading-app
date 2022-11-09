@@ -29,7 +29,7 @@ const Statements = () => {
       when={statement_count()}
       fallback={
         <div class={styles["no-list"]}>
-          <div>There are no open contracts</div>
+          <div>You have not made any transactions</div>
         </div>
       }
     >
@@ -81,8 +81,8 @@ const StatementItems = (props) => {
         <strong>Credit/Debit</strong>
         <div
           class={classNames({
-            [styles.profit]: Math.sign(props.amount) >= 0,
-            [styles.loss]: Math.sign(props.amount) < 0,
+            [styles["profit-value"]]: Math.sign(props.amount) >= 0,
+            [styles["loss-value"]]: Math.sign(props.amount) < 0,
           })}
         >
           {props.amount}

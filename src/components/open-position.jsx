@@ -2,16 +2,14 @@ import { onMount, Show, For } from "solid-js";
 import { subscribe, authorize } from "Utils/socket-base";
 import { login_information } from "Stores/base-store";
 import {
-  // open_contract_ids,
+  open_contract_ids,
+  setOpenContractId,
   open_contract_info,
   setOpenContractInfo,
 } from "../stores";
-import { createSignal } from "solid-js";
 import styles from "Styles/open-position.module.scss";
 import { timePeriod } from "../utils/format-value";
 import classNames from "classnames";
-
-const [mock_contract_ids, setMockContractIds] = createSignal([2419]);
 
 const getOpenContractInfo = (contract_id) => {
   subscribe(
@@ -23,10 +21,10 @@ const getOpenContractInfo = (contract_id) => {
     (resp) => {
       const { proposal_open_contract } = resp;
       if (proposal_open_contract.is_expired) {
-        const new_set = mock_contract_ids().filter(
+        const new_set = open_contract_ids().filter(
           (ctd_id) => proposal_open_contract.contract_id !== ctd_id
         );
-        setMockContractIds(new_set);
+        setOpenContractId(new_set);
         delete open_contract_info()[proposal_open_contract.contract_id];
         setOpenContractInfo({ ...open_contract_info() });
       } else {
@@ -55,11 +53,7 @@ const OpenPosition = () => {
     const active_account = JSON.parse(login_information?.active_account);
     if (active_account) {
       authorize(active_account.token).then(() => {
-        // open_contract_ids().forEach((contract_id) =>
-        //   getOpenContractInfo(contract_id)
-        // );
-        // TODO: Replace with actual contract_ids
-        mock_contract_ids().forEach((contract_id) =>
+        open_contract_ids().forEach((contract_id) =>
           getOpenContractInfo(contract_id)
         );
       });
@@ -78,7 +72,7 @@ const OpenPosition = () => {
         </div>
       }
     >
-      <For each={mock_contract_ids()}>
+      <For each={open_contract_ids()}>
         {(contract_id) => (
           <OpenPositionItem
             type={open_contract_info()[contract_id]?.type}
@@ -101,7 +95,7 @@ const OpenPosition = () => {
 const OpenPositionItem = (props) => {
   return (
     <div class={styles["open-position"]}>
-      <div class={classNames(styles["type"], styles["card-alignment "])}>
+      <div class={classNames(styles["type"], styles["card-alignment"])}>
         <div>
           <strong>Type</strong>
         </div>
@@ -147,7 +141,14 @@ const OpenPositionItem = (props) => {
         <div>
           <strong>Indicative profit/loss</strong>
         </div>
-        <div>{props.profit}</div>
+        <div
+          class={classNames(styles["profit"], {
+            [styles["profit-value"]]: Math.sign(props.profit) >= 0,
+            [styles["loss-value"]]: Math.sign(props.profit) < 0,
+          })}
+        >
+          {props.profit}
+        </div>
       </div>
     </div>
   );
