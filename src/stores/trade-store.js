@@ -17,6 +17,7 @@ const [buy_error_message, setBuyErrorMessage] = createSignal();
 const [open_contract_ids, setOpenContractId] = createSignal([]);
 const [open_contract_info, setOpenContractInfo] = createSignal({});
 const [statements, setStatements] = createSignal([]);
+const [subscribe_id, setSubscribeId] = createSignal(null);
 
 const fetchActiveSymbols = async () => {
   try {
@@ -76,4 +77,6 @@ export {
   setOpenContractInfo,
   statements,
   setStatements,
+  subscribe_id,
+  setSubscribeId,
 };

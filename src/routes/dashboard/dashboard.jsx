@@ -15,6 +15,7 @@ import styles from "../../styles/dashboard.module.scss";
 import { subscribe } from "../../utils/socket-base";
 import { login_information } from "Stores/base-store";
 import monitorNetwork from "Utils/network-status";
+import shared from "../../styles/shared.module.scss";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -63,7 +64,7 @@ const Dashboard = () => {
   return (
     <Show
       when={!login_information.is_logging_in && !is_loading()}
-      fallback={<Loader class={styles["loader-position"]} />}
+      fallback={<Loader class={shared["loader-position"]} />}
     >
       <Show
         when={is_watchlist()}

@@ -31,6 +31,8 @@ import {
   setOpenContractInfo,
   statements,
   setStatements,
+  subscribe_id,
+  setSubscribeId,
 } from "./trade-store";
 import { showAccountSwitcher, setshowAccountSwitcher } from "./ui-store";
 
@@ -71,4 +73,6 @@ export {
   setOpenContractInfo,
   statements,
   setStatements,
+  subscribe_id,
+  setSubscribeId,
 };

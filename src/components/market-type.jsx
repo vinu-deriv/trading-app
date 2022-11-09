@@ -9,12 +9,15 @@ import {
   selectedTradeType,
   selectedTrade,
   setSelectedTrade,
+  subscribe_id,
+  setSubscribeId,
 } from "../stores";
 import classNames from "classnames";
 import HeartIcon from "../assets/svg/heart.svg";
 import TrashBinIcon from "../assets/svg/trash.svg";
 import ActivityIcon from "../assets/svg/activity.svg";
 import { SVGWrapper, Loader } from "../components";
+import { sendRequest } from "../utils/socket-base";
 
 const generateData = (data_set = {}, prop, item) =>
   prop in data_set ? [...data_set[prop], item] : [item];

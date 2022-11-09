@@ -174,3 +174,18 @@
     display: block;
   }
 }
+
+.container {
+  display: flex;
+  padding: 0.5rem;
+  box-sizing: border-box;
+  margin-bottom: 1rem;
+  gap: 2rem;
+  justify-content: center;
+  border: 1px solid red;
+}
+
+.market-tick {
+  display: flex;
+  gap: 1rem;
+}
