@@ -12,8 +12,8 @@ import {
   setSelectedTradeType,
 } from "../../stores";
 import styles from "../../styles/dashboard.module.scss";
-import shared from "../../styles/shared.module.scss";
 import { subscribe } from "../../utils/socket-base";
+import { login_information } from "Stores/base-store";
 import monitorNetwork from "Utils/network-status";
 
 const Dashboard = () => {
@@ -62,8 +62,8 @@ const Dashboard = () => {
 
   return (
     <Show
-      when={!is_loading()}
-      fallback={<Loader class={shared["loader-position"]} />}
+      when={!login_information.is_logging_in && !is_loading()}
+      fallback={<Loader class={styles["loader-position"]} />}
     >
       <Show
         when={is_watchlist()}

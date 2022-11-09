@@ -22,6 +22,13 @@ export const init = () => {
       }
     });
 
+    document.addEventListener("DOMContentLoaded", () => {
+      history.replaceState(null, null, "/");
+    });
+
+    setLoginInformation({
+      is_logging_in: true,
+    });
     authorize(obj_params.token1).then((response) => {
       if (!response?.error) {
         const { account_list, loginid, balance } = response.authorize;
@@ -42,6 +49,7 @@ export const init = () => {
           accounts: JSON.stringify(account_list),
           active_loginid: loginid,
           is_logged_in: true,
+          is_logging_in: false,
           active_account: JSON.stringify({
             balance,
             ...account_list.find((account) => account.loginid === loginid),
