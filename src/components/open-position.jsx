@@ -10,6 +10,7 @@ import {
 import styles from "Styles/open-position.module.scss";
 import { timePeriod } from "../utils/format-value";
 import classNames from "classnames";
+import Loader from "./loader";
 
 const getOpenContractInfo = (contract_id) => {
   subscribe(
@@ -67,9 +68,13 @@ const OpenPosition = () => {
     <Show
       when={is_open_contract_avbl()}
       fallback={
-        <div class={styles["no-list"]}>
-          <div>There are no open contracts</div>
-        </div>
+        is_open_contract_avbl() ? (
+          <Loader class={styles["loader-position"]} />
+        ) : (
+          <div class={styles["no-list"]}>
+            <div>There are no open contracts.</div>
+          </div>
+        )
       }
     >
       <For each={open_contract_ids()}>

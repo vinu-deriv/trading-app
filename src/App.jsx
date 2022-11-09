@@ -77,7 +77,7 @@ function App() {
       </section>
       <footer>
         <div>
-          The server <a href="/endpoint">endpoint</a> is:
+          The server <a href="/endpoint">endpoint</a> is: &nbsp;
           <span>{endpoint.server_url}</span>
         </div>
       </footer>

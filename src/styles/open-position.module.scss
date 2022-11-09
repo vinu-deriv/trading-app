@@ -6,7 +6,7 @@
 
 .open-position {
   display: grid;
-  box-shadow: 0 2px 0px 0 rgb(0 0 0 / 20%);
+  border-bottom: 1px solid #f2f3f4;
   transition: 0.3s;
   grid-template-areas:
     "type time"
@@ -15,7 +15,6 @@
     "payout profit";
   padding: 0.5rem;
   box-sizing: border-box;
-  background-color: var(--report-card-background);
   color: var(--text-main);
   gap: 1rem;
   margin: 1rem;
@@ -41,6 +40,11 @@
 
 .currency {
   grid-area: currency;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  text-align: left;
   @extend .card-alignment;
 }
 
@@ -67,7 +71,6 @@
 .no-list {
   top: 40%;
   position: relative;
-  border: solid 1px #ecd2d4;
   box-sizing: border-box;
   margin: 1rem;
   border-radius: 8px;
@@ -75,7 +78,6 @@
 
 .statement {
   grid-template-areas:
-    ". type"
     "trans currency"
     "date credit"
     "btext bvalue";
@@ -112,10 +114,18 @@
   border-radius: 5px;
   border: 1px solid var(--button-green);
   color: var(--button-green);
+  width: fit-content;
+  padding: 0.5rem;
+  font-size: 10px;
+
   &--buy {
-    border-radius: 5px;
     border: 1px solid var(--button-red);
     color: var(--button-red);
+  }
+
+  &--hold {
+    border: 1px solid var(--button-yellow);
+    color: var(--button-yellow);
   }
 }
 

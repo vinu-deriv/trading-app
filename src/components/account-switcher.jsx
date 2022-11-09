@@ -98,28 +98,30 @@ const AccountSwitcher = () => {
   );
   return (
     <Portal>
-      <div class={styles["dc-modal__container"]}>
-        <div class={styles["dc-modal-header"]}>
-          <h3>Deriv Accounts</h3>
-          <div
-            class={styles["close"]}
-            onClick={() => {
-              setshowAccountSwitcher(false);
-            }}
-          />
-          <div class={styles["separator"]} />
+      <div class={styles["dc-modal"]}>
+        <div class={styles["dc-modal__container"]}>
+          <div class={styles["dc-modal-header"]}>
+            <h3>Deriv Accounts</h3>
+            <div
+              class={styles["close"]}
+              onClick={() => {
+                setshowAccountSwitcher(false);
+              }}
+            />
+            <div class={styles["separator"]} />
+          </div>
+          {demo_accounts()?.length && (
+            <AccountList title="Demo Account" accounts={demo_accounts()} />
+          )}
+          {real_accounts()?.length && (
+            <AccountList
+              title={
+                real_accounts().length === 1 ? "Real Account" : "Real Accounts"
+              }
+              accounts={real_accounts()}
+            />
+          )}
         </div>
-        {demo_accounts()?.length && (
-          <AccountList title="Demo Account" accounts={demo_accounts()} />
-        )}
-        {real_accounts()?.length && (
-          <AccountList
-            title={
-              real_accounts().length === 1 ? "Real Account" : "Real Accounts"
-            }
-            accounts={real_accounts()}
-          />
-        )}
       </div>
     </Portal>
   );
