@@ -1,6 +1,6 @@
 import styles from "./App.module.scss";
 import { Routes, Route } from "solid-app-router";
-import { createEffect, lazy } from "solid-js";
+import { createEffect, lazy, Show } from "solid-js";
 import NavBar from "./components/nav";
 import { endpoint, init } from "Stores/base-store";
 import { onMount } from "solid-js";
@@ -13,6 +13,7 @@ import {
   activeSymbols,
   selectedMarkets,
   setSelectedMarkets,
+  buy_error_message,
 } from "./stores";
 import monitorNetwork from "Utils/network-status";
 import { onCleanup } from "solid-js";
@@ -20,6 +21,7 @@ import { sendRequest } from "./utils/socket-base";
 import classNames from "classnames";
 import { AccountSwitcher } from "./components";
 import { mapMarket } from "./utils/map-markets";
+import ErrorComponent from "./components/error-component";
 
 const Endpoint = lazy(() => import("Routes/endpoint"));
 const Dashboard = lazy(() => import("Routes/dashboard/dashboard"));
@@ -57,6 +59,9 @@ function App() {
         "theme-dark": !is_light_theme(),
       })}
     >
+      <Show when={buy_error_message()}>
+        <ErrorComponent message={buy_error_message()} />
+      </Show>
       <NavBar />
       <section class={styles.content}>
         <Portal>

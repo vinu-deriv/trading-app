@@ -189,7 +189,8 @@ const OptionsTrade = () => {
 
   const handleBuyContractClicked = async (id) => {
     await buyContract(id, amount(), token);
-    navigate("/reports", { replace: true });
+
+    if (!buy_error_message()) navigate("/reports", { replace: true });
   };
 
   return (
