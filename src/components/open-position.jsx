@@ -1,6 +1,7 @@
 import { onMount, Show, For } from "solid-js";
 import { subscribe, authorize } from "Utils/socket-base";
 import { login_information } from "Stores/base-store";
+import classNames from "classnames";
 import {
   open_contract_ids,
   setOpenContractId,
@@ -9,7 +10,6 @@ import {
 } from "../stores";
 import styles from "Styles/open-position.module.scss";
 import { timePeriod } from "../utils/format-value";
-import classNames from "classnames";
 import Loader from "./loader";
 
 const getOpenContractInfo = (contract_id) => {
