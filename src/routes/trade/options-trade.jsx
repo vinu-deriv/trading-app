@@ -2,7 +2,7 @@ import styles from "./trade.module.scss";
 import { createSignal, createEffect } from "solid-js";
 import { createStore } from "solid-js/store";
 import { Show } from "solid-js";
-import { sendRequest } from "Utils/socket-base";
+import { sendRequest, subscribe } from "Utils/socket-base";
 import {
   selectedTradeType,
   is_stake,
@@ -22,39 +22,97 @@ const [duration_unit, setDurationUnit] = createSignal("");
 const [duration_value, setDurationValue] = createSignal(0);
 const [amount, setAmountValue] = createSignal(0);
 
+let unsubscribe_buy;
+let unsubscribe_sell;
+
 const [proposal_buy, setProposalBuy] = createStore({
   id: "",
   ask_price: "",
   payout: "",
+  subscriptionId: "",
 });
 const [proposal_sell, setProposalSell] = createStore({
   id: "",
   ask_price: "",
   payout: "",
+  subscriptionId: "",
 });
 const [proposal_error_message, setProposalErrorMessage] = createSignal();
 
-const getProposal = async (currency, symbol, trade_type, is_option) => {
-  if (duration_unit() && symbol && is_option) {
-    try {
-      const response = await sendRequest({
-        proposal: 1,
-        amount: amount(),
-        basis: is_stake() ? "stake" : "payout",
-        contract_type: trade_type,
-        currency,
-        duration: duration_unit() === "t" ? slider_value() : duration_value(),
-        duration_unit: duration_unit(),
-        symbol,
-      });
+const getProposal = async (
+  duration_unit,
+  symbol,
+  amount,
+  is_stake,
+  slider_value,
+  duration_value,
+  currency
+) => {
+  await forgetProposal();
 
-      return response.proposal;
-    } catch (error) {
-      if (!proposal_error_message())
-        setProposalErrorMessage(error.error.message);
+  if (trade_types.trade_types.length > 0) {
+    if (duration_unit && symbol) {
+      unsubscribe_buy = subscribe(
+        {
+          proposal: 1,
+          amount: amount,
+          basis: is_stake ? "stake" : "payout",
+          contract_type: trade_types.trade_types[0],
+          currency,
+          duration: duration_unit === "t" ? slider_value : duration_value,
+          duration_unit: duration_unit,
+          symbol: symbol,
+          subscribe: 1,
+        },
+        (response) => {
+          if (response.proposal) {
+            const { id, ask_price, payout } = response.proposal;
+
+            if (id)
+              setProposalBuy({
+                id,
+                ask_price,
+                payout,
+                subscriptionId: response.subscription.id,
+              });
+          }
+
+          if (!proposal_error_message() && response.error)
+            setProposalErrorMessage(response.error.message);
+        }
+      );
+
+      unsubscribe_sell = subscribe(
+        {
+          proposal: 1,
+          amount: amount,
+          basis: is_stake ? "stake" : "payout",
+          contract_type: trade_types.trade_types[1],
+          currency,
+          duration: duration_unit === "t" ? slider_value : duration_value,
+          duration_unit: duration_unit,
+          symbol: symbol,
+          subscribe: 1,
+        },
+        (response) => {
+          if (response.proposal) {
+            const { id, ask_price, payout } = response.proposal;
+
+            if (id)
+              setProposalSell({
+                id,
+                ask_price,
+                payout,
+                subscriptionId: response.subscription.id,
+              });
+          }
+
+          if (!proposal_error_message() && response.error)
+            setProposalErrorMessage(response.error.message);
+        }
+      );
     }
   }
-  return { id: "", ask_price: "", payout: "" };
 };
 
 const buySellButtonWrapper = (proposal) => (
@@ -96,8 +154,17 @@ const buySellButtonWrapper = (proposal) => (
   </Show>
 );
 
+const forgetProposal = async () => {
+  if (unsubscribe_buy) unsubscribe_buy.unsubscribe();
+  if (unsubscribe_sell) unsubscribe_sell.unsubscribe();
+  await sendRequest({
+    forget_all: ["proposal"],
+  });
+};
+
 const OptionsTrade = () => {
   const navigate = useNavigate();
+
   const { currency, token } = JSON.parse(
     localStorage.getItem("active_account")
   );
@@ -108,29 +175,16 @@ const OptionsTrade = () => {
     setProposalSell({ id: "", ask_price: "", payout: "" });
     setProposalErrorMessage(null);
     setBuyErrorMessage(null);
-    if (trade_types.trade_types.length > 0) {
-      const getProposals = async () => {
-        const { id, ask_price, payout } = await getProposal(
-          currency,
-          symbol(),
-          trade_types.trade_types[0],
-          true
-        );
 
-        if (id) setProposalBuy({ id, ask_price, payout });
-
-        const proposal_sell_local = await getProposal(
-          currency,
-          symbol(),
-          trade_types.trade_types[1],
-          true
-        );
-
-        if (proposal_sell_local.id) setProposalSell(proposal_sell_local);
-      };
-
-      getProposals();
-    }
+    getProposal(
+      duration_unit(),
+      symbol(),
+      amount(),
+      is_stake(),
+      slider_value(),
+      duration_value(),
+      currency
+    );
   });
 
   const handleBuyContractClicked = async (id) => {
