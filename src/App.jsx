@@ -13,7 +13,7 @@ import {
   activeSymbols,
   selectedMarkets,
   setSelectedMarkets,
-  buy_error_message
+  buy_error_message,
 } from "./stores";
 import monitorNetwork from "Utils/network-status";
 import { onCleanup } from "solid-js";
@@ -59,9 +59,9 @@ function App() {
         "theme-dark": !is_light_theme(),
       })}
     >
-       <Show when={buy_error_message()}>
-          <ErrorComponent message={buy_error_message()} />
-        </Show>
+      <Show when={buy_error_message()}>
+        <ErrorComponent message={buy_error_message()} />
+      </Show>
       <NavBar />
       <section class={styles.content}>
         <Portal>
@@ -71,7 +71,7 @@ function App() {
               <div class={styles.disconnected}>You seem to be offline.</div>
             </div>
           )}
-        </Portal> 
+        </Portal>
         {showAccountSwitcher() && <AccountSwitcher />}
         <Routes>
           <Route element={<Endpoint />} path="/endpoint" />

@@ -1,13 +1,13 @@
 import styles from "../styles/error-component.module.scss";
-import { onCleanup } from "solid-js";
+import { onCleanup, Show } from "solid-js";
 import { setBuyErrorMessage } from "./../stores";
 
-const ErrorComponent = ({ message }) => {
+const ErrorComponent = (props) => {
   onCleanup(() => {
     setBuyErrorMessage(null);
   });
   return (
-    message && (
+    <Show when={props.message}>
       <div
         class={styles["popup__div"]}
         onClick={() => setBuyErrorMessage(null)}
@@ -19,10 +19,10 @@ const ErrorComponent = ({ message }) => {
           >
             X
           </button>
-          <p class={styles["popup__text"]}>{message}</p>
+          <p class={styles["popup__text"]}>{props.message}</p>
         </div>
       </div>
-    )
+    </Show>
   );
 };
 export default ErrorComponent;
