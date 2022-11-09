@@ -14,6 +14,9 @@ const [is_stake, setIsStake] = createSignal(true);
 const [symbol, setSymbol] = createSignal();
 const [trade_types, setTradeTypes] = createStore({ trade_types: [] });
 const [buy_error_message, setBuyErrorMessage] = createSignal();
+const [open_contract_ids, setOpenContractId] = createSignal([]);
+const [open_contract_info, setOpenContractInfo] = createSignal({});
+const [statements, setStatements] = createSignal([]);
 
 const fetchActiveSymbols = async () => {
   try {
@@ -63,4 +66,10 @@ export {
   buy_error_message,
   setBuyErrorMessage,
   buyContract,
+  open_contract_ids,
+  setOpenContractId,
+  open_contract_info,
+  setOpenContractInfo,
+  statements,
+  setStatements,
 };

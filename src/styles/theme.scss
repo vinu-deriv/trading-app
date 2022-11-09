@@ -13,6 +13,7 @@
     --section-background-3: #{$card-background-2};
     --card-highlight: #{$card-highlight-1};
     --trade-block-background: #{$trade-block-light};
+    --report-card-background: #{$card-background-3};
   }
 
   .theme-dark {
@@ -26,6 +27,7 @@
     --section-background-3: #{$card-background-1};
     --card-highlight: #{$card-highlight-2};
     --trade-block-background: #{$trade-block-dark};
+    --report-card-background: #{$card-background-4};
   }
 }
 

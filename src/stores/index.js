@@ -25,6 +25,12 @@ import {
   buy_error_message,
   setBuyErrorMessage,
   buyContract,
+  open_contract_ids,
+  setOpenContractId,
+  open_contract_info,
+  setOpenContractInfo,
+  statements,
+  setStatements,
 } from "./trade-store";
 import { showAccountSwitcher, setshowAccountSwitcher } from "./ui-store";
 
@@ -59,4 +65,10 @@ export {
   setIsLightTheme,
   selectedTrade,
   setSelectedTrade,
+  open_contract_ids,
+  setOpenContractId,
+  open_contract_info,
+  setOpenContractInfo,
+  statements,
+  setStatements,
 };
