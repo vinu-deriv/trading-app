@@ -25,9 +25,8 @@ export const timePeriod = (end_time_epoc, start_time_epoc) => {
   const totalSeconds = parseInt(Math.floor(delta_ms / 1000), 10);
   const totalMinutes = parseInt(Math.floor(totalSeconds / 60), 10);
   const totalHours = parseInt(Math.floor(totalMinutes / 60), 10);
-  // const days = parseInt(Math.floor(totalHours / 24), 10);
   const seconds = parseInt(totalSeconds % 60, 10);
   const minutes = parseInt(totalMinutes % 60, 10);
   const hours = parseInt(totalHours % 24, 10);
-  return `${hours}:${minutes}:${seconds}`;
+  return `${hours}h ${minutes}m ${seconds}s`;
 };

@@ -11,7 +11,7 @@ import styles from "Styles/open-position.module.scss";
 import { timePeriod } from "../utils/format-value";
 import classNames from "classnames";
 
-const [mock_contract_ids, setMockContractIds] = createSignal([2419]);
+const [mock_contract_ids, setMockContractIds] = createSignal([2619]);
 
 const getOpenContractInfo = (contract_id) => {
   subscribe(
@@ -101,7 +101,7 @@ const OpenPosition = () => {
 const OpenPositionItem = (props) => {
   return (
     <div class={styles["open-position"]}>
-      <div class={classNames(styles["type"], styles["card-alignment "])}>
+      <div class={classNames(styles["type"], styles["card-alignment"])}>
         <div>
           <strong>Type</strong>
         </div>
@@ -147,7 +147,14 @@ const OpenPositionItem = (props) => {
         <div>
           <strong>Indicative profit/loss</strong>
         </div>
-        <div>{props.profit}</div>
+        <div
+          class={classNames(styles["profit"], {
+            [styles["profit-value"]]: Math.sign(props.profit) >= 0,
+            [styles["loss-value"]]: Math.sign(props.profit) < 0,
+          })}
+        >
+          {props.profit}
+        </div>
       </div>
     </div>
   );
