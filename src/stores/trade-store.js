@@ -40,10 +40,16 @@ const buyContract = async (id, amount, token) => {
   }
 
   try {
-    await sendRequest({
+    const response = await sendRequest({
       buy: id,
       price: Number(amount),
     });
+
+    if (response?.buy) {
+      setOpenContractId(response.buy.contract_id);
+    }
+
+    console.log(response);
   } catch (error) {
     setBuyErrorMessage(error.error.message);
   }
