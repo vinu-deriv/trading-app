@@ -46,7 +46,7 @@ const buyContract = async (id, amount, token) => {
     });
 
     if (response?.buy) {
-      setOpenContractId(response.buy.contract_id);
+      setOpenContractId([...open_contract_ids(), response.buy.contract_id]);
     }
   } catch (error) {
     setBuyErrorMessage(error.error.message);
