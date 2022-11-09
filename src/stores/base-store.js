@@ -1,6 +1,5 @@
 import { createStore } from "solid-js/store";
 import { authorize, sendRequest } from "Utils/socket-base";
-import { useNavigate } from "solid-app-router";
 
 export const [login_information, setLoginInformation] = createStore();
 export const [endpoint, setEndpoint] = createStore();
@@ -86,7 +85,6 @@ export const setLocalValues = () => {
 };
 
 export const logout = () => {
-  const navigate = useNavigate();
   sendRequest({ logout: 1 }).then(() => {
     setLoginInformation({
       accounts: "",
@@ -95,6 +93,6 @@ export const logout = () => {
       active_account: "",
     });
     setLocalValues();
-    navigate("/", { replace: true });
+    window.location.href = "/";
   });
 };
