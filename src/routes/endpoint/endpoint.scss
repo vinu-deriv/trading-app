@@ -8,6 +8,7 @@
     label {
         font-weight: bold;
         margin-bottom: 1rem;
+        color: var(--text-main);
     }
     
     form {
@@ -26,6 +27,7 @@
             box-sizing: border-box;
             border: 1px solid #d6dadb;
             border-radius: 4px;
+            color: var(--text-main);
         }
 
         button {
