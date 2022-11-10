@@ -77,9 +77,9 @@ const StatementItems = (props) => {
           <div>{props.currency}</div>
         </div>
         <div
-          class={classNames(styles["type"], {
-            [styles.action]: props.action_type !== "sell",
-            [styles["action--buy"]]: props.action_type === "sell",
+          class={classNames(styles["action"], {
+            [styles.action]: props.action_type === "sell",
+            [styles["action--buy"]]: props.action_type === "buy",
             [styles["action--hold"]]: props.action_type === "hold",
           })}
         >

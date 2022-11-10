@@ -15,6 +15,7 @@
   align-items: center;
   justify-content: space-between;
   background: var(--section-background-1);
+  color: var(--text-main);
   padding: 0 1em;
   top: 0;
   left: 0;
@@ -22,6 +23,7 @@
   z-index: 2;
   min-height: 80px;
   box-sizing: border-box;
+  border-bottom: 1px solid var(--border-1);
 
   .menu {
     display: flex;
@@ -133,8 +135,8 @@
     color: var(--text-main);
     background-color: var(--section-background-1);
   }
-  .menu > li:first-child {
-    border-top: 1px solid #777777;
+  .menu > li:last-child {
+    border-top: 1px solid var(--border-1);
   }
 
   .account_info {
@@ -166,7 +168,7 @@
   justify-content: space-between;
   background: var(--section-background-1);
   padding: 0 1rem;
-  border-bottom: 1px solid #f2f3f4;
+  border-bottom: 1px solid var(--border-1);
 
   .menu {
     display: flex;
