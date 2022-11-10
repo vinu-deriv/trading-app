@@ -13,7 +13,7 @@ import {
   activeSymbols,
   selectedMarkets,
   setSelectedMarkets,
-  buy_error_message,
+  error_message,
 } from "./stores";
 import monitorNetwork from "Utils/network-status";
 import { onCleanup } from "solid-js";
@@ -59,8 +59,8 @@ function App() {
         "theme-dark": !is_light_theme(),
       })}
     >
-      <Show when={buy_error_message()}>
-        <ErrorComponent message={buy_error_message()} />
+      <Show when={error_message()}>
+        <ErrorComponent message={error_message()} />
       </Show>
       <NavBar />
       <section

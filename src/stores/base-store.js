@@ -2,7 +2,7 @@
 import { createStore } from "solid-js/store";
 import { createSignal } from "solid-js";
 import { authorize, sendRequest, subscribe } from "Utils/socket-base";
-import { setBuyErrorMessage } from "./trade-store";
+import { setErrorMessage } from "./trade-store";
 export const [login_information, setLoginInformation] = createStore();
 export const [endpoint, setEndpoint] = createStore();
 export const [balance_of_all_accounts, setBalanceOfAllAccounts] = createSignal(
@@ -27,7 +27,7 @@ const getBalanceOfAllAccounts = (token) => {
       });
     })
     .catch((err) => {
-      setBuyErrorMessage(err.message);
+      setErrorMessage(err.message);
     });
 };
 

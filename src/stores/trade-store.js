@@ -13,7 +13,7 @@ const [selectedTrade, setSelectedTrade] = createSignal({
 const [is_stake, setIsStake] = createSignal(true);
 const [symbol, setSymbol] = createSignal();
 const [trade_types, setTradeTypes] = createStore({ trade_types: [] });
-const [buy_error_message, setBuyErrorMessage] = createSignal();
+const [error_message, setErrorMessage] = createSignal();
 const [open_contract_ids, setOpenContractId] = createSignal([]);
 const [open_contract_info, setOpenContractInfo] = createSignal({});
 const [statements, setStatements] = createSignal([]);
@@ -36,7 +36,7 @@ const buyContract = async (id, amount, token) => {
     await authorize(token);
   } catch (error) {
     // To be changed once error component is ready
-    setBuyErrorMessage(error.error.message);
+    setErrorMessage(error.error.message);
   }
 
   try {
@@ -49,7 +49,7 @@ const buyContract = async (id, amount, token) => {
       setOpenContractId([...open_contract_ids(), response.buy.contract_id]);
     }
   } catch (error) {
-    setBuyErrorMessage(error.error.message);
+    setErrorMessage(error.error.message);
   }
 };
 
@@ -67,8 +67,8 @@ export {
   setSymbol,
   trade_types,
   setTradeTypes,
-  buy_error_message,
-  setBuyErrorMessage,
+  error_message,
+  setErrorMessage,
   buyContract,
   open_contract_ids,
   setOpenContractId,

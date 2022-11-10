@@ -1,21 +1,21 @@
 import styles from "../styles/error-component.module.scss";
 import { onCleanup, Show } from "solid-js";
-import { setBuyErrorMessage } from "./../stores";
+import { setErrorMessage } from "./../stores";
 
 const ErrorComponent = (props) => {
   onCleanup(() => {
-    setBuyErrorMessage(null);
+    setErrorMessage(null);
   });
   return (
     <Show when={props.message}>
       <div
         class={styles["popup__div"]}
-        onClick={() => setBuyErrorMessage(null)}
+        onClick={() => setErrorMessage(null)}
       >
         <div class={styles["popup"]}>
           <button
             class={styles["popup__button"]}
-            onClick={() => setBuyErrorMessage(null)}
+            onClick={() => setErrorMessage(null)}
           >
             X
           </button>

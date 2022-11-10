@@ -10,8 +10,8 @@ import {
   symbol,
   setSymbol,
   trade_types,
-  buy_error_message,
-  setBuyErrorMessage,
+  error_message,
+  setErrorMessage,
   buyContract,
 } from "../../stores";
 import { useNavigate } from "solid-app-router";
@@ -174,7 +174,7 @@ const OptionsTrade = () => {
     setProposalBuy({ id: "", ask_price: "", payout: "" });
     setProposalSell({ id: "", ask_price: "", payout: "" });
     setProposalErrorMessage(null);
-    setBuyErrorMessage(null);
+    setErrorMessage(null);
 
     getProposal(
       duration_unit(),
@@ -190,7 +190,7 @@ const OptionsTrade = () => {
   const handleBuyContractClicked = async (id) => {
     await buyContract(id, amount(), token);
 
-    if (!buy_error_message()) navigate("/reports", { replace: true });
+    if (!error_message()) navigate("/reports", { replace: true });
   };
 
   return (
@@ -314,8 +314,8 @@ const OptionsTrade = () => {
             {proposal_error_message()}
           </span>
         </Show>
-        <Show when={buy_error_message()}>
-          <span class={styles["error-message"]}>{buy_error_message()}</span>
+        <Show when={error_message()}>
+          <span class={styles["error-message"]}>{error_message()}</span>
         </Show>
       </div>
     </Show>
