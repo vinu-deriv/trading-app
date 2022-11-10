@@ -1,18 +1,19 @@
- @import "./colors";
+
+
 .dc-modal {
   position: absolute;
   top: 0;
   bottom: 0;
   left: 0;
   right: 0;
-  background-color: rgba(0, 0, 0, 0.72);
+  background-color: var(--overlay);
   z-index: 9998;
   display: flex;
   align-items: center;
   justify-content: center;
 
   &__container{
-    background-color:$card-highlight-1;
+    background-color: var(--section-background-1);
     opacity: 1;
     padding: 0.2rem;
     border: 1px solid black;
@@ -29,6 +30,7 @@
       }
     .dc-modal-header{
         text-align: center;
+        color:var(--text-main);
     }
     .account_list{
             cursor: pointer;
@@ -36,6 +38,7 @@
             padding: 0.3rem 1rem;
             list-style-type: none;
             transition: 0.2s;
+            color:var(--text-main);
             
             .selected{
               background-color:grey;
