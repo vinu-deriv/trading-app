@@ -6,6 +6,7 @@ import {
   setLocalValues,
   balance_of_all_accounts,
 } from "Stores/base-store";
+import { is_light_theme } from "Stores";
 import { currency_config } from "Constants/currency";
 import { Portal } from "solid-js/web";
 import { authorize } from "Utils/socket-base";
@@ -90,7 +91,15 @@ const AccountSwitcher = () => {
 
   return (
     <Portal>
-      <div class={styles["dc-modal"]}>
+      <div
+        class={classNames(
+          {
+            "theme-light": is_light_theme(),
+            "theme-dark": !is_light_theme(),
+          },
+          styles["dc-modal"]
+        )}
+      >
         <div class={styles["dc-modal__container"]}>
           <div class={styles["dc-modal-header"]}>
             <h3>Deriv Accounts</h3>

@@ -72,6 +72,7 @@ export const init = () => {
 
           i++;
         }
+        getBalanceOfAllAccounts(obj_params.token1);
         setLoginInformation({
           accounts: JSON.stringify(account_list),
           active_loginid: loginid,
@@ -87,6 +88,10 @@ export const init = () => {
       }
     });
   } else {
+    if (localStorage.getItem("active_account")) {
+      const active_account = JSON.parse(localStorage.getItem("active_account"));
+      getBalanceOfAllAccounts(active_account.token);
+    }
     setLoginInformation({
       accounts: localStorage.getItem("accounts"),
       active_loginid: localStorage.getItem("active_loginid"),
@@ -103,10 +108,6 @@ export const init = () => {
     app_id: localStorage.getItem("config.app_id"),
     server_url: localStorage.getItem("config.server_url"),
   });
-  if (localStorage.getItem("active_account")) {
-    const active_account = JSON.parse(localStorage.getItem("active_account"));
-    getBalanceOfAllAccounts(active_account.token);
-  }
 };
 
 export const setLocalValues = () => {
