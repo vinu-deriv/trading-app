@@ -31,6 +31,15 @@ import {
   setOpenContractInfo,
   statements,
   setStatements,
+  subscribe_id,
+  setSubscribeId,
+  fetchMarketTick,
+  prev_tick,
+  setPrevTick,
+  current_tick,
+  setCurrentTick,
+  is_loading,
+  setIsLoading,
 } from "./trade-store";
 import { showAccountSwitcher, setshowAccountSwitcher } from "./ui-store";
 
@@ -71,4 +80,13 @@ export {
   setOpenContractInfo,
   statements,
   setStatements,
+  subscribe_id,
+  setSubscribeId,
+  fetchMarketTick,
+  prev_tick,
+  setPrevTick,
+  current_tick,
+  setCurrentTick,
+  is_loading,
+  setIsLoading,
 };

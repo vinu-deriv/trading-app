@@ -174,3 +174,28 @@
     display: block;
   }
 }
+
+.container {
+  display: grid;
+  padding: 0.5rem;
+  box-sizing: border-box;
+  margin-bottom: 1rem;
+  justify-content: center;
+  border: 1px solid red;
+  border-radius: 5px;
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.market {
+  &-text {
+    color: var(--text-main);
+  }
+  &-tick {
+    display: flex;
+    gap: 1rem;
+  }
+}
+
+.tick-layout {
+  display: flex;
+}

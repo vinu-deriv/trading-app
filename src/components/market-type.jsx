@@ -10,11 +10,19 @@ import {
   selectedTradeType,
   selectedTrade,
   setSelectedTrade,
+  subscribe_id,
+  setSubscribeId,
+  fetchMarketTick,
+  setIsLoading,
+  current_tick,
+  setPrevTick,
+  setCurrentTick,
 } from "../stores";
 import HeartIcon from "../assets/svg/heart.svg";
 import TrashBinIcon from "../assets/svg/trash.svg";
 import ActivityIcon from "../assets/svg/activity.svg";
 import { SVGWrapper, Loader } from "../components";
+import { sendRequest } from "../utils/socket-base";
 
 const generateData = (data_set = {}, prop, item) =>
   prop in data_set ? [...data_set[prop], item] : [item];
@@ -43,7 +51,7 @@ const Accordion = () => {
 
   const [tradeList, setTradeList] = createSignal([]);
 
-  const [activeSection, setActiveSection] = createSignal([]);
+  const [activeSection, setActiveSection] = createSignal("");
 
   createEffect(() => {
     setMarkets(getMarketTypes(activeSymbols()));
@@ -54,11 +62,12 @@ const Accordion = () => {
     if (check === 0) {
       return;
     }
-    if (activeSection().includes(section)) {
-      setActiveSection(activeSection().filter((sect) => sect !== section));
-    } else {
-      setActiveSection([...activeSection(), section]);
-    }
+    // if (activeSection().includes(section)) {
+    //   setActiveSection(activeSection().filter((sect) => sect !== section));
+    // } else {
+    //   setActiveSection([...activeSection(), section]);
+    // }
+    setActiveSection(section);
   };
 
   const getSubmarkets = (evnt, market) => {
@@ -80,6 +89,24 @@ const Accordion = () => {
     setSelectedTrade({
       ...selectedTrade(),
       trade_type: selectedTradeType().display_name,
+    });
+    if (subscribe_id()) {
+      sendRequest({ forget: subscribe_id() }).then(() => {
+        setSubscribeId(null);
+        fetchMarketTick(selectedTradeType()?.symbol, processTicks);
+      });
+    } else {
+      fetchMarketTick(selectedTradeType()?.symbol, processTicks);
+    }
+  };
+
+  const processTicks = (resp) => {
+    setIsLoading(false);
+    setSubscribeId(resp.tick.id);
+    const prev_value = current_tick();
+    setPrevTick(prev_value);
+    setTimeout(() => {
+      setCurrentTick(resp.tick.quote);
     });
   };
 
@@ -116,7 +143,7 @@ const Accordion = () => {
         <hr />
         <div
           class={classNames(styles["container"], {
-            [styles["active"]]: activeSection().includes("markets"),
+            [styles["active"]]: activeSection() === "markets",
           })}
           onClick={() => expand("markets", true)}
         >
@@ -145,7 +172,7 @@ const Accordion = () => {
         <hr />
         <div
           class={classNames(styles["container"], {
-            [styles["active"]]: activeSection().includes("submarkets"),
+            [styles["active"]]: activeSection() === "submarkets",
             [styles["disabled"]]: !submarketList().length,
           })}
           onClick={() => expand("submarkets", submarketList().length)}
@@ -170,7 +197,7 @@ const Accordion = () => {
         <hr />
         <div
           class={classNames(styles["container"], {
-            [styles["active"]]: activeSection().includes("trades"),
+            [styles["active"]]: activeSection() === "trades",
             [styles["disabled"]]: !tradeList().length,
           })}
           onClick={() => expand("trades", tradeList().length)}

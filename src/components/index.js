@@ -5,6 +5,7 @@ import AccountSwitcher from "./account-switcher";
 import Loader from "./loader";
 import OpenPosition from "./open-position";
 import Statements from "./statements";
+import Accordion from "./market-type";
 
 export {
   Watchlist,
@@ -14,4 +15,5 @@ export {
   Loader,
   OpenPosition,
   Statements,
+  Accordion,
 };
