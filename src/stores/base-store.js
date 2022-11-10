@@ -1,8 +1,35 @@
+/* eslint-disable no-console */
 import { createStore } from "solid-js/store";
-import { authorize, sendRequest } from "Utils/socket-base";
-
+import { createSignal } from "solid-js";
+import { authorize, sendRequest, subscribe } from "Utils/socket-base";
+import { setErrorMessage } from "./trade-store";
 export const [login_information, setLoginInformation] = createStore();
 export const [endpoint, setEndpoint] = createStore();
+export const [balance_of_all_accounts, setBalanceOfAllAccounts] = createSignal(
+  {}
+);
+
+const getBalanceOfAllAccounts = (token) => {
+  authorize(token)
+    .then(() => {
+      subscribe({ balance: 1, account: "all" }, (value) => {
+        if (value.balance.accounts) {
+          setBalanceOfAllAccounts(value.balance.accounts);
+        } else {
+          setBalanceOfAllAccounts({
+            ...balance_of_all_accounts(),
+            [value.balance.loginid]: {
+              ...balance_of_all_accounts()[value.balance.loginid],
+              balance: value.balance.balance,
+            },
+          });
+        }
+      });
+    })
+    .catch((err) => {
+      setErrorMessage(err.message);
+    });
+};
 
 export const init = () => {
   const obj_params = {};
@@ -76,6 +103,10 @@ export const init = () => {
     app_id: localStorage.getItem("config.app_id"),
     server_url: localStorage.getItem("config.server_url"),
   });
+  if (localStorage.getItem("active_account")) {
+    const active_account = JSON.parse(localStorage.getItem("active_account"));
+    getBalanceOfAllAccounts(active_account.token);
+  }
 };
 
 export const setLocalValues = () => {

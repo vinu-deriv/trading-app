@@ -115,7 +115,10 @@ a {
 }
 
 .content {
-  height: calc(100% - 81px);
+  height: 100%;
   background-color: var(--section-background-1);
   overflow: auto;
+}
+.is-acc-switcher-open{
+  opacity: 0.3;
 }

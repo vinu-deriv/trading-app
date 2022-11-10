@@ -70,7 +70,7 @@ const Dashboard = () => {
         when={is_watchlist()}
         fallback={
           <div class={styles["no-list"]}>
-            <div>You have not added anything to your Watchlist</div>
+            <div>You have not added anything to your Watchlist.</div>
             <button
               class={styles["trade--button"]}
               onClick={() => navigate("/trade", { replace: true })}

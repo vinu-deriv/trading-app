@@ -7,12 +7,13 @@
 
 .tabs {
   position: relative;
+  font-size: 14px;
   width: 100%;
   height: 100%;
 }
 
 .effect-3 .line {
-  background: #3498db;
+  background: #ff444f;
   width: 50%;
   height: 4px;
   position: absolute;
@@ -38,7 +39,8 @@
 }
 
 .tabs span {
-  background: #f0f0f0;
+  background: var(--section-background-1);
+  color: var(--text-main);
   text-align: center;
   overflow: hidden;
 }
@@ -56,12 +58,12 @@
 }
 
 .tabs input:checked + span {
-  background: #fff;
+  background: var(--section-background-1);
 }
 
 .tabs input:checked + span,
 .tabs input:hover + span {
-  color: #3498db;
+  font-weight: bold;
 }
 
 .tab-1,
@@ -75,9 +77,9 @@
 }
 
 .tab-content {
-  padding: 80px 20px 20px;
+  padding: 80px 0 20px;
   width: 100%;
-  // min-height: 340px;
+  color: var(--text-main);
 }
 
 .tab-content section {

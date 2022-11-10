@@ -1,36 +1,46 @@
 import { createSignal } from "solid-js";
 import { onMount } from "solid-js";
 import { setStatements, statements } from "../stores";
-import { sendRequest } from "../utils/socket-base";
+import { sendRequest, authorize } from "../utils/socket-base";
 import styles from "Styles/open-position.module.scss";
 import classNames from "classnames";
 import { Show } from "solid-js";
 import { For } from "solid-js";
 import { addComma } from "../utils/format-value";
 import { login_information } from "../stores/base-store";
+import Loader from "./loader";
 
 const Statements = () => {
   const [statement_count, setStatementCount] = createSignal(null);
 
   onMount(() => {
-    sendRequest({
-      statement: 1,
-      limit: 100,
-      offset: 0,
-    }).then((resp) => {
-      const { transactions, count } = resp.statement;
-      setStatements(transactions);
-      setStatementCount(count);
-    });
+    const active_account = JSON.parse(login_information?.active_account);
+    if (active_account) {
+      authorize(active_account.token).then(() => {
+        sendRequest({
+          statement: 1,
+          limit: 100,
+          offset: 0,
+        }).then((resp) => {
+          const { transactions, count } = resp.statement;
+          setStatements(transactions);
+          setStatementCount(count);
+        });
+      });
+    }
   });
 
   return (
     <Show
       when={statement_count()}
       fallback={
-        <div class={styles["no-list"]}>
-          <div>You have not made any transactions</div>
-        </div>
+        statement_count ? (
+          <Loader class={styles["loader-position"]} />
+        ) : (
+          <div class={styles["no-list"]}>
+            <div>You have not made any transactions.</div>
+          </div>
+        )
       }
     >
       <For each={statements()}>
@@ -57,21 +67,24 @@ export default Statements;
 const StatementItems = (props) => {
   return (
     <div class={classNames(styles["open-position"], styles["statement"])}>
-      <div
-        class={classNames(styles["type"], {
-          [styles.action]: props.action_type !== "sell",
-          [styles["action--buy"]]: props.action_type === "sell",
-        })}
-      >
-        <strong>{props.action_type?.toUpperCase()}</strong>
-      </div>
       <div class={styles["trans-id"]}>
         <strong>Ref. Id</strong>
         <div>{props.transaction_id}</div>
       </div>
       <div class={styles["currency"]}>
-        <strong>Currency</strong>
-        <div>{props.currency}</div>
+        <div>
+          <strong>Currency</strong>
+          <div>{props.currency}</div>
+        </div>
+        <div
+          class={classNames(styles["type"], {
+            [styles.action]: props.action_type !== "sell",
+            [styles["action--buy"]]: props.action_type === "sell",
+            [styles["action--hold"]]: props.action_type === "hold",
+          })}
+        >
+          <strong>{props.action_type?.toUpperCase()}</strong>
+        </div>
       </div>
       <div class={styles["date-time"]}>
         <strong>Transaction time</strong>

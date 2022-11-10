@@ -1,16 +1,17 @@
-import { For, onMount } from "solid-js";
-import { createEffect, createSignal } from "solid-js";
+import { createEffect, createSignal, For, Show } from "solid-js";
 import classNames from "classnames";
 import {
   login_information,
   setLoginInformation,
   setLocalValues,
+  balance_of_all_accounts,
 } from "Stores/base-store";
 import { currency_config } from "Constants/currency";
 import { Portal } from "solid-js/web";
-import styles from "../styles/account-switcher.module.scss";
-import { authorize, subscribe } from "Utils/socket-base";
+import { authorize } from "Utils/socket-base";
 import { setshowAccountSwitcher } from "Stores/ui-store";
+import Loader from "./loader";
+import styles from "../styles/account-switcher.module.scss";
 
 const getCurrencyDisplayCode = (currency = "") => {
   if (currency !== "eUSDT" && currency !== "tUSDT") {
@@ -22,20 +23,9 @@ const getCurrencyDisplayCode = (currency = "") => {
 const AccountSwitcher = () => {
   const [demo_accounts, setDemoAccounts] = createSignal([]);
   const [real_accounts, setRealAccounts] = createSignal([]);
-  const [balance_of_all_accounts, setBalanceOfAllAccounts] = createSignal({});
 
-  const getBalanceOfAllAccounts = () => {
-    const active_account = JSON.parse(login_information?.active_account);
-    authorize(active_account.token).then(() => {
-      subscribe({ balance: 1, account: "all" }, (value) => {
-        setBalanceOfAllAccounts(value.balance.accounts);
-      });
-    });
-  };
-
-  onMount(async () => {
-    await getBalanceOfAllAccounts();
-  });
+  const is_balance_avbl = () =>
+    Object.keys(balance_of_all_accounts()).length ?? null;
 
   createEffect(() => {
     const accounts = JSON.parse(login_information?.accounts);
@@ -64,6 +54,7 @@ const AccountSwitcher = () => {
           active_account: JSON.stringify(active_acc),
         });
         setLocalValues();
+        setshowAccountSwitcher(false);
       });
     }
   };
@@ -96,30 +87,40 @@ const AccountSwitcher = () => {
       </For>
     </div>
   );
+
   return (
     <Portal>
-      <div class={styles["dc-modal__container"]}>
-        <div class={styles["dc-modal-header"]}>
-          <h3>Deriv Accounts</h3>
-          <div
-            class={styles["close"]}
-            onClick={() => {
-              setshowAccountSwitcher(false);
-            }}
-          />
-          <div class={styles["separator"]} />
+      <div class={styles["dc-modal"]}>
+        <div class={styles["dc-modal__container"]}>
+          <div class={styles["dc-modal-header"]}>
+            <h3>Deriv Accounts</h3>
+            <div
+              class={styles["close"]}
+              onClick={() => {
+                setshowAccountSwitcher(false);
+              }}
+            />
+            <div class={styles["separator"]} />
+          </div>
+
+          <Show when={is_balance_avbl()} fallback={<Loader />}>
+            <>
+              {demo_accounts()?.length && (
+                <AccountList title="Demo Account" accounts={demo_accounts()} />
+              )}
+              {real_accounts()?.length && (
+                <AccountList
+                  title={
+                    real_accounts().length === 1
+                      ? "Real Account"
+                      : "Real Accounts"
+                  }
+                  accounts={real_accounts()}
+                />
+              )}
+            </>
+          </Show>
         </div>
-        {demo_accounts()?.length && (
-          <AccountList title="Demo Account" accounts={demo_accounts()} />
-        )}
-        {real_accounts()?.length && (
-          <AccountList
-            title={
-              real_accounts().length === 1 ? "Real Account" : "Real Accounts"
-            }
-            accounts={real_accounts()}
-          />
-        )}
       </div>
     </Portal>
   );
