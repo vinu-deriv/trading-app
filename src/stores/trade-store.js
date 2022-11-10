@@ -1,6 +1,6 @@
 import { createSignal } from "solid-js";
 import { createStore } from "solid-js/store";
-import { sendRequest, authorize } from "../utils/socket-base";
+import { sendRequest, authorize, subscribe } from "../utils/socket-base";
 
 const [activeSymbols, setActiveSymbols] = createSignal([]);
 const [selectedTradeType, setSelectedTradeType] = createSignal({});
@@ -18,6 +18,9 @@ const [open_contract_ids, setOpenContractId] = createSignal([]);
 const [open_contract_info, setOpenContractInfo] = createSignal({});
 const [statements, setStatements] = createSignal([]);
 const [subscribe_id, setSubscribeId] = createSignal(null);
+const [prev_tick, setPrevTick] = createSignal(null);
+const [current_tick, setCurrentTick] = createSignal(null);
+const [is_loading, setIsLoading] = createSignal(false);
 
 const fetchActiveSymbols = async () => {
   try {
@@ -54,6 +57,16 @@ const buyContract = async (id, amount, token) => {
   }
 };
 
+const fetchMarketTick = async (symbol, marketTickHandler) => {
+  subscribe(
+    {
+      ticks: symbol,
+      subscribe: 1,
+    },
+    marketTickHandler
+  );
+};
+
 export {
   activeSymbols,
   setActiveSymbols,
@@ -79,4 +92,11 @@ export {
   setStatements,
   subscribe_id,
   setSubscribeId,
+  fetchMarketTick,
+  prev_tick,
+  setPrevTick,
+  current_tick,
+  setCurrentTick,
+  is_loading,
+  setIsLoading,
 };

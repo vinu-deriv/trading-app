@@ -33,6 +33,13 @@ import {
   setStatements,
   subscribe_id,
   setSubscribeId,
+  fetchMarketTick,
+  prev_tick,
+  setPrevTick,
+  current_tick,
+  setCurrentTick,
+  is_loading,
+  setIsLoading,
 } from "./trade-store";
 import { showAccountSwitcher, setshowAccountSwitcher } from "./ui-store";
 
@@ -75,4 +82,11 @@ export {
   setStatements,
   subscribe_id,
   setSubscribeId,
+  fetchMarketTick,
+  prev_tick,
+  setPrevTick,
+  current_tick,
+  setCurrentTick,
+  is_loading,
+  setIsLoading,
 };

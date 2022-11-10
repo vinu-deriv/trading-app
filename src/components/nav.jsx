@@ -1,4 +1,4 @@
-import { Show } from "solid-js";
+import { Show, createSignal } from "solid-js";
 import { useNavigate } from "solid-app-router";
 import classNames from "classnames";
 import Logo from "../../src/assets/logo2.png";
@@ -20,6 +20,8 @@ const NavBar = () => {
     return balance_of_all_accounts()[account.loginid];
   };
 
+  const [checked, setChecked] = createSignal(false);
+
   const AccountHeader = () => {
     return (
       <Show
@@ -40,7 +42,14 @@ const NavBar = () => {
     <section class={isDesktop() ? styles.topnav_desktop : styles.topnav_mobile}>
       {isMobile() && (
         <>
-          <input id={styles.menu_toggle} type="checkbox" />
+          <input
+            id={styles.menu_toggle}
+            type="checkbox"
+            checked={checked()}
+            onClick={() => {
+              setChecked(!checked());
+            }}
+          />
           <label class={styles.menu_button_container} for={styles.menu_toggle}>
             <div class={styles.menu_button} />
           </label>
@@ -57,9 +66,21 @@ const NavBar = () => {
             </a>
           </li>
         )}
-        <li onClick={() => navigate("/trade", { replace: true })}>Trade</li>
+        <li
+          onClick={() => {
+            navigate("/trade", { replace: true });
+            setChecked(false);
+          }}
+        >
+          Trade
+        </li>
         {login_information.is_logged_in && (
-          <li onClick={() => navigate("/reports", { replace: true })}>
+          <li
+            onClick={() => {
+              navigate("/reports", { replace: true });
+              setChecked(false);
+            }}
+          >
             Report
           </li>
         )}
