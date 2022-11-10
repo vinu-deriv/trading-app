@@ -31,7 +31,7 @@ const Trade = () => {
               when={selectedTradeType()?.symbol}
               fallback={
                 <p class={styles["error-message"]}>
-                  Select a Market to trade with
+                  Select a market to trade with
                 </p>
               }
             >

@@ -17,6 +17,7 @@
     --trade-block-background: #{$trade-block-light};
     --report-card-background: #{$card-background-3};
     --overlay:#{$overlay-1};
+    --border-1: #{$border-1};
   }
 
   .theme-dark {
@@ -34,6 +35,7 @@
     --trade-block-background: #{$trade-block-dark};
     --report-card-background: #{$card-background-4};
     --overlay:#{$overlay-1};
+    --border-1: #{$border-2};
   }
 }
 
