@@ -63,7 +63,11 @@ function App() {
         <ErrorComponent message={buy_error_message()} />
       </Show>
       <NavBar />
-      <section class={styles.content}>
+      <section
+        class={classNames(styles.content, {
+          [styles["is-acc-switcher-open"]]: showAccountSwitcher(),
+        })}
+      >
         <Portal>
           {network_status.is_disconnected && (
             <div class={styles.banner}>

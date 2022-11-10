@@ -1,6 +1,7 @@
+import { createSignal, createEffect, Show, Index } from "solid-js";
+import classNames from "classnames";
 import styles from "../styles/accordion.module.scss";
 import shared from "../styles/shared.module.scss";
-import { createSignal, createEffect, Show, Index } from "solid-js";
 import {
   activeSymbols,
   setSelectedTradeType,
@@ -10,7 +11,6 @@ import {
   selectedTrade,
   setSelectedTrade,
 } from "../stores";
-import classNames from "classnames";
 import HeartIcon from "../assets/svg/heart.svg";
 import TrashBinIcon from "../assets/svg/trash.svg";
 import ActivityIcon from "../assets/svg/activity.svg";

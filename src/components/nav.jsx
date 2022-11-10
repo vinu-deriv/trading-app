@@ -1,23 +1,40 @@
+import { Show } from "solid-js";
+import { useNavigate } from "solid-app-router";
+import classNames from "classnames";
 import Logo from "../../src/assets/logo2.png";
 import styles from "../styles/navbar.module.scss";
 import { loginUrl } from "Constants/deriv-urls";
-import { login_information, logout } from "Stores/base-store";
+import {
+  login_information,
+  logout,
+  balance_of_all_accounts,
+} from "Stores/base-store";
 import { setshowAccountSwitcher } from "Stores/ui-store";
-import classNames from "classnames";
 import { is_light_theme, setIsLightTheme } from "../stores";
 import { isDesktop, isMobile } from "Utils/responsive";
-import { useNavigate } from "solid-app-router";
-
-const AccountHeader = () => (
-  <div>
-    {JSON.parse(login_information?.active_account)?.balance}
-    {JSON.parse(login_information?.active_account)?.currency}
-    <i class={styles.arrow_down} />
-  </div>
-);
 
 const NavBar = () => {
   const navigate = useNavigate();
+  const current_acc_data = () => {
+    const account = JSON.parse(login_information?.active_account);
+    return balance_of_all_accounts()[account.loginid];
+  };
+
+  const AccountHeader = () => {
+    return (
+      <Show
+        when={login_information.is_logged_in && balance_of_all_accounts()}
+        fallback={<>Waiting for Accounts</>}
+      >
+        <div class={styles.account_wrapper}>
+          <span>
+            {current_acc_data()?.balance} {current_acc_data()?.currency}
+          </span>
+          <i class={styles.arrow_down} />
+        </div>
+      </Show>
+    );
+  };
 
   return (
     <section class={isDesktop() ? styles.topnav_desktop : styles.topnav_mobile}>
