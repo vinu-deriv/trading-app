@@ -54,7 +54,10 @@ const Dashboard = () => {
 
   onMount(() => {
     if (!network_status.is_disconnected) {
-      const getFavs = JSON.parse(localStorage.getItem("favourites"));
+      const active_user = localStorage.getItem("userId") ?? "guest";
+      const getFavs = JSON.parse(
+        localStorage.getItem(`${active_user}-favourites`)
+      );
       if (getFavs?.length) {
         getFavs.forEach((marketSymbol) => getMarketTick(marketSymbol));
       }

@@ -34,7 +34,10 @@ function App() {
   onMount(async () => {
     await fetchActiveSymbols();
     const map_market = mapMarket(activeSymbols());
-    const getFavs = JSON.parse(localStorage.getItem("favourites"));
+    const active_user = localStorage.getItem("userId") ?? "guest";
+    const getFavs = JSON.parse(
+      localStorage.getItem(`${active_user}-favourites`)
+    );
     if (getFavs?.length) {
       getFavs.forEach((marketSymbol) =>
         setSelectedMarkets([...selectedMarkets(), map_market[marketSymbol]])

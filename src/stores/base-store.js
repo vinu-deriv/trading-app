@@ -58,7 +58,9 @@ export const init = () => {
     });
     authorize(obj_params.token1).then((response) => {
       if (!response?.error) {
-        const { account_list, loginid, balance } = response.authorize;
+        const { account_list, loginid, balance, user_id } = response.authorize;
+
+        localStorage.setItem("userId", user_id);
 
         let i = 1;
         while (obj_params[`acct${i}`]) {
@@ -124,6 +126,7 @@ export const logout = () => {
       is_logged_in: false,
       active_account: "",
     });
+    localStorage.removeItem("userId");
     setLocalValues();
     window.location.href = "/";
   });

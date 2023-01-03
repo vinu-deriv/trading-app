@@ -57,11 +57,12 @@ const MarketValue = (props) => {
 };
 
 const Watchlist = (props) => {
+  const active_user = localStorage.getItem("userId") ?? "guest";
   const removeWatchlistHandler = (symbol) => {
-    const newList = JSON.parse(localStorage.getItem("favourites")).filter(
-      (sym) => sym !== symbol
-    );
-    localStorage.setItem("favourites", JSON.stringify(newList));
+    const newList = JSON.parse(
+      localStorage.getItem(`${active_user}-favourites`)
+    ).filter((sym) => sym !== symbol);
+    localStorage.setItem(`${active_user}-favourites`, JSON.stringify(newList));
     setSelectedMarkets(
       selectedMarkets().filter((mkt) => mkt.symbol !== symbol)
     );

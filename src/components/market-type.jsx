@@ -62,11 +62,6 @@ const Accordion = () => {
     if (check === 0) {
       return;
     }
-    // if (activeSection().includes(section)) {
-    //   setActiveSection(activeSection().filter((sect) => sect !== section));
-    // } else {
-    //   setActiveSection([...activeSection(), section]);
-    // }
     setActiveSection(section);
   };
 
@@ -115,7 +110,10 @@ const Accordion = () => {
       (trade) => trade.symbol === tradeList()[index].symbol
     );
 
-    const storage_list = JSON.parse(localStorage.getItem("favourites") ?? "[]");
+    const active_user = localStorage.getItem("userId") ?? "guest";
+    const storage_list = JSON.parse(
+      localStorage.getItem(`${active_user}-favourites`) ?? "[]"
+    );
     if (is_trade_exisit) {
       setSelectedMarkets([
         ...selectedMarkets().filter(
@@ -125,11 +123,14 @@ const Accordion = () => {
       const newList = storage_list.filter(
         (sym) => sym !== tradeList()[index].symbol
       );
-      localStorage.setItem("favourites", JSON.stringify(newList));
+      localStorage.setItem(
+        `${active_user}-favourites`,
+        JSON.stringify(newList)
+      );
     } else {
       setSelectedMarkets([...selectedMarkets(), tradeList()[index]]);
       localStorage.setItem(
-        "favourites",
+        `${active_user}-favourites`,
         JSON.stringify([...storage_list, tradeList()[index].symbol])
       );
     }
