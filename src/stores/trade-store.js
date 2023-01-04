@@ -1,6 +1,7 @@
+import { authorize, sendRequest, subscribe } from "../utils/socket-base";
+
 import { createSignal } from "solid-js";
 import { createStore } from "solid-js/store";
-import { sendRequest, authorize, subscribe } from "../utils/socket-base";
 
 const [activeSymbols, setActiveSymbols] = createSignal([]);
 const [selectedTradeType, setSelectedTradeType] = createSignal({});
@@ -57,14 +58,16 @@ const buyContract = async (id, amount, token) => {
   }
 };
 
-const fetchMarketTick = async (symbol, marketTickHandler) => {
-  subscribe(
+const fetchMarketTick = (symbol, marketTickHandler) => {
+  const market_tick_subscription_ref = subscribe(
     {
       ticks: symbol,
       subscribe: 1,
     },
     marketTickHandler
   );
+
+  setSubscribeId(market_tick_subscription_ref);
 };
 
 export {

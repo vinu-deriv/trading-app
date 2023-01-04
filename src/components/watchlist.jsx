@@ -1,6 +1,4 @@
-import { Switch, Match } from "solid-js";
-import styles from "../styles/watchlist.module.scss";
-import classNames from "classnames";
+import { Match, Switch } from "solid-js";
 import {
   prevWatchList,
   selectedMarkets,
@@ -8,7 +6,10 @@ import {
   watchList,
   watchListRef,
 } from "../stores";
+
+import classNames from "classnames";
 import { sendRequest } from "../utils/socket-base";
+import styles from "../styles/watchlist.module.scss";
 
 const MarketValue = (props) => {
   const difference = () => {
@@ -20,7 +21,11 @@ const MarketValue = (props) => {
     }
     let status = "same";
     const rateChange =
-      watchList()[props.symbol] - prevWatchList()[props.symbol];
+      watchList()[props.symbol] && prevWatchList()[props.symbol]
+        ? ((watchList()[props.symbol] - prevWatchList()[props.symbol]) /
+            prevWatchList()[props.symbol]) *
+          100
+        : 0;
     if (watchList()[props.symbol] < prevWatchList()[props.symbol]) {
       status = "decrease";
     } else if (watchList()[props.symbol] > prevWatchList()[props.symbol]) {
@@ -42,7 +47,7 @@ const MarketValue = (props) => {
       <span
         class={classNames(styles.text, styles[`text--${difference().status}`])}
       >
-        <b>{difference()["value"].toFixed(2)}</b>
+        <b>{difference()["value"].toFixed(2)} %</b>
         <Switch>
           <Match when={difference().status === "increase"}>
             <div class={styles["arrow-up"]} />
@@ -85,7 +90,10 @@ const Watchlist = (props) => {
         <MarketValue symbol={props.symbol} />
       </div>
       <button
-        onClick={() => removeWatchlistHandler(props.symbol)}
+        onClick={(event) => {
+          event.stopPropagation();
+          removeWatchlistHandler(props.symbol);
+        }}
         class={styles["button"]}
       >
         Remove from Watchlist

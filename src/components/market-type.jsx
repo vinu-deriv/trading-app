@@ -1,28 +1,28 @@
-import { createSignal, createEffect, Show, Index } from "solid-js";
-import classNames from "classnames";
-import styles from "../styles/accordion.module.scss";
-import shared from "../styles/shared.module.scss";
+import { Index, Show, createEffect, createSignal, onMount } from "solid-js";
+import { Loader, SVGWrapper } from "../components";
 import {
   activeSymbols,
-  setSelectedTradeType,
-  setSelectedMarkets,
-  selectedMarkets,
-  selectedTradeType,
-  selectedTrade,
-  setSelectedTrade,
-  subscribe_id,
-  setSubscribeId,
-  fetchMarketTick,
-  setIsLoading,
   current_tick,
-  setPrevTick,
+  fetchMarketTick,
+  selectedMarkets,
+  selectedTrade,
+  selectedTradeType,
   setCurrentTick,
+  setIsLoading,
+  setPrevTick,
+  setSelectedMarkets,
+  setSelectedTrade,
+  setSelectedTradeType,
+  setSubscribeId,
+  subscribe_id,
 } from "../stores";
+
+import ActivityIcon from "../assets/svg/activity.svg";
 import HeartIcon from "../assets/svg/heart.svg";
 import TrashBinIcon from "../assets/svg/trash.svg";
-import ActivityIcon from "../assets/svg/activity.svg";
-import { SVGWrapper, Loader } from "../components";
-import { sendRequest } from "../utils/socket-base";
+import classNames from "classnames";
+import shared from "../styles/shared.module.scss";
+import styles from "../styles/accordion.module.scss";
 
 const generateData = (data_set = {}, prop, item) =>
   prop in data_set ? [...data_set[prop], item] : [item];
@@ -58,6 +58,12 @@ const Accordion = () => {
     setMarketList(Object.keys(markets()));
   });
 
+  onMount(() => {
+    if (Object.keys(selectedTradeType()).length) {
+      getMetaketData();
+    }
+  });
+
   const expand = (section, check) => {
     if (check === 0) {
       return;
@@ -85,11 +91,14 @@ const Accordion = () => {
       ...selectedTrade(),
       trade_type: selectedTradeType().display_name,
     });
+    getMetaketData();
+  };
+
+  const getMetaketData = async () => {
     if (subscribe_id()) {
-      sendRequest({ forget: subscribe_id() }).then(() => {
-        setSubscribeId(null);
-        fetchMarketTick(selectedTradeType()?.symbol, processTicks);
-      });
+      await subscribe_id().unsubscribe();
+      setSubscribeId(null);
+      fetchMarketTick(selectedTradeType()?.symbol, processTicks);
     } else {
       fetchMarketTick(selectedTradeType()?.symbol, processTicks);
     }
@@ -97,7 +106,6 @@ const Accordion = () => {
 
   const processTicks = (resp) => {
     setIsLoading(false);
-    setSubscribeId(resp.tick.id);
     const prev_value = current_tick();
     setPrevTick(prev_value);
     setTimeout(() => {

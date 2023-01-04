@@ -1,21 +1,23 @@
-import { Show, For, onMount, createSignal } from "solid-js";
-import { useNavigate } from "solid-app-router";
-import { Watchlist, Loader } from "../../components";
+import { For, Show, createSignal, onCleanup, onMount } from "solid-js";
+import { Loader, Watchlist } from "../../components";
 import {
+  prevWatchList,
   selectedMarkets,
   setPrevWatchList,
-  prevWatchList,
-  watchList,
+  setSelectedTradeType,
   setWatchList,
   setWatchListRef,
+  watchList,
   watchListRef,
-  setSelectedTradeType,
 } from "../../stores";
-import styles from "../../styles/dashboard.module.scss";
-import { subscribe } from "../../utils/socket-base";
+
+import { createStore } from "solid-js/store";
 import { login_information } from "Stores/base-store";
 import monitorNetwork from "Utils/network-status";
 import shared from "../../styles/shared.module.scss";
+import styles from "../../styles/dashboard.module.scss";
+import { subscribe } from "Utils/socket-base";
+import { useNavigate } from "solid-app-router";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -23,13 +25,15 @@ const Dashboard = () => {
   const is_watchlist = () => selectedMarkets().length || null;
 
   const [is_loading, setIsLoading] = createSignal(false);
+  const [watchlist_symbol_stream_ref, setWatchListSymbolStreamRef] =
+    createStore([]);
 
   const { network_status } = monitorNetwork();
 
   const getMarketTick = (market) => {
     setIsLoading(true);
     setWatchList({ ...watchList(), [market]: 0 });
-    subscribe(
+    const unsubscribeRef = subscribe(
       {
         ticks: market,
         subscribe: 1,
@@ -50,6 +54,10 @@ const Dashboard = () => {
         });
       }
     );
+    setWatchListSymbolStreamRef([
+      ...watchlist_symbol_stream_ref,
+      unsubscribeRef,
+    ]);
   };
 
   onMount(() => {
@@ -61,6 +69,14 @@ const Dashboard = () => {
       if (getFavs?.length) {
         getFavs.forEach((marketSymbol) => getMarketTick(marketSymbol));
       }
+    }
+  });
+
+  onCleanup(() => {
+    if (watchlist_symbol_stream_ref.length) {
+      watchlist_symbol_stream_ref.forEach(
+        async (subscribe_ref) => await subscribe_ref.unsubscribe()
+      );
     }
   });
 

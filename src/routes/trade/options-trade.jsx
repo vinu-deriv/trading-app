@@ -1,21 +1,22 @@
-import styles from "./trade.module.scss";
-import { createSignal, createEffect } from "solid-js";
-import { createStore } from "solid-js/store";
-import { Show } from "solid-js";
-import { sendRequest, subscribe } from "Utils/socket-base";
 import {
-  selectedTradeType,
-  is_stake,
-  setIsStake,
-  symbol,
-  setSymbol,
-  trade_types,
-  error_message,
-  setErrorMessage,
   buyContract,
+  error_message,
+  is_stake,
+  selectedTradeType,
+  setErrorMessage,
+  setIsStake,
+  setSymbol,
+  symbol,
+  trade_types,
 } from "../../stores";
-import { useNavigate } from "solid-app-router";
+import { createEffect, createSignal } from "solid-js";
+
+import { Show } from "solid-js";
 import classNames from "classnames";
+import { createStore } from "solid-js/store";
+import styles from "./trade.module.scss";
+import { subscribe } from "Utils/socket-base";
+import { useNavigate } from "solid-app-router";
 
 const [slider_value, setSliderValue] = createSignal(1);
 const [duration_unit, setDurationUnit] = createSignal("");
@@ -157,9 +158,6 @@ const buySellButtonWrapper = (proposal) => (
 const forgetProposal = async () => {
   if (unsubscribe_buy) unsubscribe_buy.unsubscribe();
   if (unsubscribe_sell) unsubscribe_sell.unsubscribe();
-  await sendRequest({
-    forget_all: ["proposal"],
-  });
 };
 
 const OptionsTrade = () => {

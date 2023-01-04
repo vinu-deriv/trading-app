@@ -8,10 +8,7 @@ const ErrorComponent = (props) => {
   });
   return (
     <Show when={props.message}>
-      <div
-        class={styles["popup__div"]}
-        onClick={() => setErrorMessage(null)}
-      >
+      <div class={styles["popup__div"]} onClick={() => setErrorMessage(null)}>
         <div class={styles["popup"]}>
           <button
             class={styles["popup__button"]}
