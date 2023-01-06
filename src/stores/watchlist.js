@@ -1,17 +1,17 @@
 import { createSignal } from "solid-js";
 
-const [watchList, setWatchList] = createSignal({}); // stores tick values for the selected market
-const [prevWatchList, setPrevWatchList] = createSignal({}); // stores previous tick values of the selected market
-const [selectedMarkets, setSelectedMarkets] = createSignal([]); // stores data of the selected market
-const [watchListRef, setWatchListRef] = createSignal({}); // stores tick ids
+const [watch_list, setWatchList] = createSignal({}); // stores tick values for the selected market
+const [prev_watch_list, setPrevWatchList] = createSignal({}); // stores previous tick values of the selected market
+const [selected_markets, setSelectedMarkets] = createSignal([]); // stores data of the selected market
+const [watch_list_ref, setWatchListRef] = createSignal({}); // stores tick ids
 
 export {
-  watchList,
+  watch_list,
   setWatchList,
-  selectedMarkets,
+  selected_markets,
   setSelectedMarkets,
-  prevWatchList,
+  prev_watch_list,
   setPrevWatchList,
-  watchListRef,
+  watch_list_ref,
   setWatchListRef,
 };

@@ -1,27 +1,28 @@
-import styles from "./App.module.scss";
-import { Routes, Route } from "solid-app-router";
-import { createEffect, lazy, Show } from "solid-js";
-import NavBar from "./components/nav";
-import { endpoint, init } from "Stores/base-store";
-import { onMount } from "solid-js";
-import { Portal } from "solid-js/web";
+import { Route, Routes } from "solid-app-router";
+import { Show, createEffect, lazy } from "solid-js";
 import {
+  activeSymbols,
+  error_message,
   fetchActiveSymbols,
   is_light_theme,
-  watchListRef,
-  showAccountSwitcher,
-  activeSymbols,
-  selectedMarkets,
+  selected_markets,
   setSelectedMarkets,
-  error_message,
+  showAccountSwitcher,
+  watch_list_ref,
 } from "./stores";
+import { endpoint, init } from "Stores/base-store";
+
+import { AccountSwitcher } from "./components";
+import ErrorComponent from "./components/error-component";
+import NavBar from "./components/nav";
+import { Portal } from "solid-js/web";
+import classNames from "classnames";
+import { getFavourites } from "./utils/map-markets";
+import { mapMarket } from "./utils/map-markets";
 import monitorNetwork from "Utils/network-status";
 import { onCleanup } from "solid-js";
 import { sendRequest } from "./utils/socket-base";
-import classNames from "classnames";
-import { AccountSwitcher } from "./components";
-import { mapMarket } from "./utils/map-markets";
-import ErrorComponent from "./components/error-component";
+import styles from "./App.module.scss";
 
 const Endpoint = lazy(() => import("Routes/endpoint"));
 const Dashboard = lazy(() => import("Routes/dashboard/dashboard"));
@@ -31,27 +32,26 @@ const Reports = lazy(() => import("Routes/reports/reports"));
 function App() {
   const { network_status } = monitorNetwork();
 
-  onMount(async () => {
-    await fetchActiveSymbols();
-    const map_market = mapMarket(activeSymbols());
-    const active_user = localStorage.getItem("userId") ?? "guest";
-    const getFavs = JSON.parse(
-      localStorage.getItem(`${active_user}-favourites`)
-    );
-    if (getFavs?.length) {
-      getFavs.forEach((marketSymbol) =>
-        setSelectedMarkets([...selectedMarkets(), map_market[marketSymbol]])
-      );
-    }
-  });
-
   createEffect(() => {
-    init();
+    init().then(() => {
+      fetchActiveSymbols().then(() => {
+        const map_market = mapMarket(activeSymbols());
+        const get_favs = getFavourites();
+        if (get_favs?.length) {
+          get_favs.forEach((marketSymbol) =>
+            setSelectedMarkets([
+              ...selected_markets(),
+              map_market[marketSymbol],
+            ])
+          );
+        }
+      });
+    });
   });
 
   onCleanup(() => {
-    Object.values(watchListRef()).forEach((symbol) =>
-      sendRequest({ forget: watchListRef()[symbol] })
+    Object.values(watch_list_ref()).forEach((symbol) =>
+      sendRequest({ forget: watch_list_ref()[symbol] })
     );
   });
 

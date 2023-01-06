@@ -1,10 +1,10 @@
 import { Match, Switch } from "solid-js";
 import {
-  prevWatchList,
-  selectedMarkets,
+  prev_watch_list,
+  selected_markets,
   setSelectedMarkets,
-  watchList,
-  watchListRef,
+  watch_list,
+  watch_list_ref,
 } from "../stores";
 
 import classNames from "classnames";
@@ -14,21 +14,21 @@ import styles from "../styles/watchlist.module.scss";
 const MarketValue = (props) => {
   const difference = () => {
     if (
-      isNaN(watchList()[props.symbol]) &&
-      isNaN(prevWatchList()[props.symbol])
+      isNaN(watch_list()[props.symbol]) &&
+      isNaN(prev_watch_list()[props.symbol])
     ) {
       return { value: 0, status: "" };
     }
     let status = "same";
     const rateChange =
-      watchList()[props.symbol] && prevWatchList()[props.symbol]
-        ? ((watchList()[props.symbol] - prevWatchList()[props.symbol]) /
-            prevWatchList()[props.symbol]) *
+      watch_list()[props.symbol] && prev_watch_list()[props.symbol]
+        ? ((watch_list()[props.symbol] - prev_watch_list()[props.symbol]) /
+            prev_watch_list()[props.symbol]) *
           100
         : 0;
-    if (watchList()[props.symbol] < prevWatchList()[props.symbol]) {
+    if (watch_list()[props.symbol] < prev_watch_list()[props.symbol]) {
       status = "decrease";
-    } else if (watchList()[props.symbol] > prevWatchList()[props.symbol]) {
+    } else if (watch_list()[props.symbol] > prev_watch_list()[props.symbol]) {
       status = "increase";
     }
     return { value: rateChange ?? 0, status };
@@ -42,7 +42,7 @@ const MarketValue = (props) => {
           styles[`badge--${difference().status}`]
         )}
       >
-        {watchList()[props.symbol]}
+        {watch_list()[props.symbol]}
       </span>
       <span
         class={classNames(styles.text, styles[`text--${difference().status}`])}
@@ -69,9 +69,9 @@ const Watchlist = (props) => {
     ).filter((sym) => sym !== symbol);
     localStorage.setItem(`${active_user}-favourites`, JSON.stringify(newList));
     setSelectedMarkets(
-      selectedMarkets().filter((mkt) => mkt.symbol !== symbol)
+      selected_markets().filter((mkt) => mkt.symbol !== symbol)
     );
-    sendRequest({ forget: watchListRef()[symbol] });
+    sendRequest({ forget: watch_list_ref()[symbol] });
   };
 
   return (

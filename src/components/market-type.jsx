@@ -4,9 +4,9 @@ import {
   activeSymbols,
   current_tick,
   fetchMarketTick,
-  selectedMarkets,
   selectedTrade,
   selectedTradeType,
+  selected_markets,
   setCurrentTick,
   setIsLoading,
   setPrevTick,
@@ -60,7 +60,7 @@ const Accordion = () => {
 
   onMount(() => {
     if (Object.keys(selectedTradeType()).length) {
-      getMetaketData();
+      getMarketData();
     }
   });
 
@@ -91,10 +91,10 @@ const Accordion = () => {
       ...selectedTrade(),
       trade_type: selectedTradeType().display_name,
     });
-    getMetaketData();
+    getMarketData();
   };
 
-  const getMetaketData = async () => {
+  const getMarketData = async () => {
     if (subscribe_id()) {
       await subscribe_id().unsubscribe();
       setSubscribeId(null);
@@ -114,7 +114,7 @@ const Accordion = () => {
   };
 
   const addToWatchlist = (evnt, index) => {
-    const is_trade_exisit = selectedMarkets().some(
+    const is_trade_exisit = selected_markets().some(
       (trade) => trade.symbol === tradeList()[index].symbol
     );
 
@@ -124,19 +124,19 @@ const Accordion = () => {
     );
     if (is_trade_exisit) {
       setSelectedMarkets([
-        ...selectedMarkets().filter(
+        ...selected_markets().filter(
           (trade) => trade.symbol !== tradeList()[index].symbol
         ),
       ]);
       const newList = storage_list.filter(
         (sym) => sym !== tradeList()[index].symbol
       );
-      localStorage.setItem(
+      const active_user = localStorage.setItem(
         `${active_user}-favourites`,
         JSON.stringify(newList)
       );
     } else {
-      setSelectedMarkets([...selectedMarkets(), tradeList()[index]]);
+      setSelectedMarkets([...selected_markets(), tradeList()[index]]);
       localStorage.setItem(
         `${active_user}-favourites`,
         JSON.stringify([...storage_list, tradeList()[index].symbol])
@@ -243,7 +243,7 @@ const Accordion = () => {
                       onClick={(evnt) => addToWatchlist(evnt, index)}
                     >
                       <Show
-                        when={selectedMarkets().find(
+                        when={selected_markets().find(
                           (mkt) => mkt.symbol === tradeList()[index].symbol
                         )}
                         fallback={

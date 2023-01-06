@@ -1,17 +1,18 @@
 import { For, Show, createSignal, onCleanup, onMount } from "solid-js";
 import { Loader, Watchlist } from "../../components";
 import {
-  prevWatchList,
-  selectedMarkets,
+  prev_watch_list,
+  selected_markets,
   setPrevWatchList,
   setSelectedTradeType,
   setWatchList,
   setWatchListRef,
-  watchList,
-  watchListRef,
+  watch_list,
+  watch_list_ref,
 } from "../../stores";
 
 import { createStore } from "solid-js/store";
+import { getFavourites } from "../../utils/map-markets";
 import { login_information } from "Stores/base-store";
 import monitorNetwork from "Utils/network-status";
 import shared from "../../styles/shared.module.scss";
@@ -22,7 +23,7 @@ import { useNavigate } from "solid-app-router";
 const Dashboard = () => {
   const navigate = useNavigate();
 
-  const is_watchlist = () => selectedMarkets().length || null;
+  const is_watchlist = () => selected_markets().length || null;
 
   const [is_loading, setIsLoading] = createSignal(false);
   const [watchlist_symbol_stream_ref, setWatchListSymbolStreamRef] =
@@ -32,25 +33,27 @@ const Dashboard = () => {
 
   const getMarketTick = (market) => {
     setIsLoading(true);
-    setWatchList({ ...watchList(), [market]: 0 });
+    setWatchList({ ...watch_list(), [market]: 0 });
     const unsubscribeRef = subscribe(
       {
         ticks: market,
         subscribe: 1,
       },
       (resp) => {
-        const prev_value = watchList()[market];
+        const prev_value = watch_list()[market];
         const new_value = resp.tick.quote;
         setIsLoading(false);
         setPrevWatchList({
-          ...prevWatchList(),
+          ...prev_watch_list(),
           [market]: prev_value ?? 0,
         });
-        if (Object.values(watchListRef()).length !== selectedMarkets().length) {
-          setWatchListRef({ ...watchListRef(), [market]: resp.tick.id });
+        if (
+          Object.values(watch_list_ref()).length !== selected_markets().length
+        ) {
+          setWatchListRef({ ...watch_list_ref(), [market]: resp.tick.id });
         }
         setTimeout(() => {
-          setWatchList({ ...watchList(), [market]: new_value });
+          setWatchList({ ...watch_list(), [market]: new_value });
         });
       }
     );
@@ -62,12 +65,9 @@ const Dashboard = () => {
 
   onMount(() => {
     if (!network_status.is_disconnected) {
-      const active_user = localStorage.getItem("userId") ?? "guest";
-      const getFavs = JSON.parse(
-        localStorage.getItem(`${active_user}-favourites`)
-      );
-      if (getFavs?.length) {
-        getFavs.forEach((marketSymbol) => getMarketTick(marketSymbol));
+      const get_favs = getFavourites();
+      if (get_favs?.length) {
+        get_favs.forEach((marketSymbol) => getMarketTick(marketSymbol));
       }
     }
   });
@@ -100,7 +100,7 @@ const Dashboard = () => {
           </div>
         }
       >
-        <For each={selectedMarkets()}>
+        <For each={selected_markets()}>
           {(marketInfo) => (
             <Watchlist
               name={marketInfo.display_name}
