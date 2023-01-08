@@ -1,4 +1,5 @@
 import DerivAPIBasic from "@deriv/deriv-api/dist/DerivAPIBasic";
+import { SocketCache } from "./socket-cache";
 
 const getSocketUrl = () => {
   const server_url =
@@ -18,7 +19,7 @@ const connection = new WebSocket(
   `wss://${getSocketUrl()}/websockets/v3?l=EN&app_id=${getAppId()}`
 );
 
-const derivApi = new DerivAPIBasic({ connection });
+const derivApi = new DerivAPIBasic({ connection, storage: SocketCache });
 
 const authorize = (authorizeToken) => derivApi.authorize(authorizeToken);
 
