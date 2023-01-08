@@ -1,6 +1,6 @@
 import moment from "moment";
 const LocalStore = window.localStorage;
-import { isEmptyObject, getPropertyValue, isEmptyValue} from './object'
+import { isEmptyObject, getPropertyValue, isEmptyValue } from "./object";
 
 export const SocketCache = (() => {
   const config = {
@@ -11,10 +11,9 @@ export const SocketCache = (() => {
 
   let data_obj = {};
 
-
   const set = (key, response) => {
     const msg_type = response.msg_type;
-    if (response.subscription) return
+    if (response.subscription) return;
 
     if (response.echo_req.end === "latest") return;
 
@@ -46,14 +45,14 @@ export const SocketCache = (() => {
 
     const expires = moment().add(config[msg_type].expire, "m").valueOf();
 
-    if (!data_obj) data_obj = {}
+    if (!data_obj) data_obj = {};
     data_obj[key] = { value: response, expires, msg_type };
     LocalStore.setItem(storage_key, JSON.stringify(data_obj));
   };
 
   const reloadDataObj = () => {
     if (isEmptyObject(data_obj)) {
-      data_obj = JSON.parse(LocalStore.getItem(storage_key) || '{}')
+      data_obj = JSON.parse(LocalStore.getItem(storage_key) || "{}");
       if (isEmptyObject(data_obj)) return;
     }
   };
