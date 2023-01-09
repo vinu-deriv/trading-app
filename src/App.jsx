@@ -6,9 +6,10 @@ import {
   fetchActiveSymbols,
   is_light_theme,
   selectedMarkets,
+  selected_markets,
   setSelectedMarkets,
   showAccountSwitcher,
-  watchListRef,
+  watch_list_ref,
 } from "./stores";
 import { configureEndpoint, getAppId, getSocketUrl } from "./utils/config";
 import { endpoint, init } from "Stores/base-store";
@@ -18,6 +19,7 @@ import ErrorComponent from "./components/error-component";
 import NavBar from "./components/nav";
 import { Portal } from "solid-js/web";
 import classNames from "classnames";
+import { getFavourites } from "./utils/map-markets";
 import { mapMarket } from "./utils/map-markets";
 import monitorNetwork from "Utils/network-status";
 import { onCleanup } from "solid-js";
@@ -47,12 +49,25 @@ function App() {
   });
 
   createEffect(() => {
-    init();
+    init().then(() => {
+      fetchActiveSymbols().then(() => {
+        const map_market = mapMarket(activeSymbols());
+        const get_favs = getFavourites();
+        if (get_favs?.length) {
+          get_favs.forEach((marketSymbol) =>
+            setSelectedMarkets([
+              ...selected_markets(),
+              map_market[marketSymbol],
+            ])
+          );
+        }
+      });
+    });
   });
 
   onCleanup(() => {
-    Object.values(watchListRef()).forEach((symbol) =>
-      sendRequest({ forget: watchListRef()[symbol] })
+    Object.values(watch_list_ref()).forEach((symbol) =>
+      sendRequest({ forget: watch_list_ref()[symbol] })
     );
   });
 

@@ -1,28 +1,28 @@
-import { createSignal, createEffect, Show, Index } from "solid-js";
-import classNames from "classnames";
-import styles from "../styles/accordion.module.scss";
-import shared from "../styles/shared.module.scss";
+import { Index, Show, createEffect, createSignal, onMount } from "solid-js";
+import { Loader, SVGWrapper } from "../components";
 import {
   activeSymbols,
-  setSelectedTradeType,
-  setSelectedMarkets,
-  selectedMarkets,
-  selectedTradeType,
-  selectedTrade,
-  setSelectedTrade,
-  subscribe_id,
-  setSubscribeId,
-  fetchMarketTick,
-  setIsLoading,
   current_tick,
-  setPrevTick,
+  fetchMarketTick,
+  selectedTrade,
+  selectedTradeType,
+  selected_markets,
   setCurrentTick,
+  setIsLoading,
+  setPrevTick,
+  setSelectedMarkets,
+  setSelectedTrade,
+  setSelectedTradeType,
+  setSubscribeId,
+  subscribe_id,
 } from "../stores";
+
+import ActivityIcon from "../assets/svg/activity.svg";
 import HeartIcon from "../assets/svg/heart.svg";
 import TrashBinIcon from "../assets/svg/trash.svg";
-import ActivityIcon from "../assets/svg/activity.svg";
-import { SVGWrapper, Loader } from "../components";
-import { sendRequest } from "../utils/socket-base";
+import classNames from "classnames";
+import shared from "../styles/shared.module.scss";
+import styles from "../styles/accordion.module.scss";
 
 const generateData = (data_set = {}, prop, item) =>
   prop in data_set ? [...data_set[prop], item] : [item];
@@ -58,15 +58,16 @@ const Accordion = () => {
     setMarketList(Object.keys(markets()));
   });
 
+  onMount(() => {
+    if (Object.keys(selectedTradeType()).length) {
+      getMarketData();
+    }
+  });
+
   const expand = (section, check) => {
     if (check === 0) {
       return;
     }
-    // if (activeSection().includes(section)) {
-    //   setActiveSection(activeSection().filter((sect) => sect !== section));
-    // } else {
-    //   setActiveSection([...activeSection(), section]);
-    // }
     setActiveSection(section);
   };
 
@@ -90,11 +91,14 @@ const Accordion = () => {
       ...selectedTrade(),
       trade_type: selectedTradeType().display_name,
     });
+    getMarketData();
+  };
+
+  const getMarketData = async () => {
     if (subscribe_id()) {
-      sendRequest({ forget: subscribe_id() }).then(() => {
-        setSubscribeId(null);
-        fetchMarketTick(selectedTradeType()?.symbol, processTicks);
-      });
+      await subscribe_id().unsubscribe();
+      setSubscribeId(null);
+      fetchMarketTick(selectedTradeType()?.symbol, processTicks);
     } else {
       fetchMarketTick(selectedTradeType()?.symbol, processTicks);
     }
@@ -102,7 +106,6 @@ const Accordion = () => {
 
   const processTicks = (resp) => {
     setIsLoading(false);
-    setSubscribeId(resp.tick.id);
     const prev_value = current_tick();
     setPrevTick(prev_value);
     setTimeout(() => {
@@ -111,25 +114,31 @@ const Accordion = () => {
   };
 
   const addToWatchlist = (evnt, index) => {
-    const is_trade_exisit = selectedMarkets().some(
+    const is_trade_exisit = selected_markets().some(
       (trade) => trade.symbol === tradeList()[index].symbol
     );
 
-    const storage_list = JSON.parse(localStorage.getItem("favourites") ?? "[]");
+    const active_user = localStorage.getItem("userId") ?? "guest";
+    const storage_list = JSON.parse(
+      localStorage.getItem(`${active_user}-favourites`) ?? "[]"
+    );
     if (is_trade_exisit) {
       setSelectedMarkets([
-        ...selectedMarkets().filter(
+        ...selected_markets().filter(
           (trade) => trade.symbol !== tradeList()[index].symbol
         ),
       ]);
       const newList = storage_list.filter(
         (sym) => sym !== tradeList()[index].symbol
       );
-      localStorage.setItem("favourites", JSON.stringify(newList));
+      const active_user = localStorage.setItem(
+        `${active_user}-favourites`,
+        JSON.stringify(newList)
+      );
     } else {
-      setSelectedMarkets([...selectedMarkets(), tradeList()[index]]);
+      setSelectedMarkets([...selected_markets(), tradeList()[index]]);
       localStorage.setItem(
-        "favourites",
+        `${active_user}-favourites`,
         JSON.stringify([...storage_list, tradeList()[index].symbol])
       );
     }
@@ -234,7 +243,7 @@ const Accordion = () => {
                       onClick={(evnt) => addToWatchlist(evnt, index)}
                     >
                       <Show
-                        when={selectedMarkets().find(
+                        when={selected_markets().find(
                           (mkt) => mkt.symbol === tradeList()[index].symbol
                         )}
                         fallback={
