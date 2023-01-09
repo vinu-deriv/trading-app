@@ -1,10 +1,15 @@
+import { authorize, sendRequest, subscribe } from "Utils/socket-base";
+
+import { createSignal } from "solid-js";
 /* eslint-disable no-console */
 import { createStore } from "solid-js/store";
-import { createSignal } from "solid-js";
-import { authorize, sendRequest, subscribe } from "Utils/socket-base";
 import { setErrorMessage } from "./trade-store";
+
 export const [login_information, setLoginInformation] = createStore();
-export const [endpoint, setEndpoint] = createStore();
+export const [endpoint, setEndpoint] = createSignal({
+  app_id: "",
+  server_url: "",
+});
 export const [balance_of_all_accounts, setBalanceOfAllAccounts] = createSignal(
   {}
 );

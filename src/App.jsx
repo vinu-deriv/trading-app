@@ -1,27 +1,29 @@
-import styles from "./App.module.scss";
-import { Routes, Route } from "solid-app-router";
-import { createEffect, lazy, Show } from "solid-js";
-import NavBar from "./components/nav";
-import { endpoint, init } from "Stores/base-store";
-import { onMount } from "solid-js";
-import { Portal } from "solid-js/web";
+import { Route, Routes } from "solid-app-router";
+import { Show, createEffect, lazy } from "solid-js";
 import {
+  activeSymbols,
+  error_message,
   fetchActiveSymbols,
   is_light_theme,
-  watchListRef,
-  showAccountSwitcher,
-  activeSymbols,
   selectedMarkets,
   setSelectedMarkets,
-  error_message,
+  showAccountSwitcher,
+  watchListRef,
 } from "./stores";
+import { configureEndpoint, getAppId, getSocketUrl } from "./utils/config";
+import { endpoint, init } from "Stores/base-store";
+
+import { AccountSwitcher } from "./components";
+import ErrorComponent from "./components/error-component";
+import NavBar from "./components/nav";
+import { Portal } from "solid-js/web";
+import classNames from "classnames";
+import { mapMarket } from "./utils/map-markets";
 import monitorNetwork from "Utils/network-status";
 import { onCleanup } from "solid-js";
+import { onMount } from "solid-js";
 import { sendRequest } from "./utils/socket-base";
-import classNames from "classnames";
-import { AccountSwitcher } from "./components";
-import { mapMarket } from "./utils/map-markets";
-import ErrorComponent from "./components/error-component";
+import styles from "./App.module.scss";
 
 const Endpoint = lazy(() => import("Routes/endpoint"));
 const Dashboard = lazy(() => import("Routes/dashboard/dashboard"));
@@ -30,8 +32,10 @@ const Reports = lazy(() => import("Routes/reports/reports"));
 
 function App() {
   const { network_status } = monitorNetwork();
+  const isSandbox = () => /dev$/.test(endpoint().server_url);
 
   onMount(async () => {
+    configureEndpoint(getAppId(), getSocketUrl());
     await fetchActiveSymbols();
     const map_market = mapMarket(activeSymbols());
     const getFavs = JSON.parse(localStorage.getItem("favourites"));
@@ -85,10 +89,12 @@ function App() {
         </Routes>
       </section>
       <footer>
-        <div>
-          The server <a href="/endpoint">endpoint</a> is: &nbsp;
-          <span>{endpoint.server_url}</span>
-        </div>
+        <Show when={isSandbox()} fallback={<div>Connected to Prod</div>}>
+          <div>
+            The server <a href="/endpoint">endpoint</a> is: &nbsp;
+            <span>{endpoint().server_url}</span>
+          </div>
+        </Show>
       </footer>
     </div>
   );
