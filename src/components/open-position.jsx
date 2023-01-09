@@ -1,5 +1,5 @@
 import { onMount, Show, For } from "solid-js";
-import { subscribe, authorize } from "Utils/socket-base";
+import { subscribe } from "Utils/socket-base";
 import { login_information } from "Stores/base-store";
 import classNames from "classnames";
 import {

@@ -1,4 +1,4 @@
-import { authorize, sendRequest, subscribe } from "../utils/socket-base";
+import { sendRequest, subscribe } from "../utils/socket-base";
 
 import { createSignal } from "solid-js";
 import { createStore } from "solid-js/store";
