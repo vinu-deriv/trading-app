@@ -1,4 +1,4 @@
-import { Show, createSignal } from "solid-js";
+import { Show, createSignal, onMount } from "solid-js";
 import { useNavigate } from "solid-app-router";
 import classNames from "classnames";
 import Logo from "../../src/assets/logo2.png";
@@ -116,9 +116,15 @@ const NavBar = () => {
 
 const toggleThemeHandler = (event) => {
   setIsLightTheme(event.target.checked);
+  localStorage.setItem("dark_theme", event.target.checked);
 };
 
 const ThemeToggle = () => {
+  onMount(() => {
+    const is_dark_theme = JSON.parse(localStorage.getItem("dark_theme"));
+      setIsLightTheme(is_dark_theme ?? true);
+  });
+
   return (
     <label class={styles["switch"]}>
       <input
