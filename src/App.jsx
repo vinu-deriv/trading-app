@@ -5,7 +5,6 @@ import {
   error_message,
   fetchActiveSymbols,
   is_light_theme,
-  selectedMarkets,
   selected_markets,
   setSelectedMarkets,
   showAccountSwitcher,
@@ -43,7 +42,7 @@ function App() {
     const getFavs = JSON.parse(localStorage.getItem("favourites"));
     if (getFavs?.length) {
       getFavs.forEach((marketSymbol) =>
-        setSelectedMarkets([...selectedMarkets(), map_market[marketSymbol]])
+        setSelectedMarkets([...selected_markets(), map_market[marketSymbol]])
       );
     }
   });
