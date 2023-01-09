@@ -16,7 +16,6 @@ const Statements = () => {
   onMount(() => {
     const active_account = JSON.parse(login_information?.active_account);
     if (active_account) {
-      authorize(active_account.token).then(() => {
         sendRequest({
           statement: 1,
           limit: 100,
@@ -25,8 +24,7 @@ const Statements = () => {
           const { transactions, count } = resp.statement;
           setStatements(transactions);
           setStatementCount(count);
-        });
-      });
+        }); 
     }
   });
 

@@ -53,11 +53,9 @@ const OpenPosition = () => {
   onMount(() => {
     const active_account = JSON.parse(login_information?.active_account);
     if (active_account) {
-      authorize(active_account.token).then(() => {
-        open_contract_ids().forEach((contract_id) =>
-          getOpenContractInfo(contract_id)
-        );
-      });
+      open_contract_ids().forEach((contract_id) =>
+        getOpenContractInfo(contract_id)
+      );
     }
   });
 

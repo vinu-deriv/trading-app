@@ -38,13 +38,6 @@ const fetchActiveSymbols = async () => {
 
 const buyContract = async (id, amount, token) => {
   try {
-    await authorize(token);
-  } catch (error) {
-    // To be changed once error component is ready
-    setErrorMessage(error.error.message);
-  }
-
-  try {
     const response = await sendRequest({
       buy: id,
       price: Number(amount),
