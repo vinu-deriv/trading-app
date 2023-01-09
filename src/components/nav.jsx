@@ -122,7 +122,7 @@ const toggleThemeHandler = (event) => {
 const ThemeToggle = () => {
   onMount(() => {
     const is_dark_theme = JSON.parse(localStorage.getItem("dark_theme"));
-      setIsLightTheme(is_dark_theme ?? true);
+    setIsLightTheme(is_dark_theme ?? true);
   });
 
   return (
