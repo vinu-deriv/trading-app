@@ -1,5 +1,7 @@
 import { endpoint, setEndpoint } from "../stores/base-store";
 
+// TODO: Need to reverify the URL RegExp when Devops deploys
+
 export const domain_app_ids = {
   "app.deriv.com": 16929,
   "staging-app.deriv.com": 16303,
