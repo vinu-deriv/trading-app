@@ -6,7 +6,10 @@ import { createStore } from "solid-js/store";
 import { setErrorMessage } from "./trade-store";
 
 export const [login_information, setLoginInformation] = createStore();
-export const [endpoint, setEndpoint] = createStore();
+export const [endpoint, setEndpoint] = createSignal({
+  app_id: "",
+  server_url: "",
+});
 export const [balance_of_all_accounts, setBalanceOfAllAccounts] = createSignal(
   {}
 );
