@@ -1,4 +1,4 @@
-import { authorize, sendRequest, subscribe } from "../utils/socket-base";
+import { sendRequest, subscribe } from "../utils/socket-base";
 
 import { createSignal } from "solid-js";
 import { createStore } from "solid-js/store";
@@ -37,13 +37,6 @@ const fetchActiveSymbols = async () => {
 };
 
 const buyContract = async (id, amount, token) => {
-  try {
-    await authorize(token);
-  } catch (error) {
-    // To be changed once error component is ready
-    setErrorMessage(error.error.message);
-  }
-
   try {
     const response = await sendRequest({
       buy: id,

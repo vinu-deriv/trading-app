@@ -1,7 +1,7 @@
 import { createSignal } from "solid-js";
 import { onMount } from "solid-js";
 import { setStatements, statements } from "../stores";
-import { sendRequest, authorize } from "../utils/socket-base";
+import { sendRequest } from "../utils/socket-base";
 import styles from "Styles/open-position.module.scss";
 import classNames from "classnames";
 import { Show } from "solid-js";
@@ -16,16 +16,14 @@ const Statements = () => {
   onMount(() => {
     const active_account = JSON.parse(login_information?.active_account);
     if (active_account) {
-      authorize(active_account.token).then(() => {
-        sendRequest({
-          statement: 1,
-          limit: 100,
-          offset: 0,
-        }).then((resp) => {
-          const { transactions, count } = resp.statement;
-          setStatements(transactions);
-          setStatementCount(count);
-        });
+      sendRequest({
+        statement: 1,
+        limit: 100,
+        offset: 0,
+      }).then((resp) => {
+        const { transactions, count } = resp.statement;
+        setStatements(transactions);
+        setStatementCount(count);
       });
     }
   });
