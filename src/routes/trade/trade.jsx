@@ -64,9 +64,9 @@ const Trade = () => {
                 )}
               </For>
             </select>
-            <Show when={selectedTradeType()?.symbol}>
+            <Show when={selectedTradeType()?.display_name}>
               <p>
-                Symbol : <b>{selectedTradeType()?.symbol}</b>
+                Symbol : <b>{selectedTradeType()?.display_name}</b>
               </p>
             </Show>
           </div>
