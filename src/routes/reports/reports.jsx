@@ -1,11 +1,16 @@
 import classNames from "classnames";
 import styles from "./reports.module.scss";
 import { OpenPosition, Statements } from "../../components";
-import { Show, createSignal } from "solid-js";
+import { Show, createSignal, onMount } from "solid-js";
+import { login_information } from "Stores/base-store";
+import { logout } from "Stores/base-store";
 
 const Reports = () => {
   const [tab_index, setTabIndex] = createSignal(1);
 
+  onMount(() => {
+    if (!login_information.is_logged_in) logout();
+  });
   return (
     <div class={classNames(styles["tabs"], styles["effect-3"])}>
       <input

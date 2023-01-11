@@ -1,5 +1,6 @@
 import { onMount, createSignal } from "solid-js";
 import { createStore } from "solid-js/store";
+import { reconnectAfter } from "./socket-base";
 
 export default function monitorNetwork() {
   const [network_status, setNetworkStatus] = createStore({
@@ -28,6 +29,7 @@ export default function monitorNetwork() {
           }
         }
         setHasBeenOffline(false);
+        reconnectAfter({ timeout: 5000 });
       });
       window.addEventListener("offline", () => {
         Notification.requestPermission((result) => {
@@ -41,6 +43,7 @@ export default function monitorNetwork() {
           }
         });
         setNetworkStatus({ is_disconnected: true });
+        reconnectAfter({ timeout: 5000 });
         setHasBeenOffline(true);
       });
     }

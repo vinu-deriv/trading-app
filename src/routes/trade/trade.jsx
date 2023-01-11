@@ -1,5 +1,5 @@
 import { Accordion, Loader } from "../../components";
-import { For, Match, Show, Switch, onCleanup } from "solid-js";
+import { For, Match, Show, Switch, onCleanup, onMount } from "solid-js";
 import {
   current_tick,
   is_loading,
@@ -17,8 +17,13 @@ import { getContractTypesConfig } from "Constants/trade-config";
 import { login_information } from "../../stores/base-store";
 import shared from "../../styles/shared.module.scss";
 import styles from "./trade.module.scss";
+import { logout } from "Stores/base-store";
 
 const Trade = () => {
+  onMount(() => {
+    if (!login_information.is_logged_in) logout();
+  });
+
   return (
     <div class={styles["trade-flex-layout"]}>
       <div class={styles["trade-flex-layout__accordion"]}>
