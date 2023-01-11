@@ -1,5 +1,4 @@
 import moment from "moment";
-const LocalStore = window.localStorage;
 import { isEmptyObject, getPropertyValue, isEmptyValue } from "./object";
 
 export const SocketCache = (() => {
@@ -47,12 +46,12 @@ export const SocketCache = (() => {
 
     if (!data_obj) data_obj = {};
     data_obj[key] = { value: response, expires, msg_type };
-    LocalStore.setItem(storage_key, JSON.stringify(data_obj));
+    localStorage.setItem(storage_key, JSON.stringify(data_obj));
   };
 
   const reloadDataObj = () => {
     if (isEmptyObject(data_obj)) {
-      data_obj = JSON.parse(LocalStore.getItem(storage_key) || "{}");
+      data_obj = JSON.parse(localStorage.getItem(storage_key) || "{}");
       if (isEmptyObject(data_obj)) return;
     }
   };
@@ -109,11 +108,11 @@ export const SocketCache = (() => {
     } else if (data_obj && data_obj[key]) {
       delete data_obj[key];
     }
-    LocalStore.setItem(storage_key, JSON.stringify(data_obj));
+    localStorage.setItem(storage_key, JSON.stringify(data_obj));
   };
 
   const clear = () => {
-    LocalStore.removeItem(storage_key);
+    localStorage.removeItem(storage_key);
     data_obj = {};
   };
 
