@@ -1,8 +1,16 @@
-import { createStore } from "solid-js/store";
+import { configureEndpoint, getAppId, getSocketUrl } from "../../utils/config";
 import { endpoint, setEndpoint } from "Stores/base-store";
+
+import { createStore } from "solid-js/store";
+import { onMount } from "solid-js";
 
 const Endpoint = () => {
   const [form_fields, setFormFields] = createStore();
+
+  onMount(() => {
+    setFormFields({ app_id: getAppId(), server: getSocketUrl() });
+    configureEndpoint(getAppId(), getSocketUrl());
+  });
 
   const onFormSubmit = (e) => {
     e.preventDefault();
@@ -14,15 +22,15 @@ const Endpoint = () => {
 
     localStorage.setItem("config.app_id", endpoint.app_id);
     localStorage.setItem("config.server_url", endpoint.server_url);
+    configureEndpoint(form_fields.app_id, form_fields.server);
     window.location.href = "/";
   };
 
   const onFormReset = () => {
     // TODO: change to prod app_id
-    setEndpoint({ app_id: "", server_url: "" });
-
-    localStorage.setItem("config.app_id", endpoint.app_id);
-    localStorage.setItem("config.server_url", endpoint.server_url);
+    localStorage.removeItem("config.app_id");
+    localStorage.removeItem("config.server_url");
+    configureEndpoint(getAppId(), getSocketUrl());
     window.location.href = "/";
   };
 
@@ -37,6 +45,7 @@ const Endpoint = () => {
             onInput={(e) => {
               setFormFields({ server: e.target.value });
             }}
+            value={form_fields.server}
             placeholder="Server"
             required
           />
@@ -48,6 +57,7 @@ const Endpoint = () => {
             onInput={(e) => {
               setFormFields({ app_id: e.target.value });
             }}
+            value={form_fields.app_id}
             placeholder="App ID"
             required
           />
