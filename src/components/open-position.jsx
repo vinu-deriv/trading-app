@@ -1,62 +1,73 @@
-import { onMount, Show, For } from "solid-js";
-import { subscribe } from "Utils/socket-base";
-import { login_information } from "Stores/base-store";
-import classNames from "classnames";
+import { For, Show, onCleanup, onMount } from "solid-js";
+import { forgetAll, wait } from "../utils/socket-base";
 import {
   open_contract_ids,
-  setOpenContractId,
   open_contract_info,
+  setOpenContractId,
   setOpenContractInfo,
 } from "../stores";
-import styles from "Styles/open-position.module.scss";
-import { timePeriod } from "../utils/format-value";
-import Loader from "./loader";
 
-const getOpenContractInfo = (contract_id) => {
+import Loader from "./loader";
+import classNames from "classnames";
+import { login_information } from "Stores/base-store";
+import styles from "Styles/open-position.module.scss";
+import { subscribe } from "Utils/socket-base";
+import throttle from "lodash.throttle";
+import { timePeriod } from "../utils/format-value";
+
+const formatActivePositionData = (proposal_open_contract) => ({
+  type: proposal_open_contract.underlying,
+  ref_id: proposal_open_contract.contract_id,
+  buy_price: proposal_open_contract.buy_price,
+  indicative_price: proposal_open_contract.bid_price,
+  pay_limit: proposal_open_contract.payout,
+  profit: proposal_open_contract.profit,
+  purchase_time_epoc: proposal_open_contract.purchase_time,
+  expiry_time_epoc: proposal_open_contract.date_expiry,
+  has_expired: proposal_open_contract.is_expired,
+  currency: proposal_open_contract.currency,
+});
+
+const filterActivePositions = (contract_info) => {
+  if (contract_info.is_expired) {
+    const new_set = open_contract_ids().filter(
+      (ctd_id) => contract_info.contract_id !== ctd_id
+    );
+    setOpenContractId(new_set);
+    delete open_contract_info()[contract_info.contract_id];
+    setOpenContractInfo({ ...open_contract_info() });
+  } else {
+    setOpenContractInfo({
+      ...open_contract_info(),
+      [contract_info.contract_id]: formatActivePositionData(contract_info),
+    });
+  }
+};
+
+const getOpenContractsInfo = () => {
   subscribe(
     {
       proposal_open_contract: 1,
       subscribe: 1,
-      contract_id,
     },
-    (resp) => {
+    throttle((resp) => {
       const { proposal_open_contract } = resp;
-      if (proposal_open_contract.is_expired) {
-        const new_set = open_contract_ids().filter(
-          (ctd_id) => proposal_open_contract.contract_id !== ctd_id
-        );
-        setOpenContractId(new_set);
-        delete open_contract_info()[proposal_open_contract.contract_id];
-        setOpenContractInfo({ ...open_contract_info() });
-      } else {
-        setOpenContractInfo({
-          ...open_contract_info(),
-          [proposal_open_contract.contract_id]: {
-            type: proposal_open_contract.underlying,
-            ref_id: proposal_open_contract.contract_id,
-            buy_price: proposal_open_contract.buy_price,
-            indicative_price: proposal_open_contract.bid_price,
-            pay_limit: proposal_open_contract.payout,
-            profit: proposal_open_contract.profit,
-            purchase_time_epoc: proposal_open_contract.purchase_time,
-            expiry_time_epoc: proposal_open_contract.date_expiry,
-            has_expired: proposal_open_contract.is_expired,
-            currency: proposal_open_contract.currency,
-          },
-        });
-      }
-    }
+      filterActivePositions(proposal_open_contract);
+    }, 500)
   );
 };
 
 const OpenPosition = () => {
-  onMount(() => {
+  onMount(async () => {
     const active_account = JSON.parse(login_information?.active_account);
     if (active_account) {
-      open_contract_ids().forEach((contract_id) =>
-        getOpenContractInfo(contract_id)
-      );
+      await wait("authorize");
+      getOpenContractsInfo();
     }
+  });
+
+  onCleanup(() => {
+    if (open_contract_ids().length) forgetAll("proposal_open_contract");
   });
 
   const is_open_contract_avbl = () =>
