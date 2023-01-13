@@ -1,18 +1,5 @@
+import { getAppId, getSocketUrl } from "Utils/config.js";
 import DerivAPIBasic from "@deriv/deriv-api/dist/DerivAPIBasic";
-
-const getSocketUrl = () => {
-  const server_url =
-    localStorage.getItem("config.server_url") ?? "green.binaryws.com";
-
-  return server_url;
-};
-
-const getAppId = () => {
-  // TODO: change production app id
-  const app_id = localStorage.getItem("config.app_id") ?? "";
-
-  return app_id;
-};
 
 const createConnection = () =>
   new WebSocket(
