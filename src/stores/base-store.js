@@ -1,4 +1,9 @@
-import { authorize, sendRequest, subscribe } from "Utils/socket-base";
+import {
+  authorize,
+  sendRequest,
+  subscribe,
+  pingWebsocket,
+} from "Utils/socket-base";
 
 import { createSignal } from "solid-js";
 /* eslint-disable no-console */
@@ -41,6 +46,7 @@ export const init = () => {
   const search = window.location.search;
   return new Promise((resolve, reject) => {
     try {
+      pingWebsocket();
       if (search) {
         const search_params = new URLSearchParams(window.location.search);
 
@@ -70,6 +76,9 @@ export const init = () => {
         });
 
         authorize(obj_params.token1).then((response) => {
+          if (response?.error?.message) {
+            logout();
+          }
           if (!response?.error) {
             const { account_list, loginid, balance, user_id } =
               response.authorize;

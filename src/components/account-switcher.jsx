@@ -13,6 +13,7 @@ import { authorize } from "Utils/socket-base";
 import { setshowAccountSwitcher } from "Stores/ui-store";
 import Loader from "./loader";
 import styles from "../styles/account-switcher.module.scss";
+import { logout } from "Stores/base-store";
 
 const getCurrencyDisplayCode = (currency = "") => {
   if (currency !== "eUSDT" && currency !== "tUSDT") {
@@ -43,6 +44,9 @@ const AccountSwitcher = () => {
         (account) => account.loginid === loginid
       );
       authorize(token).then((response) => {
+        if (response?.error?.message) {
+          logout();
+        }
         const { loginid, balance } = response.authorize;
         const active_acc = {
           balance,
