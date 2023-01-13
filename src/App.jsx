@@ -1,4 +1,4 @@
-import { Route, Routes } from "solid-app-router";
+import { Route, Routes, useLocation } from "solid-app-router";
 import { Show, createEffect, lazy } from "solid-js";
 import {
   activeSymbols,
@@ -11,7 +11,7 @@ import {
   watch_list_ref,
 } from "./stores";
 import { configureEndpoint, getAppId, getSocketUrl } from "./utils/config";
-import { endpoint, init } from "Stores/base-store";
+import { endpoint, init, login_information, logout } from "Stores/base-store";
 
 import { AccountSwitcher } from "./components";
 import ErrorComponent from "./components/error-component";
@@ -34,6 +34,8 @@ const Reports = lazy(() => import("Routes/reports/reports"));
 function App() {
   const { network_status } = monitorNetwork();
   const isSandbox = () => /dev$/.test(endpoint().server_url);
+  const location = useLocation();
+  const pathname = location.pathname;
 
   onMount(async () => {
     configureEndpoint(getAppId(), getSocketUrl());
@@ -49,6 +51,8 @@ function App() {
 
   createEffect(() => {
     init().then(() => {
+      if (pathname.match(/(trade|reports)/) && !login_information.is_logged_in)
+        logout();
       fetchActiveSymbols().then(() => {
         const map_market = mapMarket(activeSymbols());
         const get_favs = getFavourites();
