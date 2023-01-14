@@ -28,5 +28,8 @@ export const timePeriod = (end_time_epoc, start_time_epoc) => {
   const seconds = parseInt(totalSeconds % 60, 10);
   const minutes = parseInt(totalMinutes % 60, 10);
   const hours = parseInt(totalHours % 24, 10);
-  return `${hours}h ${minutes}m ${seconds}s`;
+  if (hours || minutes || seconds) {
+    return `${hours}h ${minutes}m ${seconds}s`;
+  }
+  return "0h 0m 0s";
 };

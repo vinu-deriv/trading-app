@@ -29,6 +29,9 @@ const formatActivePositionData = (proposal_open_contract) => ({
 });
 
 const filterActivePositions = (contract_info) => {
+  if (!open_contract_ids().includes(contract_info.contract_id)) {
+    setOpenContractId([...open_contract_ids(), contract_info.contract_id]);
+  }
   if (contract_info.is_expired) {
     const new_set = open_contract_ids().filter(
       (ctd_id) => contract_info.contract_id !== ctd_id
@@ -106,74 +109,71 @@ const OpenPosition = () => {
   );
 };
 
-const OpenPositionItem = (props) => {
-  return (
-    <div class={styles["open-position"]}>
-      <div class={classNames(styles["type"], styles["card-alignment"])}>
-        <div>
-          <strong>Type</strong>
-        </div>
-        <div>{props.type}</div>
+const OpenPositionItem = (props) => (
+  <div class={styles["open-position"]}>
+    <div class={classNames(styles["type"], styles["card-alignment"])}>
+      <div>
+        <strong>Type</strong>
       </div>
-      <div class={styles["time"]}>
-        <div>
-          <strong>Expires in</strong>
-        </div>
-        <ExpiryTimer contract_id={props.contract_id} />
+      <div>{props.type}</div>
+    </div>
+    <div class={styles["time"]}>
+      <div>
+        <strong>Expires in</strong>
       </div>
-      <div class={styles["ref-id"]}>
-        <div>
-          <strong>Ref: Id</strong>
-        </div>
-        <div>{props.ref_id}</div>
+      <ExpiryTimer contract_id={props.contract_id} />
+    </div>
+    <div class={styles["ref-id"]}>
+      <div>
+        <strong>Ref: Id</strong>
       </div>
-      <div class={styles["currency"]}>
-        <div>
-          <strong>Currency</strong>
-        </div>
-        <div>{props.currency}</div>
+      <div>{props.ref_id}</div>
+    </div>
+    <div class={styles["currency"]}>
+      <div>
+        <strong>Currency</strong>
       </div>
-      <div class={styles["buy"]}>
-        <div>
-          <strong>Buy price</strong>
-        </div>
-        <div>{props.buy_price}</div>
+      <div>{props.currency}</div>
+    </div>
+    <div class={styles["buy"]}>
+      <div>
+        <strong>Buy price</strong>
       </div>
-      <div class={styles["indicative"]}>
-        <div>
-          <strong>Indicative Price</strong>
-        </div>
-        <div>{props.indicative_price}</div>
+      <div>{props.buy_price}</div>
+    </div>
+    <div class={styles["indicative"]}>
+      <div>
+        <strong>Indicative Price</strong>
       </div>
-      <div class={styles["payout"]}>
-        <div>
-          <strong>Payout limit</strong>
-        </div>
-        <div>{props.pay_limit}</div>
+      <div>{props.indicative_price}</div>
+    </div>
+    <div class={styles["payout"]}>
+      <div>
+        <strong>Payout limit</strong>
       </div>
-      <div class={styles["profit"]}>
-        <div>
-          <strong>Indicative profit/loss</strong>
-        </div>
-        <div
-          class={classNames(styles["profit"], {
-            [styles["profit-value"]]: Math.sign(props.profit) >= 0,
-            [styles["loss-value"]]: Math.sign(props.profit) < 0,
-          })}
-        >
-          {props.profit}
-        </div>
+      <div>{props.pay_limit}</div>
+    </div>
+    <div class={styles["profit"]}>
+      <div>
+        <strong>Indicative profit/loss</strong>
+      </div>
+      <div
+        class={classNames(styles["profit"], {
+          [styles["profit-value"]]: Math.sign(props.profit) >= 0,
+          [styles["loss-value"]]: Math.sign(props.profit) < 0,
+        })}
+      >
+        {props.profit}
       </div>
     </div>
-  );
-};
+  </div>
+);
 
 const ExpiryTimer = (props) => {
   const contract_info = () => open_contract_info()[props.contract_id];
   const expiry_time = () =>
-    timePeriod(contract_info().expiry_time_epoc * 1000, Date.now());
-
-  return <div>{expiry_time()}</div>;
+    timePeriod(contract_info()?.expiry_time_epoc * 1000, Date.now());
+  return <div>{expiry_time}</div>;
 };
 
 export default OpenPosition;

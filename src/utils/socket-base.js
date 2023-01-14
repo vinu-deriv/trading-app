@@ -47,7 +47,7 @@ function reconnectAfter({ timeout }) {
 }
 
 const excludeAuthorize = (type) =>
-  !(type === "authorize") && !login_information.is_logged_in;
+  !(type === "authorize" && !login_information.is_logged_in);
 
 const wait = (...responses) =>
   derivApi.expectResponse(...responses.filter(excludeAuthorize));
@@ -60,7 +60,6 @@ export {
   subscribe,
   forgetAll,
   wait,
-  derivApi,
   reconnectAfter,
   pingWebsocket,
 };
