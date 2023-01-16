@@ -22,14 +22,14 @@ export const convertToTime = (epoc_time) => {
 
 export const timePeriod = (end_time_epoc, start_time_epoc) => {
   const delta_ms = end_time_epoc - start_time_epoc;
+  if (delta_ms < 0) {
+    return "0h 0m 0s";
+  }
   const totalSeconds = parseInt(Math.floor(delta_ms / 1000), 10);
   const totalMinutes = parseInt(Math.floor(totalSeconds / 60), 10);
   const totalHours = parseInt(Math.floor(totalMinutes / 60), 10);
   const seconds = parseInt(totalSeconds % 60, 10);
   const minutes = parseInt(totalMinutes % 60, 10);
   const hours = parseInt(totalHours % 24, 10);
-  if (hours || minutes || seconds) {
-    return `${hours}h ${minutes}m ${seconds}s`;
-  }
-  return "0h 0m 0s";
+  return `${hours}h ${minutes}m ${seconds}s`;
 };

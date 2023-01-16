@@ -55,7 +55,8 @@ const getOpenContractsInfo = () => {
     },
     throttle((resp) => {
       const { proposal_open_contract } = resp;
-      filterActivePositions(proposal_open_contract);
+      if (Object.keys(proposal_open_contract).length)
+        filterActivePositions(proposal_open_contract);
     }, 500)
   );
 };
