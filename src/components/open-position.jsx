@@ -6,7 +6,6 @@ import {
   setOpenContractId,
   setOpenContractInfo,
 } from "../stores";
-
 import Loader from "./loader";
 import classNames from "classnames";
 import { login_information } from "Stores/base-store";
