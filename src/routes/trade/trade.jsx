@@ -14,7 +14,10 @@ import OptionsTrade from "./options-trade";
 import classNames from "classnames";
 import dashboardStyles from "../../styles/watchlist.module.scss";
 import { getContractTypesConfig } from "Constants/trade-config";
-import { login_information, redirectToLoggedOutUserToLogin } from "../../stores/base-store";
+import {
+  login_information,
+  redirectToLoggedOutUserToLogin,
+} from "../../stores/base-store";
 import shared from "../../styles/shared.module.scss";
 import styles from "./trade.module.scss";
 
