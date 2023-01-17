@@ -14,16 +14,13 @@ import OptionsTrade from "./options-trade";
 import classNames from "classnames";
 import dashboardStyles from "../../styles/watchlist.module.scss";
 import { getContractTypesConfig } from "Constants/trade-config";
-import { login_information } from "../../stores/base-store";
+import { login_information, redirectToLoggedOutUserToLogin } from "../../stores/base-store";
 import shared from "../../styles/shared.module.scss";
 import styles from "./trade.module.scss";
-import { loginUrl } from "Constants/deriv-urls";
 
 const Trade = () => {
   onMount(() => {
-    if (!login_information.is_logged_in) {
-      window.location.href = loginUrl({ language: "en" });
-    }
+    redirectToLoggedOutUserToLogin();
   });
 
   return (

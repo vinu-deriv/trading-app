@@ -9,6 +9,7 @@ import { createSignal } from "solid-js";
 /* eslint-disable no-console */
 import { createStore } from "solid-js/store";
 import { setErrorMessage } from "./trade-store";
+import { loginUrl } from "Constants/deriv-urls";
 
 export const [login_information, setLoginInformation] = createStore();
 export const [endpoint, setEndpoint] = createSignal({
@@ -157,3 +158,9 @@ export const logout = () => {
     window.location.href = "/";
   });
 };
+
+export const redirectToLoggedOutUserToLogin = () => {
+  if (!login_information.is_logged_in) {
+    window.location.href = loginUrl({ language: "en" });
+  }
+}
