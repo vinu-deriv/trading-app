@@ -16,10 +16,10 @@ import dashboardStyles from "../../styles/watchlist.module.scss";
 import { getContractTypesConfig } from "Constants/trade-config";
 import {
   login_information,
-  redirectToLoggedOutUserToLogin,
 } from "../../stores/base-store";
 import shared from "../../styles/shared.module.scss";
 import styles from "./trade.module.scss";
+import { redirectToLoggedOutUserToLogin } from "Utils/user-redirect-to-login";
 
 const Trade = () => {
   onMount(() => {
