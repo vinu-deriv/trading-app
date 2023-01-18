@@ -30,19 +30,6 @@
             color: var(--text-main);
         }
 
-        button {
-            height: 3.2rem;
-            padding: 0 1.6rem;
-            border: 0;
-            border-radius: 4px;
-
-            &[type='submit'] {
-                background-color: #ff444f;
-                margin-right: 0.5rem;
-                color: #fff;
-                font-weight: bold;
-            }
-        }
 
         .error-message {
             color: #ff444f;
