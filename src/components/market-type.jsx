@@ -16,7 +16,6 @@ import {
   setSubscribeId,
   subscribe_id,
 } from "../stores";
-
 import ActivityIcon from "../assets/svg/activity.svg";
 import HeartIcon from "../assets/svg/heart.svg";
 import TrashBinIcon from "../assets/svg/trash.svg";
