@@ -6,6 +6,7 @@ import Loader from "./loader";
 import OpenPosition from "./open-position";
 import Statements from "./statements";
 import Accordion from "./market-type";
+import { Tab, Tabs } from "./tabs";
 
 export {
   Watchlist,
@@ -16,4 +17,6 @@ export {
   OpenPosition,
   Statements,
   Accordion,
+  Tab,
+  Tabs,
 };

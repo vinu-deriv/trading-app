@@ -1,0 +1,22 @@
+.tabs-container {
+   &__header > ul {
+        list-style-type: none;
+        padding-left: 0;
+        display: flex;
+    }
+
+    &__content {
+        padding: 0 16px;
+    }
+}
+
+.tab-title {
+    height: 48px;
+    padding: 0 16px;
+    display: flex;
+    align-items: center;
+
+    &--active {
+        border-bottom: 2px solid var(--button-red);
+    }
+}
