@@ -1,5 +1,7 @@
 import { getAppId, getSocketUrl } from "Utils/config.js";
+
 import DerivAPIBasic from "@deriv/deriv-api/dist/DerivAPIBasic";
+import { login_information } from "../stores/base-store";
 
 const createConnection = () =>
   new WebSocket(
@@ -44,4 +46,20 @@ function reconnectAfter({ timeout }) {
   }, timeout);
 }
 
-export { authorize, sendRequest, subscribe, reconnectAfter, pingWebsocket };
+const excludeAuthorize = (type) =>
+  !(type === "authorize" && !login_information.is_logged_in);
+
+const wait = (...responses) =>
+  derivApi.expectResponse(...responses.filter(excludeAuthorize));
+
+const forgetAll = (request_type) => derivApi.forgetAll(request_type);
+
+export {
+  authorize,
+  sendRequest,
+  subscribe,
+  forgetAll,
+  wait,
+  reconnectAfter,
+  pingWebsocket,
+};
