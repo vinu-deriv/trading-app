@@ -6,11 +6,13 @@
     }
 
     &__content {
+        color: var(--text-main);
         padding: 0 16px;
     }
 }
 
 .tab-title {
+    color: var(--text-main);
     height: 48px;
     padding: 0 16px;
     display: flex;
