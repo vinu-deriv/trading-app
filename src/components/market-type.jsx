@@ -16,6 +16,7 @@ import {
   setSubscribeId,
   subscribe_id,
 } from "../stores";
+import { login_information } from "../stores/base-store";
 
 import ActivityIcon from "../assets/svg/activity.svg";
 import HeartIcon from "../assets/svg/heart.svg";
@@ -227,7 +228,10 @@ const Accordion = () => {
                     <Button
                       type="trade"
                       onClick={(evnt) => selectTrade(evnt, index)}
-                      disabled={!tradeTypes().exchange_is_open}
+                      disabled={
+                        !tradeTypes().exchange_is_open ||
+                        !login_information.is_logged_in
+                      }
                     >
                       <SVGWrapper
                         id={`trade-icon-${index}`}

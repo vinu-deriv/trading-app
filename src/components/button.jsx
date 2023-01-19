@@ -6,7 +6,7 @@ export const Button = (props) => {
     <button
       onClick={(evnt) => props.onClick(evnt)}
       type={props.type}
-      disabled={props.is_disabled}
+      disabled={props.disabled}
       class={`${classNames(styles.btn, {
         [styles.primary]: props.type === "primary",
         [styles.secondrary]: props.type === "secondrary",

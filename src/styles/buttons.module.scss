@@ -75,4 +75,7 @@
 .disabled {
   pointer-events: none;
   opacity: 0.32;
+  color: var(--text-sub);
+  cursor: pointer
+
 }
