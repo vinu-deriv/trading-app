@@ -42,8 +42,10 @@
   display: flex;
   height: fit-content;
   align-items: center;
-  background: var(--trade-block-background);
   padding: 1px 5px;
+  &:hover {
+    background-color: var(--trade-block-background);
+  }
 }
 .flat {
   background-color: #ff444f;
@@ -64,6 +66,10 @@
   border-radius: 4px;
   border: 1px solid greenyellow;
   padding: 1px 5px;
+
+  &:hover {
+    background-color: var(--trade-block-background);
+  }
 }
 
 .disabled {
