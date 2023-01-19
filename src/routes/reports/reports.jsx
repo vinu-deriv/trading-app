@@ -2,13 +2,13 @@ import classNames from "classnames";
 import styles from "./reports.module.scss";
 import { OpenPosition, Statements } from "../../components";
 import { Show, createSignal, onMount } from "solid-js";
-import { redirectToLoggedOutUserToLogin } from "Utils/user-redirect-to-login";
+import { redirectToLogin } from "Utils/user-redirect-to-login";
 
 const Reports = () => {
   const [tab_index, setTabIndex] = createSignal(1);
 
   onMount(() => {
-    redirectToLoggedOutUserToLogin();
+    redirectToLogin();
   });
   return (
     <div class={classNames(styles["tabs"], styles["effect-3"])}>

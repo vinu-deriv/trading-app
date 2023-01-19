@@ -17,11 +17,11 @@ import { getContractTypesConfig } from "Constants/trade-config";
 import { login_information } from "../../stores/base-store";
 import shared from "../../styles/shared.module.scss";
 import styles from "./trade.module.scss";
-import { redirectToLoggedOutUserToLogin } from "Utils/user-redirect-to-login";
+import { redirectToLogin } from "Utils/user-redirect-to-login";
 
 const Trade = () => {
   onMount(() => {
-    redirectToLoggedOutUserToLogin();
+    redirectToLogin();
   });
 
   return (
