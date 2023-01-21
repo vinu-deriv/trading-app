@@ -1,5 +1,5 @@
-import { Accordion, Loader } from "../../components";
 import { For, Match, Show, Switch, onCleanup } from "solid-js";
+import { Loader, MarketList } from "../../components";
 import {
   current_tick,
   is_loading,
@@ -22,7 +22,7 @@ const Trade = () => {
   return (
     <div class={styles["trade-flex-layout"]}>
       <div class={styles["trade-flex-layout__accordion"]}>
-        <Accordion />
+        <MarketList />
       </div>
       {login_information.is_logged_in && (
         <div class={styles["trade-flex-layout__trade"]}>

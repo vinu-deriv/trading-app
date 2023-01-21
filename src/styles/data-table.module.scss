@@ -1,0 +1,19 @@
+.data-table {
+  .title {
+    text-align: start;
+    font-size: smaller;
+  }
+  border-collapse: collapse;
+  width: 100%;
+  th,
+  td {
+    border-top: 1px solid #ddd;
+    padding: 8px;
+    text-align: start;
+    box-sizing: border-box;
+  }
+  th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+  }
+}

@@ -1,3 +1,5 @@
+import moment from "moment";
+
 export const addComma = (num, decimal_points = 2) => {
   let number = String(num || 0).replace(/,/g, "");
   if (typeof decimal_points !== "undefined") {
@@ -32,4 +34,26 @@ export const timePeriod = (end_time_epoc, start_time_epoc) => {
   const minutes = parseInt(totalMinutes % 60, 10);
   const hours = parseInt(totalHours % 24, 10);
   return `${hours}h ${minutes}m ${seconds}s`;
+};
+
+const toMoment = (value) => {
+  if (!value) return moment().utc();
+  if (value instanceof moment && value.isValid() && value.isUTC()) return value;
+  if (typeof value === "number") return epochToMoment(value);
+  return moment.utc(value);
+};
+
+export const epochToMoment = (epoch) => moment.unix(epoch).utc();
+
+export const addDays = (date, days_offset) =>
+  toMoment(date).add(days_offset, "days");
+
+export const formatDate = (date, format = "YYYY-MM-DD") =>
+  toMoment(date).format(format);
+
+export const daysSince = (date) => {
+  const diff = toMoment()
+    .startOf("day")
+    .diff(toMoment(date).startOf("day"), "days");
+  return !date ? "" : diff;
 };

@@ -1,12 +1,16 @@
-import Watchlist from "./watchlist";
-import SVGWrapper from "./svg-wrapper";
-import NavBar from "./nav";
-import AccountSwitcher from "./account-switcher";
-import Loader from "./loader";
-import OpenPosition from "./open-position";
-import Statements from "./statements";
-import Accordion from "./market-type";
 import { Tab, Tabs } from "./tabs";
+
+import AccountSwitcher from "./account-switcher";
+import DataTable from "./data-table";
+import DisplayChangePercent from "./displasy-change-percent";
+import DisplayTickValue from "./display-tick-value";
+import Loader from "./loader";
+import MarketList from "./market-list";
+import NavBar from "./nav";
+import OpenPosition from "./open-position";
+import SVGWrapper from "./svg-wrapper";
+import Statements from "./statements";
+import Watchlist from "./watchlist";
 
 export {
   Watchlist,
@@ -16,7 +20,10 @@ export {
   Loader,
   OpenPosition,
   Statements,
-  Accordion,
+  MarketList,
   Tab,
   Tabs,
+  DisplayChangePercent,
+  DataTable,
+  DisplayTickValue,
 };
