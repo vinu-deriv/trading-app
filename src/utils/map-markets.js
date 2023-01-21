@@ -11,9 +11,6 @@ export const getFavourites = () => {
   return JSON.parse(localStorage.getItem(`${active_user}-favourites`)) ?? [];
 };
 
-const generateData = (data_set = {}, prop, item) =>
-  prop in data_set ? [...data_set[prop], item] : [item];
-
 export const segregateMarkets = (active_symbols) =>
   active_symbols.reduce(
     (markets, symbol) => ({
