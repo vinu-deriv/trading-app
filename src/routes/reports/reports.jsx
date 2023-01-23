@@ -1,11 +1,15 @@
 import classNames from "classnames";
 import styles from "./reports.module.scss";
 import { OpenPosition, Statements } from "../../components";
-import { Show, createSignal } from "solid-js";
+import { Show, createSignal, onMount } from "solid-js";
+import { redirectToLogin } from "Utils/user-redirect-to-login";
 
 const Reports = () => {
   const [tab_index, setTabIndex] = createSignal(1);
 
+  onMount(() => {
+    redirectToLogin();
+  });
   return (
     <div class={classNames(styles["tabs"], styles["effect-3"])}>
       <input
