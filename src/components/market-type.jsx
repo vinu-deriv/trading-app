@@ -16,12 +16,14 @@ import {
   setSubscribeId,
   subscribe_id,
 } from "../stores";
+import { login_information } from "../stores/base-store";
 import ActivityIcon from "../assets/svg/activity.svg";
 import HeartIcon from "../assets/svg/heart.svg";
 import TrashBinIcon from "../assets/svg/trash.svg";
 import classNames from "classnames";
 import shared from "../styles/shared.module.scss";
 import styles from "../styles/accordion.module.scss";
+import { Button } from "./button";
 
 const generateData = (data_set = {}, prop, item) =>
   prop in data_set ? [...data_set[prop], item] : [item];
@@ -222,10 +224,13 @@ const Accordion = () => {
                     )}
                   </div>
                   <div class={styles.action}>
-                    <button
-                      class={classNames(styles.button, styles["button--trade"])}
+                    <Button
+                      type="trade"
                       onClick={(evnt) => selectTrade(evnt, index)}
-                      disabled={!tradeTypes().exchange_is_open}
+                      disabled={
+                        !tradeTypes().exchange_is_open ||
+                        !login_information.is_logged_in
+                      }
                     >
                       <SVGWrapper
                         id={`trade-icon-${index}`}
@@ -233,12 +238,9 @@ const Accordion = () => {
                         stroke="green"
                       />
                       Open trade
-                    </button>
-                    <button
-                      class={classNames(
-                        styles.button,
-                        styles["button--favourite"]
-                      )}
+                    </Button>
+                    <Button
+                      type="teriary_light"
                       onClick={(evnt) => addToWatchlist(evnt, index)}
                     >
                       <Show
@@ -265,7 +267,7 @@ const Accordion = () => {
                           <span>Remove from Watchlist</span>
                         </>
                       </Show>
-                    </button>
+                    </Button>
                   </div>
                 </div>
               )}

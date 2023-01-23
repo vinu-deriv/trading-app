@@ -12,6 +12,7 @@ import {
 import { setshowAccountSwitcher } from "Stores/ui-store";
 import { is_light_theme, setIsLightTheme } from "../stores";
 import { isDesktop, isMobile } from "Utils/responsive";
+import { Button } from "./button";
 
 const NavBar = () => {
   const navigate = useNavigate();
@@ -91,14 +92,11 @@ const NavBar = () => {
         {login_information.is_logged_in && <li onClick={logout}> Sign Out</li>}
       </ul>
       {login_information.is_logged_in ? (
-        <button
-          class={styles.account_info}
-          onClick={() => setshowAccountSwitcher(true)}
-        >
+        <Button type="secondrary" onClick={() => setshowAccountSwitcher(true)}>
           <div class={styles.account_wrapper}>
             <AccountHeader />
           </div>
-        </button>
+        </Button>
       ) : (
         !login_information.is_logging_in && (
           <div
