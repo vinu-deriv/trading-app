@@ -1,4 +1,5 @@
-import { children, createSignal, For, Show } from "solid-js";
+import { For, Show, children, createSignal } from "solid-js";
+
 import TabTitle from "./tab-title";
 import styles from "./tabs.module.scss";
 

@@ -163,8 +163,24 @@ const MarketList = () => {
     <>
       <h3 class={styles["title"]}>What would you like to trade with?</h3>
       <Show when={market_data()}>
-        <DataTable headers={header} data={market_data()} show_header={true} />
+        <DataTable
+          headers={header}
+          data={market_data()}
+          show_header={true}
+          table_class={styles["market-list"]}
+        />
       </Show>
+      {/* <Tabs>
+        <Tab title="Tab 1" onClick={() => console.log("Clicked 1")}>
+          <div>Tab1</div>
+        </Tab>
+        <Tab title="Tab 2" onClick={() => console.log("Clicked 2")}>
+          <div>Tab1</div>
+        </Tab>
+        <Tab title="Tab 3" >
+          <div>Tab1</div>
+        </Tab>
+      </Tabs> */}
     </>
   );
 };

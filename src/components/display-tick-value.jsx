@@ -39,7 +39,9 @@ const DisplayTickValue = (props) => {
   return (
     <Show
       when={!is_loading() && !!market_ticks()[props.data]}
-      fallback={<Loader class={shared["loader-position"]} />}
+      fallback={
+        <Loader class={shared["loader-position"]} type="1" size="1.5rem" />
+      }
     >
       <Switch>
         <Match when={market_ticks()[props.data]["is_closed"] === true}>
@@ -48,14 +50,14 @@ const DisplayTickValue = (props) => {
           </span>
         </Match>
         <Match when={market_ticks()[props.data]["is_closed"] === false}>
-          <span
+          <b
             class={classNames(
-              styles.text,
-              styles[`text--${difference().status}`]
+              styles.badge,
+              styles[`badge--${difference().status}`]
             )}
           >
-            <b>{difference()["value"]}</b>
-          </span>
+            {difference()["value"]}
+          </b>
         </Match>
       </Switch>
     </Show>

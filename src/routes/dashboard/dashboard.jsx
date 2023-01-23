@@ -19,6 +19,7 @@ import shared from "../../styles/shared.module.scss";
 import styles from "../../styles/dashboard.module.scss";
 import { subscribe } from "Utils/socket-base";
 import { useNavigate } from "solid-app-router";
+import { Button } from "../../components/button";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -90,13 +91,13 @@ const Dashboard = () => {
         fallback={
           <div class={styles["no-list"]}>
             <div>You have not added anything to your Watchlist.</div>
-            <button
-              class={styles["trade--button"]}
+            <Button
+              type="primary"
               onClick={() => navigate("/trade", { replace: true })}
             >
               {" "}
               Go to Trading
-            </button>
+            </Button>
           </div>
         }
       >

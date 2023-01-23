@@ -4,6 +4,7 @@ import Loader from "./loader";
 import { is_loading } from "../stores";
 import { market_ticks } from "../stores";
 import shared from "../styles/shared.module.scss";
+import styles from "../styles/watchlist.module.scss";
 
 const DisplayChangePercent = (props) => {
   const [difference, setDifference] = createSignal({ value: 0 });
@@ -35,7 +36,9 @@ const DisplayChangePercent = (props) => {
       when={!is_loading()}
       fallback={<Loader class={shared["loader-position"]} />}
     >
-      <b>{difference()["value"].toFixed(2)} %</b>
+      <b class={styles[`text--${difference().status}`]}>
+        {difference()["value"].toFixed(2)} %
+      </b>
     </Show>
   );
 };

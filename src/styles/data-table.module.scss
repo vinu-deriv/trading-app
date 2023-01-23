@@ -1,3 +1,8 @@
+table {
+  display: flex;
+  flex-direction: column;
+}
+
 .data-table {
   .title {
     text-align: start;
@@ -5,15 +10,34 @@
   }
   border-collapse: collapse;
   width: 100%;
+
+  tr {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr;
+  }
+
+  tbody {
+    line-height: var(--text-lh-m);
+  }
   th,
   td {
+    display: grid;
+    grid-template-columns: repeat(1fr, 3);
     border-top: 1px solid #ddd;
     padding: 8px;
     text-align: start;
     box-sizing: border-box;
+    font-size: var(--text-size-s);
+    align-content: center;
   }
   th {
     padding-top: 12px;
     padding-bottom: 12px;
+  }
+
+  td {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 }

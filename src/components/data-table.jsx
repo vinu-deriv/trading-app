@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { For, Show } from "solid-js";
 
 import classNames from "classnames";
@@ -21,7 +22,13 @@ const DataTable = (props) => {
       <tbody class={classNames(styles["table-body"], props.table_body_class)}>
         <For each={props.data}>
           {(cell_value) => (
-            <tr>
+            <tr
+              draggable="true"
+              onDragStart={() => console.log("onDragStart")}
+              onTouchMove={() => console.log("onTouchMove")}
+              onTouchStart={() => console.log("onTouchStart")}
+              style={{ border: "solid 1px black" }}
+            >
               <For each={props.headers}>
                 {(header) =>
                   header.cell_content ? (

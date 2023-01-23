@@ -3,6 +3,7 @@ import { endpoint, setEndpoint } from "Stores/base-store";
 
 import { createStore } from "solid-js/store";
 import { onMount } from "solid-js";
+import { Button } from "../../components/button";
 
 const Endpoint = () => {
   const [form_fields, setFormFields] = createStore();
@@ -63,10 +64,17 @@ const Endpoint = () => {
           />
         </div>
         <div>
-          <button type="submit">Submit</button>
-          <button type="button" onClick={onFormReset}>
+          <Button
+            type="flat"
+            onClick={() => {
+              onFormSubmit;
+            }}
+          >
+            Submit
+          </Button>
+          <Button type="tertiary" onClick={onFormReset}>
             Reset
-          </button>
+          </Button>
         </div>
       </form>
     </div>

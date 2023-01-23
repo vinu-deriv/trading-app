@@ -79,20 +79,6 @@
   display: flex;
 }
 
-.button {
-  display: flex;
-  height: fit-content;
-  align-items: center;
-  border-radius: 4px;
-
-  &--trade {
-    border: 1px solid greenyellow;
-  }
-
-  &--favourite {
-    border: 1px solid coral;
-  }
-}
 
 .disabled {
   color: var(--text-sub);
@@ -114,4 +100,11 @@
 
 .title {
   color: var(--text-main);
+}
+
+.market-list {
+  th:not(:first-child),
+  td:not(:first-child) {
+    text-align: end;
+  }
 }
