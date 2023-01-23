@@ -24,9 +24,10 @@ const DataTable = (props) => {
           {(cell_value) => (
             <tr
               draggable="true"
-              onDragStart={() => console.log("onDragStart")}
+              onDragCapture={() => console.log("onDragStart")}
               onTouchMove={() => console.log("onTouchMove")}
-              onTouchStart={() => console.log("onTouchStart")}
+              onTouchMoveCapture={() => console.log("onTouchMoveCapture")}
+              onTouchEnd={() => console.log("onTouchEnd")}
               style={{ border: "solid 1px black" }}
             >
               <For each={props.headers}>
