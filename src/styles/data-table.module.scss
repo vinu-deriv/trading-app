@@ -18,6 +18,15 @@ table {
 
   tbody {
     line-height: var(--text-lh-m);
+    tr {
+      width: 100%;
+      transition: width 2s;
+      touch-action: pan-x;
+    }
+
+    tr:active {
+      width: 80%;
+    }
   }
   th,
   td {
@@ -38,14 +47,9 @@ table {
   td {
     white-space: nowrap;
     text-overflow: ellipsis;
-    transition: width 2s;
 
     &:not(:last-child) {
       overflow: hidden;
-    }
-
-    &:active {
-      width: 80%;
     }
   }
 }
