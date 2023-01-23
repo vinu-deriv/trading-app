@@ -34,7 +34,7 @@ const DisplayChangePercent = (props) => {
   return (
     <Show
       when={!is_loading()}
-      fallback={<Loader class={shared["loader-position"]} />}
+      fallback={<Loader class={shared["spinner"]} type="1" size="1.5rem" />}
     >
       <b class={styles[`text--${difference().status}`]}>
         {difference()["value"].toFixed(2)} %

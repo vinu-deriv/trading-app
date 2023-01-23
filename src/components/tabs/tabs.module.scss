@@ -1,24 +1,25 @@
 .tabs-container {
-   &__header > ul {
-        list-style-type: none;
-        padding-left: 0;
-        display: flex;
-    }
+  &__header > ul {
+    list-style-type: none;
+    padding-left: 0;
+    display: flex;
+    overflow: auto;
+  }
 
-    &__content {
-        color: var(--text-main);
-        padding: 0 16px;
-    }
+  &__content {
+    color: var(--text-main);
+    // padding: 0 16px;
+  }
 }
 
 .tab-title {
-    color: var(--text-main);
-    height: 48px;
-    padding: 0 16px;
-    display: flex;
-    align-items: center;
+  color: var(--text-main);
+  height: 48px;
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
 
-    &--active {
-        border-bottom: 2px solid var(--button-red);
-    }
+  &--active {
+    border-bottom: 2px solid var(--button-red);
+  }
 }

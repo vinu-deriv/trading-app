@@ -2,8 +2,11 @@ import {
   DataTable,
   DisplayChangePercent,
   DisplayTickValue,
+  Tab,
+  Tabs,
 } from "../components";
-import { Show, createSignal, onCleanup, onMount } from "solid-js";
+import { FAVOURITES, MARKET_TYPES } from "../constants/trade-config";
+import { For, Show, createSignal, onCleanup, onMount } from "solid-js";
 import {
   activeSymbols,
   fetchMarketTick,
@@ -11,30 +14,37 @@ import {
   setMarketTicks,
 } from "../stores";
 import { addDays, formatDate } from "../utils/format-value";
-import { forgetAll, sendRequest } from "../utils/socket-base";
+import { forgetAll, sendRequest, wait } from "../utils/socket-base";
 
 import { ERROR_CODE } from "../constants/error-codes";
+import { getFavourites } from "../utils/map-markets";
 import { segregateMarkets } from "../utils/map-markets";
 import styles from "../styles/accordion.module.scss";
 import throttle from "lodash.throttle";
 
 const MarketList = () => {
-  const header = [
+  const header_config = [
     { title: "Name", ref: "display_name" },
     { title: "Change %", ref: "change", cell_content: DisplayChangePercent },
     { title: "Price", ref: "tick", cell_content: DisplayTickValue },
   ];
 
-  const MARKET_TYPE = "synthetic_index"; // "indices";
+  const default_tab = {
+    title: "Favourites",
+    ref: "favs",
+  };
 
   const [all_markets, setAllMarkets] = createSignal([]);
   const [available_markets, setAvailableMarkets] = createSignal([]);
   const [market_data, setMarketData] = createSignal(null);
+  const [active_tab, setActiveTab] = createSignal(0);
+  const [is_market_closed, setIsMarketClosed] = createSignal();
 
   onMount(() => {
     setAllMarkets(segregateMarkets(activeSymbols()));
-    getAvailableMarkets(MARKET_TYPE);
-    getMarketData(MARKET_TYPE);
+    setActiveTab(0);
+    setIsMarketClosed(false);
+    getWatchList();
   });
 
   onCleanup(() => {
@@ -61,10 +71,19 @@ const MarketList = () => {
       tick: markets.symbol,
     }));
 
-  const fetchAvailableMarketSymbols = (market_type) =>
-    available_markets().filter(
+  const fetchAvailableMarketSymbols = (market_type) => {
+    const requiredMarkets = available_markets().filter(
       (market_data) => market_data.market === market_type
     );
+    return requiredMarkets.map((market) => market.symbol);
+  };
+
+  const setTabList = (abvl_markets) => [
+    default_tab,
+    ...MARKET_TYPES.filter((type) =>
+      Object.keys(abvl_markets).includes(type.ref)
+    ),
+  ];
 
   const generateTickData = ({
     previous = 0,
@@ -140,16 +159,19 @@ const MarketList = () => {
       // eslint-disable-next-line no-console
       const { echo_req, error } = response;
       if (error.code === ERROR_CODE.market_closed) {
-        await checkWhenMarketOpens(0, echo_req.ticks);
+        if (!is_market_closed()) {
+          setIsMarketClosed(true);
+          await checkWhenMarketOpens(0, echo_req.ticks);
+        }
       }
     }
   };
 
-  const getMarketData = async (market_type) => {
-    // forgetAll("ticks");
-    const requiredMarkets = fetchAvailableMarketSymbols(market_type);
-    const symbol_list = requiredMarkets.map((market) => market.symbol);
-    // await wait("forget_all");
+  const getMarketData = async (symbol_list) => {
+    if (Object.keys(market_ticks()).length) {
+      await forgetAll("ticks");
+      await wait("forget_all");
+    }
     setMarketData(generateDataSet());
     symbol_list.forEach(async (symbol) => {
       await fetchMarketTick(symbol, throttle(marketDataHandler, 500));
@@ -159,28 +181,66 @@ const MarketList = () => {
   const getAvailableMarkets = (market_type) =>
     setAvailableMarkets(all_markets()[market_type]);
 
+  const fetchSelectedMarket = (tab_ref) => {
+    setIsMarketClosed(false);
+    const { index, id } = tab_ref;
+    setActiveTab(index);
+    if (id === FAVOURITES) {
+      getWatchList();
+    } else {
+      getAvailableMarkets(id);
+      const symbol_list = fetchAvailableMarketSymbols(id);
+      getMarketData(symbol_list);
+    }
+  };
+
+  const getWatchList = () => {
+    const favourite_markets = getFavourites();
+    const selected_markets = activeSymbols().filter((markets) =>
+      favourite_markets.includes(markets.symbol)
+    );
+    setAvailableMarkets(selected_markets);
+    getMarketData(favourite_markets);
+  };
+
+  const updateWatchlist = (row_data) => {
+    let new_list = [];
+    const favourite_markets = getFavourites();
+    const active_user = localStorage.getItem("userId") ?? "guest";
+    if (favourite_markets.includes(row_data.tick)) {
+      new_list = favourite_markets.filter((sym) => sym !== row_data.tick);
+    } else {
+      new_list = [...favourite_markets, row_data.tick];
+      localStorage.setItem(
+        `${active_user}-favourites`,
+        JSON.stringify(new_list)
+      );
+    }
+  };
+
   return (
     <>
       <h3 class={styles["title"]}>What would you like to trade with?</h3>
-      <Show when={market_data()}>
-        <DataTable
-          headers={header}
-          data={market_data()}
-          show_header={true}
-          table_class={styles["market-list"]}
-        />
-      </Show>
-      {/* <Tabs>
-        <Tab title="Tab 1" onClick={() => console.log("Clicked 1")}>
-          <div>Tab1</div>
-        </Tab>
-        <Tab title="Tab 2" onClick={() => console.log("Clicked 2")}>
-          <div>Tab1</div>
-        </Tab>
-        <Tab title="Tab 3" >
-          <div>Tab1</div>
-        </Tab>
-      </Tabs> */}
+      <Tabs
+        onTabItemClick={(tab_ref) => fetchSelectedMarket(tab_ref)}
+        active_index={active_tab()}
+      >
+        <For each={setTabList(all_markets())}>
+          {(tabs) => (
+            <Tab label={tabs.title} id={tabs.ref}>
+              <Show when={market_data()}>
+                <DataTable
+                  headers={header_config}
+                  data={market_data()}
+                  show_header={true}
+                  table_class={styles["market-list"]}
+                  onRowSelect={(data) => updateWatchlist(data)}
+                />
+              </Show>
+            </Tab>
+          )}
+        </For>
+      </Tabs>
     </>
   );
 };

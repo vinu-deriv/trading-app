@@ -39,9 +39,7 @@ const DisplayTickValue = (props) => {
   return (
     <Show
       when={!is_loading() && !!market_ticks()[props.data]}
-      fallback={
-        <Loader class={shared["loader-position"]} type="1" size="1.5rem" />
-      }
+      fallback={<Loader class={shared["spinner"]} type="1" size="1.5rem" />}
     >
       <Switch>
         <Match when={market_ticks()[props.data]["is_closed"] === true}>
