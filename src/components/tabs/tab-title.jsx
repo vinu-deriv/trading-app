@@ -7,7 +7,10 @@ const TabTitle = (props) => {
       class={classNames(styles["tab-title"], {
         [styles["tab-title--active"]]: props.active,
       })}
-      onClick={() => props.setSelectedTab(props.index)}
+      onClick={() => {
+        props.setSelectedTab(props.index);
+        props.onClick?.(props.index);
+      }}
     >
       {props.label}
     </li>
