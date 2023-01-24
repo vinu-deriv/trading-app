@@ -64,15 +64,10 @@ const Endpoint = () => {
           />
         </div>
         <div>
-          <Button
-            type="flat"
-            onClick={() => {
-              onFormSubmit;
-            }}
-          >
+          <Button category="flat" type="submit">
             Submit
           </Button>
-          <Button type="tertiary" onClick={onFormReset}>
+          <Button category="tertiary" onClick={onFormReset}>
             Reset
           </Button>
         </div>

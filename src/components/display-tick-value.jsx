@@ -51,7 +51,8 @@ const DisplayTickValue = (props) => {
           <b
             class={classNames(
               styles.badge,
-              styles[`badge--${difference().status}`]
+              styles[`badge--${difference().status}`],
+              styles["badge-align"]
             )}
           >
             {difference()["value"]}

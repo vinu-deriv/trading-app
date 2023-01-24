@@ -82,7 +82,7 @@ const Dashboard = () => {
           <div class={styles["no-list"]}>
             <div>You have not added anything to your Watchlist.</div>
             <Button
-              type="primary"
+              category="primary"
               onClick={() => navigate("/trade", { replace: true })}
             >
               {" "}

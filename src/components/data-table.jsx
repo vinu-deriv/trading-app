@@ -1,10 +1,20 @@
 /* eslint-disable no-console */
-import { For, Show } from "solid-js";
+import { For, Show, createEffect, createSignal } from "solid-js";
 
 import classNames from "classnames";
+import { detectTouch } from "../utils/responsive";
 import styles from "../styles/data-table.module.scss";
+import { swipe_direction } from "../stores/ui-store";
 
 const DataTable = (props) => {
+  const [active_index, setActiveIndex] = createSignal(null);
+
+  createEffect(() => {
+    if (swipe_direction() === "RIGHT") {
+      setActiveIndex(null);
+    }
+  });
+
   return (
     <div style={{ position: "relative" }}>
       <table class={classNames(styles["data-table"], props.table_class)}>
@@ -28,11 +38,15 @@ const DataTable = (props) => {
           )}
         >
           <For each={props.data}>
-            {(cell_value) => (
+            {(cell_value, index) => (
               <tr
                 draggable="true"
-                onDragCapture={() => console.log("onDragStart")}
-                onTouchMove={(evnt) => console.log("onTouchMove: ", evnt)}
+                onTouchStart={() => setActiveIndex(index())}
+                ref={(el) => detectTouch(el)}
+                class={classNames({
+                  [styles.active]:
+                    swipe_direction() === "LEFT" && index() === active_index(),
+                })}
               >
                 <td>
                   <For each={props.headers}>

@@ -91,7 +91,7 @@ const Watchlist = (props) => {
         <MarketValue symbol={props.symbol} />
       </div>
       <Button
-        type="primary"
+        category="primary"
         onClick={(event) => {
           event.stopPropagation();
           removeWatchlistHandler(props.symbol);

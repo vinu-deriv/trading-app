@@ -95,7 +95,10 @@ const NavBar = () => {
         {login_information.is_logged_in && <li onClick={logout}> Sign Out</li>}
       </ul>
       {login_information.is_logged_in ? (
-        <Button type="secondrary" onClick={() => setshowAccountSwitcher(true)}>
+        <Button
+          category="secondrary"
+          onClick={() => setshowAccountSwitcher(true)}
+        >
           <div class={styles.account_wrapper}>
             <AccountHeader />
           </div>

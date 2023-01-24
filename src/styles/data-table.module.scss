@@ -76,7 +76,10 @@ table {
     z-index: 1;
     position: relative;
   }
-  tr:active {
+  // tr:active {
+  //   width: 85%;
+  // }
+  .active {
     width: 85%;
   }
 }
