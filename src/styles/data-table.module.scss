@@ -7,7 +7,6 @@ table {
 }
 
 .data-table {
-  // z-index: 1;
   .title {
     text-align: start;
     font-size: smaller;
@@ -77,7 +76,7 @@ table {
     z-index: 1;
     position: relative;
   }
-  tr:hover {
+  tr:active {
     width: 85%;
   }
 }
