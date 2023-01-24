@@ -1,5 +1,5 @@
 import { For, Show, createSignal, onCleanup, onMount } from "solid-js";
-import { Loader, Watchlist } from "../../components";
+import { Loader, Watchlist, Slider } from "../../components";
 import {
   prev_watch_list,
   selected_markets,
@@ -102,16 +102,19 @@ const Dashboard = () => {
       >
         <For each={selected_markets()}>
           {(marketInfo) => (
-            <Watchlist
-              name={marketInfo.display_name}
-              symbol={marketInfo.symbol}
-              market={marketInfo.market_display_name}
-              submarket={marketInfo.submarket_display_name}
-              onClick={() => {
-                setSelectedTradeType(marketInfo);
-                navigate("/trade", { replace: true });
-              }}
-            />
+            <>
+              <Watchlist
+                name={marketInfo.display_name}
+                symbol={marketInfo.symbol}
+                market={marketInfo.market_display_name}
+                submarket={marketInfo.submarket_display_name}
+                onClick={() => {
+                  setSelectedTradeType(marketInfo);
+                  navigate("/trade", { replace: true });
+                }}
+              />
+              <Slider symbol={marketInfo.symbol} />
+            </>
           )}
         </For>
       </Show>

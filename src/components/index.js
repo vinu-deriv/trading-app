@@ -7,6 +7,7 @@ import OpenPosition from "./open-position";
 import Statements from "./statements";
 import Accordion from "./market-type";
 import { Tab, Tabs } from "./tabs";
+import Slider from "./tick-slider";
 
 export {
   Watchlist,
@@ -19,4 +20,5 @@ export {
   Accordion,
   Tab,
   Tabs,
+  Slider,
 };
