@@ -20,14 +20,19 @@ const DataTable = (props) => {
             </tr>
           </thead>
         </Show>
-        <tbody class={classNames(styles["table-body"], props.table_body_class)}>
+        <tbody
+          class={classNames(
+            styles["table-body"],
+            styles["slider"],
+            props.table_body_class
+          )}
+        >
           <For each={props.data}>
             {(cell_value) => (
               <tr
                 draggable="true"
                 onDragCapture={() => console.log("onDragStart")}
                 onTouchMove={(evnt) => console.log("onTouchMove: ", evnt)}
-                style={{ border: "solid 1px black" }}
               >
                 <For each={props.headers}>
                   {(header) =>
@@ -68,10 +73,10 @@ const DataTable = (props) => {
         <tbody class={classNames(styles["table-body"], props.table_body_class)}>
           <For each={props.data}>
             {(cell_value) => (
-              <tr style={{ border: "solid 1px black" }}>
+              <tr>
                 <For each={props.headers}>
                   {(header, index) => (
-                    <td>
+                    <td onClick={() => console.log("TD clicked")}>
                       <props.config.action_component
                         data={props.config.watchlist}
                         selected={cell_value.tick}

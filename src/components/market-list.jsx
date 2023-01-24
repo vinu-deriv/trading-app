@@ -209,17 +209,16 @@ const MarketList = () => {
   };
 
   const updateWatchlist = (row_data) => {
-    let new_list = [];
+    console.log("Row data: ", row_data);
     const favourite_markets = getFavourites();
     const active_user = localStorage.getItem("userId") ?? "guest";
-    if (favourite_markets.includes(row_data.tick)) {
-      new_list = favourite_markets.filter((sym) => sym !== row_data.tick);
-    } else {
-      new_list = [...favourite_markets, row_data.tick];
-      localStorage.setItem(
-        `${active_user}-favourites`,
-        JSON.stringify(new_list)
-      );
+    console.log("favourite_markets: ", favourite_markets);
+    const new_list = favourite_markets.includes(row_data.tick)
+      ? favourite_markets.filter((sym) => sym !== row_data.tick)
+      : [...favourite_markets, row_data.tick];
+    localStorage.setItem(`${active_user}-favourites`, JSON.stringify(new_list));
+    if (active_tab() === 0) {
+      getWatchList();
     }
   };
 
@@ -257,7 +256,7 @@ const MarketList = () => {
 
 const MarketListAction = (props) => {
   return (
-    <div onClick={() => props.onAction()}>
+    <div id="action" onClick={() => props.onAction()}>
       <Show
         when={props.data.find((mkt) => mkt === props.selected)}
         fallback={

@@ -5,7 +5,7 @@ table {
 }
 
 .data-table {
-  z-index: 1;
+  // z-index: 1;
   .title {
     text-align: start;
     font-size: smaller;
@@ -26,10 +26,6 @@ table {
       transition: width 0.5s;
       touch-action: pan-x;
       min-height: 46px;
-    }
-
-    tr:hover {
-      width: 85%;
     }
   }
   th,
@@ -58,8 +54,22 @@ table {
   }
 }
 
+.slider {
+  tr {
+    z-index: 1;
+    position: relative;
+  }
+  tr:hover {
+    width: 85%;
+  }
+}
+
 .action-table {
   z-index: 0;
   position: absolute;
   top: 0;
+
+  tr {
+    max-height: 46px;
+  }
 }
