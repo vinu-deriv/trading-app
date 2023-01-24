@@ -256,7 +256,11 @@ const MarketList = () => {
 
 const MarketListAction = (props) => {
   return (
-    <div id="action" onClick={() => props.onAction()}>
+    <div
+      id="action"
+      onClick={() => props.onAction()}
+      class={styles["action-position"]}
+    >
       <Show
         when={props.data.find((mkt) => mkt === props.selected)}
         fallback={
@@ -264,8 +268,9 @@ const MarketListAction = (props) => {
             <SVGWrapper
               id={`watch-icon-${props.index}`}
               icon={HeartIcon}
-              stroke="red"
+              stroke="white"
               class={watchlist_styles["fav-icon-position"]}
+              height="16"
             />
           </>
         }
@@ -274,8 +279,9 @@ const MarketListAction = (props) => {
           <SVGWrapper
             id={`watch-icon-${props.index}`}
             icon={TrashBinIcon}
-            stroke="red"
+            stroke="white"
             class={watchlist_styles["fav-icon-position"]}
+            height="16"
           />
         </>
       </Show>

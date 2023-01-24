@@ -79,7 +79,6 @@
   display: flex;
 }
 
-
 .disabled {
   color: var(--text-sub);
   cursor: pointer;
@@ -107,4 +106,8 @@
   td:not(:first-child) {
     text-align: end;
   }
+}
+
+.action-position {
+  margin-right: 0.4rem;
 }

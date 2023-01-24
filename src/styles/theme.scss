@@ -13,10 +13,10 @@
 
   .theme-light {
     --button-red: #{$brand-red-coral};
-    --glow-red:#{$brand-red-coral-2};
+    --glow-red: #{$brand-red-coral-2};
     --button-disabled: #{$brand-disabled-1};
     --button-green: #{$brand-green};
-    --glow-green:#{$brand-green-2}
+    --glow-green: #{$brand-green-2};
     --button-yellow: #{$yellow};
     --text-main: #{$text-black};
     --text-sub: #{$brand-disabled-2};
@@ -30,15 +30,15 @@
     --overlay: #{$overlay-1};
     --border-1: #{$border-1};
     --row-hover: #{$brand-disabled-1};
-    --loader:#{$accent-blue-1}
+    --loader: #{$accent-blue-1};
   }
 
   .theme-dark {
     --button-red: #{$brand-red-coral};
-    --glow-red:#{$brand-red-coral-2};
+    --glow-red: #{$brand-red-coral-2};
     --button-disabled: #{$brand-disabled-1};
     --button-green: #{$brand-green};
-    --glow-green:#{$brand-green-2};
+    --glow-green: #{$brand-green-2};
     --button-yellow: #{$yellow};
     --text-main: #{$text-white};
     --text-sub: #{$brand-disabled-3};
@@ -53,7 +53,7 @@
     --border-1: #{$border-2};
     --overlay: #{$overlay-2};
     --row-hover: #{$color-grey-7};
-    --loader:#{$accent-blue-2};
+    --loader: #{$accent-blue-2};
   }
 }
 

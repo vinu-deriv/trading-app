@@ -34,17 +34,19 @@ const DataTable = (props) => {
                 onDragCapture={() => console.log("onDragStart")}
                 onTouchMove={(evnt) => console.log("onTouchMove: ", evnt)}
               >
-                <For each={props.headers}>
-                  {(header) =>
-                    header.cell_content ? (
-                      <td>
-                        <header.cell_content data={cell_value[header.ref]} />
-                      </td>
-                    ) : (
-                      <td>{cell_value[header.ref]}</td>
-                    )
-                  }
-                </For>
+                <td>
+                  <For each={props.headers}>
+                    {(header) =>
+                      header.cell_content ? (
+                        <div>
+                          <header.cell_content data={cell_value[header.ref]} />
+                        </div>
+                      ) : (
+                        <div>{cell_value[header.ref]}</div>
+                      )
+                    }
+                  </For>
+                </td>
               </tr>
             )}
           </For>
@@ -72,20 +74,26 @@ const DataTable = (props) => {
         </Show>
         <tbody class={classNames(styles["table-body"], props.table_body_class)}>
           <For each={props.data}>
-            {(cell_value) => (
+            {(cell_value, index) => (
               <tr>
-                <For each={props.headers}>
-                  {(header, index) => (
-                    <td onClick={() => console.log("TD clicked")}>
-                      <props.config.action_component
-                        data={props.config.watchlist}
-                        selected={cell_value.tick}
-                        index={index()}
-                        onAction={() => props.config.onAction(cell_value)}
-                      />
-                    </td>
-                  )}
-                </For>
+                <td
+                  onClick={() => console.log("TD clicked")}
+                  class={classNames({
+                    [styles.add]: !props.config.watchlist.includes(
+                      cell_value.tick
+                    ),
+                    [styles.remove]: props.config.watchlist.includes(
+                      cell_value.tick
+                    ),
+                  })}
+                >
+                  <props.config.action_component
+                    data={props.config.watchlist}
+                    selected={cell_value.tick}
+                    index={index()}
+                    onAction={() => props.config.onAction(cell_value)}
+                  />
+                </td>
               </tr>
             )}
           </For>
