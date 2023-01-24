@@ -19,7 +19,9 @@ const NavBar = () => {
   const navigate = useNavigate();
   const current_acc_data = () => {
     const account = JSON.parse(login_information?.active_account);
-    return balance_of_all_accounts()[account.loginid];
+    if (account) return balance_of_all_accounts()[account.loginid];
+
+    logout();
   };
 
   const [checked, setChecked] = createSignal(false);
