@@ -1,7 +1,7 @@
 import classNames from "classnames";
 import styles from "../styles/buttons.module.scss";
 
-export const Button = (props) => {
+const Button = (props) => {
   return (
     <button
       onClick={(evnt) => props.onClick(evnt)}
@@ -20,3 +20,5 @@ export const Button = (props) => {
     </button>
   );
 };
+
+export default Button;

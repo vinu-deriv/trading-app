@@ -1,8 +1,7 @@
+import { Button, Loader, Watchlist } from "../../components";
 import { For, Show, createSignal, onCleanup, onMount } from "solid-js";
-import { Loader, Watchlist } from "../../components";
 import { selected_markets, setSelectedTradeType } from "../../stores";
 
-import { Button } from "../../components/button";
 import { createStore } from "solid-js/store";
 import { login_information } from "Stores/base-store";
 import monitorNetwork from "Utils/network-status";

@@ -1,9 +1,9 @@
 import { configureEndpoint, getAppId, getSocketUrl } from "../../utils/config";
 import { endpoint, setEndpoint } from "Stores/base-store";
 
+import { Button } from "../../components";
 import { createStore } from "solid-js/store";
 import { onMount } from "solid-js";
-import { Button } from "../../components/button";
 
 const Endpoint = () => {
   const [form_fields, setFormFields] = createStore();

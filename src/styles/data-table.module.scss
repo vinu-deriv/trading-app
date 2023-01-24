@@ -1,9 +1,11 @@
 table {
   display: flex;
   flex-direction: column;
+  position: relative;
 }
 
 .data-table {
+  z-index: 1;
   .title {
     text-align: start;
     font-size: smaller;
@@ -14,18 +16,20 @@ table {
   tr {
     display: grid;
     grid-template-columns: 1.5fr 1fr 1fr;
+    background-color: var(--section-background-1);
   }
 
   tbody {
     line-height: var(--text-lh-m);
     tr {
       width: 100%;
-      transition: width 2s;
+      transition: width 0.5s;
       touch-action: pan-x;
+      min-height: 46px;
     }
 
-    tr:active {
-      width: 80%;
+    tr:hover {
+      width: 85%;
     }
   }
   th,
@@ -52,4 +56,10 @@ table {
       overflow: hidden;
     }
   }
+}
+
+.action-table {
+  z-index: 0;
+  position: absolute;
+  top: 0;
 }

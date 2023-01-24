@@ -1,7 +1,8 @@
-import styles from "../styles/error-component.module.scss";
-import { onCleanup, Show } from "solid-js";
+import { Show, onCleanup } from "solid-js";
+
+import { Button } from "../components";
 import { setErrorMessage } from "./../stores";
-import { Button } from "./button";
+import styles from "../styles/error-component.module.scss";
 
 const ErrorComponent = (props) => {
   onCleanup(() => {

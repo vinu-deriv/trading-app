@@ -1,6 +1,7 @@
 import { Tab, Tabs } from "./tabs";
 
 import AccountSwitcher from "./account-switcher";
+import Button from "./button";
 import DataTable from "./data-table";
 import DisplayChangePercent from "./displasy-change-percent";
 import DisplayTickValue from "./display-tick-value";
@@ -26,4 +27,5 @@ export {
   DisplayChangePercent,
   DataTable,
   DisplayTickValue,
+  Button,
 };

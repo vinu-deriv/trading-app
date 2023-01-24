@@ -1,7 +1,9 @@
+/* eslint-disable no-console */
 import {
   DataTable,
   DisplayChangePercent,
   DisplayTickValue,
+  SVGWrapper,
   Tab,
   Tabs,
 } from "../components";
@@ -17,10 +19,13 @@ import { addDays, formatDate } from "../utils/format-value";
 import { forgetAll, sendRequest, wait } from "../utils/socket-base";
 
 import { ERROR_CODE } from "../constants/error-codes";
+import HeartIcon from "../assets/svg/heart.svg";
+import TrashBinIcon from "../assets/svg/trash.svg";
 import { getFavourites } from "../utils/map-markets";
 import { segregateMarkets } from "../utils/map-markets";
 import styles from "../styles/accordion.module.scss";
 import throttle from "lodash.throttle";
+import watchlist_styles from "../styles/watchlist.module.scss";
 
 const MarketList = () => {
   const header_config = [
@@ -234,7 +239,12 @@ const MarketList = () => {
                   data={market_data()}
                   show_header={true}
                   table_class={styles["market-list"]}
-                  onRowSelect={(data) => updateWatchlist(data)}
+                  onRowSelect={() => console.log("On row select")}
+                  config={{
+                    watchlist: getFavourites(),
+                    action_component: MarketListAction,
+                    onAction: (data) => updateWatchlist(data),
+                  }}
                 />
               </Show>
             </Tab>
@@ -242,6 +252,35 @@ const MarketList = () => {
         </For>
       </Tabs>
     </>
+  );
+};
+
+const MarketListAction = (props) => {
+  return (
+    <div onClick={() => props.onAction()}>
+      <Show
+        when={props.data.find((mkt) => mkt === props.selected)}
+        fallback={
+          <>
+            <SVGWrapper
+              id={`watch-icon-${props.index}`}
+              icon={HeartIcon}
+              stroke="red"
+              class={watchlist_styles["fav-icon-position"]}
+            />
+          </>
+        }
+      >
+        <>
+          <SVGWrapper
+            id={`watch-icon-${props.index}`}
+            icon={TrashBinIcon}
+            stroke="red"
+            class={watchlist_styles["fav-icon-position"]}
+          />
+        </>
+      </Show>
+    </div>
   );
 };
 
