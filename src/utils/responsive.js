@@ -49,31 +49,39 @@ export const detectTouch = (touchArea) => {
   };
   isTouchDevice();
   // Start Swipe
-  touchArea.addEventListener(events[deviceType].down, (event) => {
-    isSwiped = true;
-    // Get X and Y Position
-    getXY(event);
-    initialX = mouseX;
-    initialY = mouseY;
-  });
-  // Mousemove / touchmove
-  touchArea.addEventListener(events[deviceType].move, (event) => {
-    if (!isTouchDevice()) {
-      event.preventDefault();
-    }
-    if (isSwiped) {
+  touchArea.addEventListener(
+    events[deviceType].down,
+    (event) => {
+      isSwiped = true;
+      // Get X and Y Position
       getXY(event);
-      const diffX = mouseX - initialX;
-      const diffY = mouseY - initialY;
-      let direction = "";
-      if (Math.abs(diffY) > Math.abs(diffX)) {
-        direction = diffY > 0 ? "DOWN" : "UP";
-      } else {
-        direction = diffX > 0 ? "RIGHT" : "LEFT";
+      initialX = mouseX;
+      initialY = mouseY;
+    },
+    { passive: true }
+  );
+  // Mousemove / touchmove
+  touchArea.addEventListener(
+    events[deviceType].move,
+    (event) => {
+      if (!isTouchDevice()) {
+        event.preventDefault();
       }
-      setSwipeDirection(direction);
-    }
-  });
+      if (isSwiped) {
+        getXY(event);
+        const diffX = mouseX - initialX;
+        const diffY = mouseY - initialY;
+        let direction = "";
+        if (Math.abs(diffY) > Math.abs(diffX)) {
+          direction = diffY > 0 ? "DOWN" : "UP";
+        } else {
+          direction = diffX > 0 ? "RIGHT" : "LEFT";
+        }
+        setSwipeDirection(direction);
+      }
+    },
+    { passive: true }
+  );
 
   // Stop Drawing
   touchArea.addEventListener(events[deviceType].up, () => {

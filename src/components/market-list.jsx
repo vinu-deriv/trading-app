@@ -16,6 +16,7 @@ import {
   onCleanup,
   onMount,
 } from "solid-js";
+import classNames from "classnames";
 import {
   activeSymbols,
   fetchMarketTick,
@@ -51,15 +52,17 @@ const MarketList = () => {
   const [market_data, setMarketData] = createSignal(null);
   const [active_tab, setActiveTab] = createSignal(0);
   const [is_market_closed, setIsMarketClosed] = createSignal();
+  const [watchlist, setWatchlist] = createSignal([]);
 
   onMount(() => {
     setActiveTab(0);
     setIsMarketClosed(false);
+    setWatchlist(getFavourites());
+    getWatchList();
   });
 
   createEffect(() => {
     setAllMarkets(segregateMarkets(activeSymbols()));
-    if (active_tab() === 0) getWatchList();
   });
 
   onCleanup(() => {
@@ -209,21 +212,20 @@ const MarketList = () => {
   };
 
   const getWatchList = () => {
-    const favourite_markets = getFavourites();
     const selected_markets = activeSymbols().filter((markets) =>
-      favourite_markets.includes(markets.symbol)
+      watchlist().includes(markets.symbol)
     );
     setAvailableMarkets(selected_markets);
-    getMarketData(favourite_markets);
+    getMarketData(watchlist());
   };
 
   const updateWatchlist = (row_data) => {
-    const favourite_markets = getFavourites();
     const active_user = localStorage.getItem("userId") ?? "guest";
-    const new_list = favourite_markets.includes(row_data.tick)
-      ? favourite_markets.filter((sym) => sym !== row_data.tick)
-      : [...favourite_markets, row_data.tick];
+    const new_list = watchlist().includes(row_data.tick)
+      ? watchlist().filter((sym) => sym !== row_data.tick)
+      : [...watchlist(), row_data.tick];
     localStorage.setItem(`${active_user}-favourites`, JSON.stringify(new_list));
+    setWatchlist(new_list);
     if (active_tab() === 0) {
       getWatchList();
     }
@@ -250,7 +252,7 @@ const MarketList = () => {
                     show_header={true}
                     table_class={styles["market-list"]}
                     config={{
-                      watchlist: getFavourites(),
+                      watchlist: watchlist(),
                       action_component: MarketListAction,
                       onAction: (data) => updateWatchlist(data),
                     }}
@@ -270,7 +272,10 @@ const MarketListAction = (props) => {
     <div
       id="action"
       onClick={() => props.onAction()}
-      class={styles["action-position"]}
+      class={classNames(styles["action-cell"], {
+        [styles.add]: !props.data.includes(props.selected),
+        [styles.remove]: props.data.includes(props.selected),
+      })}
     >
       <Show
         when={props.data.find((mkt) => mkt === props.selected)}
@@ -281,7 +286,7 @@ const MarketListAction = (props) => {
               icon={StarIcon}
               stroke="white"
               class={watchlist_styles["fav-icon-position"]}
-              height="16"
+              height="24"
             />
           </>
         }
@@ -292,7 +297,7 @@ const MarketListAction = (props) => {
             icon={TrashBinIcon}
             stroke="white"
             class={watchlist_styles["fav-icon-position"]}
-            height="16"
+            height="24"
           />
         </>
       </Show>

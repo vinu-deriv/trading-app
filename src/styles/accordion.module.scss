@@ -108,6 +108,23 @@
   }
 }
 
-.action-position {
-  margin-right: 0.4rem;
+.action-cell {
+  z-index: 0;
+  display: flex;
+  justify-content: end;
+  height: 100%;
+  align-items: center;
+  background-color: aqua;
+  top: 0;
+  right: 0;
+  position: absolute;
+  padding: 1rem;
+  width: 100%;
+}
+
+.add {
+  background-color: var(--button-green);
+}
+.remove {
+  background-color: var(--button-red);
 }
