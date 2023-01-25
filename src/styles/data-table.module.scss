@@ -30,7 +30,6 @@ table {
     tr {
       width: 100%;
       transition: width 0.5s;
-      touch-action: pan-x;
       min-height: 46px;
     }
     td {
@@ -99,8 +98,8 @@ table {
 }
 
 .add {
-  background-color: var(--glow-green);
+  background-color: var(--button-green);
 }
 .remove {
-  background-color: var(--glow-red);
+  background-color: var(--button-red);
 }

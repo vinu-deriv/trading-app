@@ -3,12 +3,20 @@ import {
   DataTable,
   DisplayChangePercent,
   DisplayTickValue,
+  Loader,
   SVGWrapper,
   Tab,
   Tabs,
 } from "../components";
 import { FAVOURITES, MARKET_TYPES } from "../constants/trade-config";
-import { For, Show, createSignal, onCleanup, onMount } from "solid-js";
+import {
+  For,
+  Show,
+  createEffect,
+  createSignal,
+  onCleanup,
+  onMount,
+} from "solid-js";
 import {
   activeSymbols,
   fetchMarketTick,
@@ -19,10 +27,11 @@ import { addDays, formatDate } from "../utils/format-value";
 import { forgetAll, sendRequest, wait } from "../utils/socket-base";
 
 import { ERROR_CODE } from "../constants/error-codes";
-import HeartIcon from "../assets/svg/heart.svg";
+import StarIcon from "../assets/svg/star.svg";
 import TrashBinIcon from "../assets/svg/trash.svg";
 import { getFavourites } from "../utils/map-markets";
 import { segregateMarkets } from "../utils/map-markets";
+import shared from "../styles/shared.module.scss";
 import styles from "../styles/accordion.module.scss";
 import throttle from "lodash.throttle";
 import watchlist_styles from "../styles/watchlist.module.scss";
@@ -46,10 +55,14 @@ const MarketList = () => {
   const [is_market_closed, setIsMarketClosed] = createSignal();
 
   onMount(() => {
-    setAllMarkets(segregateMarkets(activeSymbols()));
     setActiveTab(0);
     setIsMarketClosed(false);
-    getWatchList();
+  });
+
+  createEffect(() => {
+    setAllMarkets(segregateMarkets(activeSymbols()));
+    if (active_tab() === 0) getWatchList();
+    console.log("All mkst: ", all_markets());
   });
 
   onCleanup(() => {
@@ -209,10 +222,8 @@ const MarketList = () => {
   };
 
   const updateWatchlist = (row_data) => {
-    console.log("Row data: ", row_data);
     const favourite_markets = getFavourites();
     const active_user = localStorage.getItem("userId") ?? "guest";
-    console.log("favourite_markets: ", favourite_markets);
     const new_list = favourite_markets.includes(row_data.tick)
       ? favourite_markets.filter((sym) => sym !== row_data.tick)
       : [...favourite_markets, row_data.tick];
@@ -225,31 +236,36 @@ const MarketList = () => {
   return (
     <>
       <h3 class={styles["title"]}>What would you like to trade with?</h3>
-      <Tabs
-        onTabItemClick={(tab_ref) => fetchSelectedMarket(tab_ref)}
-        active_index={active_tab()}
+      <Show
+        when={Object.keys(all_markets()).length}
+        fallback={<Loader class={shared["spinner"]} type="2" />}
       >
-        <For each={setTabList(all_markets())}>
-          {(tabs) => (
-            <Tab label={tabs.title} id={tabs.ref}>
-              <Show when={market_data()}>
-                <DataTable
-                  headers={header_config}
-                  data={market_data()}
-                  show_header={true}
-                  table_class={styles["market-list"]}
-                  onRowSelect={() => console.log("On row select")}
-                  config={{
-                    watchlist: getFavourites(),
-                    action_component: MarketListAction,
-                    onAction: (data) => updateWatchlist(data),
-                  }}
-                />
-              </Show>
-            </Tab>
-          )}
-        </For>
-      </Tabs>
+        <Tabs
+          onTabItemClick={(tab_ref) => fetchSelectedMarket(tab_ref)}
+          active_index={active_tab()}
+        >
+          <For each={setTabList(all_markets())}>
+            {(tabs) => (
+              <Tab label={tabs.title} id={tabs.ref}>
+                <Show when={market_data()}>
+                  <DataTable
+                    headers={header_config}
+                    data={market_data()}
+                    show_header={true}
+                    table_class={styles["market-list"]}
+                    onRowSelect={() => console.log("On row select")}
+                    config={{
+                      watchlist: getFavourites(),
+                      action_component: MarketListAction,
+                      onAction: (data) => updateWatchlist(data),
+                    }}
+                  />
+                </Show>
+              </Tab>
+            )}
+          </For>
+        </Tabs>
+      </Show>
     </>
   );
 };
@@ -267,7 +283,7 @@ const MarketListAction = (props) => {
           <>
             <SVGWrapper
               id={`watch-icon-${props.index}`}
-              icon={HeartIcon}
+              icon={StarIcon}
               stroke="white"
               class={watchlist_styles["fav-icon-position"]}
               height="16"

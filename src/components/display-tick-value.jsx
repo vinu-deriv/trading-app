@@ -2,7 +2,6 @@ import { Match, Show, Switch, createEffect, createSignal } from "solid-js";
 
 import Loader from "./loader";
 import classNames from "classnames";
-import { is_loading } from "../stores";
 import { market_ticks } from "../stores";
 import shared from "../styles/shared.module.scss";
 import styles from "../styles/watchlist.module.scss";
@@ -38,7 +37,7 @@ const DisplayTickValue = (props) => {
 
   return (
     <Show
-      when={!is_loading() && !!market_ticks()[props.data]}
+      when={!!market_ticks()[props.data]}
       fallback={<Loader class={shared["spinner"]} type="1" size="1.5rem" />}
     >
       <Switch>

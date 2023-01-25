@@ -21,7 +21,7 @@ const Loader = (props) => (
       </div>
     </Match>
     <Match when={props.type === "2"}>
-      <div class={classNames(styles["loader-2"], props.class)} />;
+      <div class={classNames(styles["loader-2"], props.class)} />
     </Match>
   </Switch>
 );
