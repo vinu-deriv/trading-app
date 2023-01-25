@@ -1,5 +1,4 @@
 import { Match, Switch } from "solid-js";
-
 import classNames from "classnames";
 import styles from "../styles/loader.module.scss";
 

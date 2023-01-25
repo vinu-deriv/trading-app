@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import {
   DataTable,
   DisplayChangePercent,
@@ -25,7 +24,6 @@ import {
 } from "../stores";
 import { addDays, formatDate } from "../utils/format-value";
 import { forgetAll, sendRequest, wait } from "../utils/socket-base";
-
 import { ERROR_CODE } from "../constants/error-codes";
 import StarIcon from "../assets/svg/action/star.svg";
 import TrashBinIcon from "../assets/svg/action/trash.svg";
@@ -62,7 +60,6 @@ const MarketList = () => {
   createEffect(() => {
     setAllMarkets(segregateMarkets(activeSymbols()));
     if (active_tab() === 0) getWatchList();
-    console.log("All mkst: ", all_markets());
   });
 
   onCleanup(() => {
@@ -77,7 +74,7 @@ const MarketList = () => {
       for (let j = 0; j < submarkets.length; j++) {
         const { symbols } = submarkets[j];
         symbol = symbols.find((item) => item.symbol === target_symbol);
-        if (symbol !== undefined) return symbol;
+        if (symbol) return symbol;
       }
     }
   };
@@ -174,7 +171,6 @@ const MarketList = () => {
         }),
       });
     } else {
-      // eslint-disable-next-line no-console
       const { echo_req, error } = response;
       if (error.code === ERROR_CODE.market_closed) {
         if (!is_market_closed()) {
@@ -253,7 +249,6 @@ const MarketList = () => {
                     data={market_data()}
                     show_header={true}
                     table_class={styles["market-list"]}
-                    onRowSelect={() => console.log("On row select")}
                     config={{
                       watchlist: getFavourites(),
                       action_component: MarketListAction,

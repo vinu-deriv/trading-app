@@ -3,7 +3,7 @@ import { Tab, Tabs } from "./tabs";
 import AccountSwitcher from "./account-switcher";
 import Button from "./button";
 import DataTable from "./data-table";
-import DisplayChangePercent from "./displasy-change-percent";
+import DisplayChangePercent from "./display-change-percent";
 import DisplayTickValue from "./display-tick-value";
 import Loader from "./loader";
 import MarketList from "./market-list";

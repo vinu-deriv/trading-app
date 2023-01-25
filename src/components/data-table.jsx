@@ -1,6 +1,4 @@
-/* eslint-disable no-console */
 import { For, Show, createEffect, createSignal } from "solid-js";
-
 import classNames from "classnames";
 import { detectTouch } from "../utils/responsive";
 import styles from "../styles/data-table.module.scss";
@@ -91,7 +89,6 @@ const DataTable = (props) => {
             {(cell_value, index) => (
               <tr>
                 <td
-                  onClick={() => console.log("TD clicked")}
                   class={classNames({
                     [styles.add]: !props.config.watchlist.includes(
                       cell_value.tick
