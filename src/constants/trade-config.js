@@ -16,3 +16,28 @@ export const getContractTypesConfig = (symbol) => ({
     trade_types: ["RUNHIGH", "RUNLOW"],
   },
 });
+
+export const MARKET_TYPES = [
+  {
+    title: "Derived",
+    ref: "synthetic_index",
+  },
+  {
+    title: "Commodities",
+    ref: "commodities",
+  },
+  {
+    title: "Cryptocurrencies",
+    ref: "cryptocurrency",
+  },
+  {
+    title: "Forex",
+    ref: "forex",
+  },
+  {
+    title: "Indices",
+    ref: "indices",
+  },
+];
+
+export const FAVOURITES = "favs";

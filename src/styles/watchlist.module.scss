@@ -61,16 +61,20 @@
   border-radius: 5px;
 
   &--increase {
-    background-color: $higher;
+    background-color: var(--button-green);
   }
 
   &--decrease {
-    background-color: $lower;
+    background-color: var(--button-red);
   }
 
   &--same {
     background-color: $neutral;
   }
+}
+
+.badge-align {
+  width: 100%;
 }
 
 .text {
@@ -90,7 +94,6 @@
     color: $neutral;
   }
 }
-
 
 .arrow-up {
   width: 0;

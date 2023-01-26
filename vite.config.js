@@ -1,8 +1,8 @@
-import { defineConfig } from "vite";
 import { VitePWA } from "vite-plugin-pwa";
-import solidPlugin from "vite-plugin-solid";
+import { defineConfig } from "vite";
 import { dependencies } from "./package.json";
 import path from "path";
+import solidPlugin from "vite-plugin-solid";
 import solidSvg from "vite-plugin-solid-svg";
 
 function renderChunks(deps) {
@@ -19,7 +19,7 @@ export default defineConfig({
   plugins: [
     solidPlugin(),
     solidSvg({
-      defaultExport: "component",
+      defaultExport: "url",
       svgo: {
         enabled: true, // optional, by default is true
       },

@@ -1,7 +1,8 @@
-import styles from "../styles/error-component.module.scss";
-import { onCleanup, Show } from "solid-js";
+import { Show, onCleanup } from "solid-js";
+
+import { Button } from "../components";
 import { setErrorMessage } from "./../stores";
-import { Button } from "./button";
+import styles from "../styles/error-component.module.scss";
 
 const ErrorComponent = (props) => {
   onCleanup(() => {
@@ -11,7 +12,7 @@ const ErrorComponent = (props) => {
     <Show when={props.message}>
       <div class={styles["popup__div"]} onClick={() => setErrorMessage(null)}>
         <div class={styles["popup"]}>
-          <Button type="secondrary" onClick={() => setErrorMessage(null)}>
+          <Button category="secondrary" onClick={() => setErrorMessage(null)}>
             X
           </Button>
           <p class={styles["popup__text"]}>{props.message}</p>

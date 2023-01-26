@@ -7,10 +7,10 @@ import {
   watch_list_ref,
 } from "../stores";
 
+import { Button } from "../components";
 import classNames from "classnames";
 import { sendRequest } from "../utils/socket-base";
 import styles from "../styles/watchlist.module.scss";
-import { Button } from "./button";
 
 const MarketValue = (props) => {
   const difference = () => {
@@ -91,7 +91,7 @@ const Watchlist = (props) => {
         <MarketValue symbol={props.symbol} />
       </div>
       <Button
-        type="primary"
+        category="primary"
         onClick={(event) => {
           event.stopPropagation();
           removeWatchlistHandler(props.symbol);
