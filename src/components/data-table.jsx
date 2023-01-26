@@ -43,7 +43,7 @@ const DataTable = (props) => {
                         swipe_direction() === "LEFT" &&
                         index() === active_index(),
                     })}
-                    onClick = {()=>props.onRowClick(cell_value)}
+                    onClick={() => props.onRowClick(cell_value)}
                   >
                     <For each={props.headers}>
                       {(header) =>

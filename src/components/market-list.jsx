@@ -22,7 +22,7 @@ import {
   fetchMarketTick,
   market_ticks,
   setMarketTicks,
-  setSelectedTradeType
+  setSelectedTradeType,
 } from "../stores";
 import { addDays, formatDate } from "../utils/format-value";
 import { forgetAll, sendRequest, wait } from "../utils/socket-base";
@@ -252,8 +252,11 @@ const MarketList = () => {
                     data={market_data()}
                     show_header={true}
                     table_class={styles["market-list"]}
-                    onRowClick = {(trade_type)=>{
-                      setSelectedTradeType({display_name:trade_type.display_name,symbol:trade_type.tick})
+                    onRowClick={(trade_type) => {
+                      setSelectedTradeType({
+                        display_name: trade_type.display_name,
+                        symbol: trade_type.tick,
+                      });
                     }}
                     config={{
                       watchlist: watchlist(),
