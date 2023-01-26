@@ -184,9 +184,7 @@ const OptionsTrade = (props) => {
 
   createEffect(() => {
     if (symbol() && props.selected_contract_type === "rise_fall") {
-      setHideEqual(
-        "rise_fall_equal" in ContractType.getFullContractTypes()
-      );
+      setHideEqual("rise_fall_equal" in ContractType.getFullContractTypes());
     } else {
       setHideEqual(false);
     }
@@ -223,7 +221,7 @@ const OptionsTrade = (props) => {
           : "intraday"
       ).duration_min_max,
     };
-  
+
     duration.min = convertDurationLimit(duration.min, duration_unit);
     duration.max = convertDurationLimit(duration.max, duration_unit);
   };
