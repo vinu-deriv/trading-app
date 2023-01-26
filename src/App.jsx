@@ -11,7 +11,8 @@ import {
   watch_list_ref,
 } from "./stores";
 import { configureEndpoint, getAppId, getSocketUrl } from "./utils/config";
-import { endpoint, init, login_information, logout } from "Stores/base-store";
+import { endpoint, init, login_information } from "Stores/base-store";
+import { loginUrl } from "Constants/deriv-urls";
 
 import { AccountSwitcher } from "./components";
 import ErrorComponent from "./components/error-component";
@@ -52,7 +53,7 @@ function App() {
   createEffect(() => {
     init().then(() => {
       if (pathname.match(/(trade|reports)/) && !login_information.is_logged_in)
-        logout();
+        window.location.href = loginUrl({ language: "en" });
       fetchActiveSymbols().then(() => {
         const map_market = mapMarket(activeSymbols());
         const get_favs = getFavourites();

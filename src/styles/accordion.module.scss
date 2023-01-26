@@ -79,21 +79,6 @@
   display: flex;
 }
 
-.button {
-  display: flex;
-  height: fit-content;
-  align-items: center;
-  border-radius: 4px;
-
-  &--trade {
-    border: 1px solid greenyellow;
-  }
-
-  &--favourite {
-    border: 1px solid coral;
-  }
-}
-
 .disabled {
   color: var(--text-sub);
   cursor: pointer;
@@ -114,4 +99,32 @@
 
 .title {
   color: var(--text-main);
+}
+
+.market-list {
+  th:not(:first-child),
+  td:not(:first-child) {
+    text-align: end;
+  }
+}
+
+.action-cell {
+  z-index: 0;
+  display: flex;
+  justify-content: end;
+  height: 100%;
+  align-items: center;
+  background-color: aqua;
+  top: 0;
+  right: 0;
+  position: absolute;
+  padding: 1rem;
+  width: 100%;
+}
+
+.add {
+  background-color: var(--button-green);
+}
+.remove {
+  background-color: var(--button-red);
 }

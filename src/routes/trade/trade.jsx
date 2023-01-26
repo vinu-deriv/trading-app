@@ -1,13 +1,14 @@
-import { Accordion, Loader } from "../../components";
 import {
   For,
   Match,
   Show,
   Switch,
   onCleanup,
+  onMount,
   createEffect,
   createSignal,
 } from "solid-js";
+import { Loader, MarketList } from "../../components";
 import {
   current_tick,
   is_loading,
@@ -24,6 +25,7 @@ import classNames from "classnames";
 import dashboardStyles from "../../styles/watchlist.module.scss";
 import { getContractTypesConfig } from "Constants/trade-config";
 import { login_information } from "../../stores/base-store";
+import { redirectToLogin } from "Utils/user-redirect-to-login";
 import shared from "../../styles/shared.module.scss";
 import styles from "./trade.module.scss";
 
@@ -64,10 +66,14 @@ const Trade = () => {
       );
   });
 
+  onMount(() => {
+    redirectToLogin();
+  });
+
   return (
     <div class={styles["trade-flex-layout"]}>
       <div class={styles["trade-flex-layout__accordion"]}>
-        <Accordion />
+        <MarketList />
       </div>
       {login_information.is_logged_in && (
         <div class={styles["trade-flex-layout__trade"]}>

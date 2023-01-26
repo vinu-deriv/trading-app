@@ -7,6 +7,7 @@ import {
   fetchMarketTick,
   is_loading,
   is_stake,
+  market_ticks,
   open_contract_ids,
   open_contract_info,
   prev_tick,
@@ -17,6 +18,7 @@ import {
   setErrorMessage,
   setIsLoading,
   setIsStake,
+  setMarketTicks,
   setOpenContractId,
   setOpenContractInfo,
   setPrevTick,
@@ -88,4 +90,6 @@ export {
   setCurrentTick,
   is_loading,
   setIsLoading,
+  market_ticks,
+  setMarketTicks,
 };

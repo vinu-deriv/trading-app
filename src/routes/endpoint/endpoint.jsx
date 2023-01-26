@@ -1,6 +1,7 @@
 import { configureEndpoint, getAppId, getSocketUrl } from "../../utils/config";
 import { endpoint, setEndpoint } from "Stores/base-store";
 
+import { Button } from "../../components";
 import { createStore } from "solid-js/store";
 import { onMount } from "solid-js";
 
@@ -63,10 +64,12 @@ const Endpoint = () => {
           />
         </div>
         <div>
-          <button type="submit">Submit</button>
-          <button type="button" onClick={onFormReset}>
+          <Button category="flat" type="submit">
+            Submit
+          </Button>
+          <Button category="tertiary" onClick={onFormReset}>
             Reset
-          </button>
+          </Button>
         </div>
       </form>
     </div>

@@ -57,6 +57,7 @@ export const daysSince = (date) => {
     .diff(toMoment(date).startOf("day"), "days");
   return !date ? "" : diff;
 };
+
 export const convertDurationLimit = (value, unit) => {
   if (!(value >= 0) || !unit || !Number.isInteger(value)) {
     return null;
