@@ -14,7 +14,7 @@ import { setshowAccountSwitcher } from "Stores/ui-store";
 import Loader from "./loader";
 import styles from "../styles/account-switcher.module.scss";
 import { logout } from "Stores/base-store";
-import { Button } from "./button";
+import Button from "./button";
 import { sendRequest } from "../utils/socket-base";
 
 const getCurrencyDisplayCode = (currency = "") => {
@@ -173,7 +173,7 @@ const AccountSwitcher = () => {
         </div>
       </div>
     </Portal>
-  ); // build fix
+  );
 };
 
 export default AccountSwitcher;
