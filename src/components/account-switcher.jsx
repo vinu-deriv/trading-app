@@ -15,7 +15,7 @@ import Loader from "./loader";
 import styles from "../styles/account-switcher.module.scss";
 import { logout } from "Stores/base-store";
 import Button from "./button";
-import { sendRequest } from "../utils/socket-base";
+import { sendRequest } from "Utils/socket-base";
 
 const getCurrencyDisplayCode = (currency = "") => {
   if (currency !== "eUSDT" && currency !== "tUSDT") {
@@ -41,6 +41,7 @@ const AccountSwitcher = () => {
   });
 
   const doSwitch = async (loginid) => {
+    loginid.stopPropagation();
     if (loginid === login_information.active_loginid) return;
     else {
       const { token } = JSON.parse(login_information?.accounts).find(
@@ -66,8 +67,10 @@ const AccountSwitcher = () => {
       });
     }
   };
-  const resetBalance = async () => {
-    const account = JSON.parse(login_information.active_account);
+  const resetBalance = async (e) => {
+    event.stopPropagation();
+    let newbalance;
+    const account = await JSON.parse(login_information.active_account);
     sendRequest({
       topup_virtual: 1,
     }).then((response) => {
@@ -78,6 +81,8 @@ const AccountSwitcher = () => {
       if (topup() != 0) {
         setTopup(0);
         setHasResetBalance(false);
+        newbalance = 10000;
+        account.balance = newbalance;
       }
     }
   };
@@ -106,12 +111,7 @@ const AccountSwitcher = () => {
                     {balance_of_all_accounts()[`${acc.loginid}`]?.currency}
                   </span>
                   {!has_reset_balance() && (
-                    <Button
-                      type="reset"
-                      onClick={() => {
-                        resetBalance();
-                      }}
-                    >
+                    <Button category="reset" onClick={resetBalance}>
                       {" "}
                       Reset Balance
                     </Button>
