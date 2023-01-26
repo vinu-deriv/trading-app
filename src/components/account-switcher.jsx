@@ -15,7 +15,7 @@ import Loader from "./loader";
 import styles from "../styles/account-switcher.module.scss";
 import { logout } from "Stores/base-store";
 import Button from "./button";
-import { sendRequest } from "../utils/socket-base";
+import { sendRequest } from "Utils/socket-base";
 
 const getCurrencyDisplayCode = (currency = "") => {
   if (currency !== "eUSDT" && currency !== "tUSDT") {
