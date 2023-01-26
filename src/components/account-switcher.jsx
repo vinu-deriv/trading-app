@@ -173,7 +173,7 @@ const AccountSwitcher = () => {
         </div>
       </div>
     </Portal>
-  );
+  ); // build fix
 };
 
 export default AccountSwitcher;
