@@ -1,5 +1,13 @@
 import { Accordion, Loader } from "../../components";
-import { For, Match, Show, Switch, onCleanup } from "solid-js";
+import {
+  For,
+  Match,
+  Show,
+  Switch,
+  onCleanup,
+  createEffect,
+  createSignal,
+} from "solid-js";
 import {
   current_tick,
   is_loading,
@@ -9,6 +17,7 @@ import {
   setTradeTypes,
   subscribe_id,
 } from "../../stores";
+import { ContractType } from "Utils/contract-type";
 
 import OptionsTrade from "./options-trade";
 import classNames from "classnames";
@@ -19,6 +28,42 @@ import shared from "../../styles/shared.module.scss";
 import styles from "./trade.module.scss";
 
 const Trade = () => {
+  const [durations_list, setDurationsList] = createSignal([]);
+  const [selected_contract_type, setSelectedContractType] = createSignal();
+  const [contract_config, setContractConfig] = createSignal();
+
+  const getConfig = async () => {
+    await ContractType.buildContractTypesConfig(selectedTradeType()?.symbol);
+    const contract_config = ContractType.getFullContractTypes();
+    setContractConfig(contract_config);
+    if (Object.keys(contract_config).length) {
+      setSelectedContractType(Object.keys(contract_config)[0]);
+      setTradeTypes(contract_config[Object.keys(contract_config)[0]]);
+      setDurationsList(
+        ContractType.getDurationUnitsList(`${selected_contract_type()}`, "spot")
+          .duration_units_list
+      );
+    }
+  };
+
+  createEffect(() => {
+    if (selectedTradeType()?.symbol) {
+      setContractConfig({});
+      setSelectedContractType({});
+      setDurationsList([]);
+      setTradeTypes({});
+      getConfig();
+    }
+  });
+
+  createEffect(() => {
+    if (selected_contract_type())
+      setDurationsList(
+        ContractType.getDurationUnitsList(`${selected_contract_type()}`, "spot")
+          .duration_units_list
+      );
+  });
+
   return (
     <div class={styles["trade-flex-layout"]}>
       <div class={styles["trade-flex-layout__accordion"]}>
@@ -26,51 +71,69 @@ const Trade = () => {
       </div>
       {login_information.is_logged_in && (
         <div class={styles["trade-flex-layout__trade"]}>
-          <section>
-            <Show
-              when={selectedTradeType()?.symbol}
-              fallback={
-                <p class={styles["error-message"]}>
-                  Select a market to trade with
-                </p>
-              }
-            >
-              <section
-                class={classNames(
-                  styles.container,
-                  dashboardStyles["market-value"]
-                )}
-              >
-                <strong class={styles["market-text"]}>Market price:</strong>
-                <DisplayTick />
-              </section>
-            </Show>
-          </section>
-          <div class={styles["select-trade"]}>
-            <select
-              class={styles["trade-type-dropdown"]}
-              onChange={(event) =>
-                setTradeTypes(getContractTypesConfig()[`${event.target.value}`])
-              }
-            >
-              <option selected="true" disabled="disabled">
-                Select Trade Types
-              </option>
-              <For each={Object.keys(getContractTypesConfig())}>
-                {(trade) => (
-                  <option value={trade}>
-                    {getContractTypesConfig()[`${trade}`].title}
-                  </option>
-                )}
-              </For>
-            </select>
-            <Show when={selectedTradeType()?.display_name}>
-              <p>
-                Symbol : <b>{selectedTradeType()?.display_name}</b>
+          <Show
+            when={selectedTradeType()?.symbol}
+            fallback={
+              <p class={styles["error-message"]}>
+                Select a market to trade with
               </p>
-            </Show>
-          </div>
-          <OptionsTrade />
+            }
+          >
+            <section
+              class={classNames(
+                styles.container,
+                dashboardStyles["market-value"]
+              )}
+            >
+              <strong class={styles["market-text"]}>Market price:</strong>
+              <DisplayTick />
+            </section>
+            <Switch fallback={"Loading trade types"}>
+              <Match when={JSON.stringify(contract_config()) === "{}"}>
+                <p> No trade types supported</p>
+              </Match>
+              <Match when={contract_config()}>
+                <div class={styles["select-trade"]}>
+                  <select
+                    class={styles["trade-type-dropdown"]}
+                    onChange={(event) => {
+                      setTradeTypes(contract_config()[`${event.target.value}`]);
+                      setDurationsList(
+                        ContractType.getDurationUnitsList(
+                          `${event.target.value}`,
+                          "spot"
+                        ).duration_units_list
+                      );
+                      setSelectedContractType(`${event.target.value}`);
+                    }}
+                  >
+                    <option selected="true" disabled="disabled">
+                      Select Trade Types
+                    </option>
+                    <For each={Object.keys(contract_config())}>
+                      {(trade) =>
+                        !getContractTypesConfig()[`${trade}`]
+                          .hide_from_dropdown && (
+                          <option value={trade}>
+                            {getContractTypesConfig()[`${trade}`].title}
+                          </option>
+                        )
+                      }
+                    </For>
+                  </select>
+                  <Show when={selectedTradeType()?.display_name}>
+                    <p>
+                      Symbol : <b>{selectedTradeType()?.display_name}</b>
+                    </p>
+                  </Show>
+                </div>
+                <OptionsTrade
+                  durations_list={durations_list()}
+                  selected_contract_type={selected_contract_type()}
+                />
+              </Match>
+            </Switch>
+          </Show>
         </div>
       )}
     </div>

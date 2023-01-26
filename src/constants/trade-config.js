@@ -1,18 +1,31 @@
-export const getContractTypesConfig = (symbol) => ({
+export const getContractTypesConfig = () => ({
   rise_fall: {
     title: "Rise/Fall",
     trade_types: ["CALL", "PUT"],
+    basis: ["stake", "payout"],
+    components: ["start_date"],
+    barrier_count: 0,
   },
-  high_low: {
-    title: "Higher/Lower",
-    trade_types: ["CALL", "PUT"],
+  rise_fall_equal: {
+    title: "Rise/Fall",
+    trade_types: ["CALLE", "PUTE"],
+    basis: ["stake", "payout"],
+    components: ["start_date"],
+    barrier_count: 0,
+    hide_from_dropdown: true,
   },
-  even_odd: {
-    title: "Even/Odd",
-    trade_types: ["DIGITODD", "DIGITEVEN"],
-  },
-  run_high_low: {
-    title: "Only Ups/Only Downs",
-    trade_types: ["RUNHIGH", "RUNLOW"],
+});
+
+export const getContractCategoriesConfig = () => ({
+  "Ups & Downs": {
+    name: "Ups & Downs",
+    categories: [
+      "rise_fall",
+      "rise_fall_equal",
+      "run_high_low",
+      "reset",
+      "asian",
+      "callputspread",
+    ],
   },
 });
