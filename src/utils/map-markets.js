@@ -10,3 +10,12 @@ export const getFavourites = () => {
   const active_user = localStorage.getItem("userId") ?? "guest";
   return JSON.parse(localStorage.getItem(`${active_user}-favourites`)) ?? [];
 };
+
+export const segregateMarkets = (active_symbols) =>
+  active_symbols.reduce(
+    (markets, symbol) => ({
+      ...markets,
+      [symbol.market]: [...(markets[symbol.market] || []), symbol],
+    }),
+    {}
+  );

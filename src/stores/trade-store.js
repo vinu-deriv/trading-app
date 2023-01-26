@@ -22,6 +22,7 @@ const [subscribe_id, setSubscribeId] = createSignal(null);
 const [prev_tick, setPrevTick] = createSignal(null);
 const [current_tick, setCurrentTick] = createSignal(null);
 const [is_loading, setIsLoading] = createSignal(false);
+const [market_ticks, setMarketTicks] = createSignal({});
 
 const fetchActiveSymbols = async () => {
   try {
@@ -59,8 +60,8 @@ const fetchMarketTick = (symbol, marketTickHandler) => {
     },
     marketTickHandler
   );
-
-  setSubscribeId(market_tick_subscription_ref);
+  return market_tick_subscription_ref;
+  // setSubscribeId(market_tick_subscription_ref);
 };
 
 export {
@@ -95,4 +96,6 @@ export {
   setCurrentTick,
   is_loading,
   setIsLoading,
+  market_ticks,
+  setMarketTicks,
 };

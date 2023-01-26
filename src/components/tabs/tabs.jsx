@@ -1,4 +1,5 @@
-import { children, createEffect, createSignal, For, Show } from "solid-js";
+import { For, Show, children, createEffect, createSignal } from "solid-js";
+
 import TabTitle from "./tab-title";
 import styles from "./tabs.module.scss";
 
@@ -21,6 +22,7 @@ const Tabs = (props) => {
               <TabTitle
                 active={index() === selected_tab()}
                 index={index}
+                id={tab.id}
                 label={tab.label}
                 setSelectedTab={setSelectedTab}
                 onClick={props.onTabItemClick}

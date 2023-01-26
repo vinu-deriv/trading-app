@@ -9,7 +9,7 @@ const TabTitle = (props) => {
       })}
       onClick={() => {
         props.setSelectedTab(props.index);
-        props.onClick?.(props.index);
+        props.onClick?.({ index: props.index(), id: props.id });
       }}
     >
       {props.label}

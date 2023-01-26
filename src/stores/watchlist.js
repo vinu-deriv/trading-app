@@ -15,3 +15,7 @@ export {
   watch_list_ref,
   setWatchListRef,
 };
+
+// const [market_watchlist, setMarketWatchlist] = createSignal([]);
+
+// export { market_watchlist, setMarketWatchlist };
