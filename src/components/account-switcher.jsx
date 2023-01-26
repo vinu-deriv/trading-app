@@ -14,6 +14,8 @@ import { setshowAccountSwitcher } from "Stores/ui-store";
 import Loader from "./loader";
 import styles from "../styles/account-switcher.module.scss";
 import { logout } from "Stores/base-store";
+import { Button } from "./button";
+import { sendRequest } from "../utils/socket-base";
 
 const getCurrencyDisplayCode = (currency = "") => {
   if (currency !== "eUSDT" && currency !== "tUSDT") {
@@ -25,10 +27,11 @@ const getCurrencyDisplayCode = (currency = "") => {
 const AccountSwitcher = () => {
   const [demo_accounts, setDemoAccounts] = createSignal([]);
   const [real_accounts, setRealAccounts] = createSignal([]);
+  const [has_reset_balance, setHasResetBalance] = createSignal(false);
+  const [topup, setTopup] = createSignal(0);
 
   const is_balance_avbl = () =>
     Object.keys(balance_of_all_accounts()).length ?? null;
-
   createEffect(() => {
     const accounts = JSON.parse(login_information?.accounts);
     if (accounts) {
@@ -63,11 +66,25 @@ const AccountSwitcher = () => {
       });
     }
   };
+  const resetBalance = async () => {
+    const account = JSON.parse(login_information.active_account);
+    sendRequest({
+      topup_virtual: 1,
+    }).then((response) => {
+      const { amount } = response.topup_virtual;
+      setTopup(amount);
+    });
+    if (account.is_virtual === 1) {
+      if (topup() != 0) {
+        setTopup(0);
+        setHasResetBalance(false);
+      }
+    }
+  };
 
   const AccountList = (props) => (
     <div class={styles["account_list"]}>
       <h5 class={styles["title"]}>{props.title}</h5>
-
       <For each={props.accounts}>
         {(acc) => (
           <div
@@ -82,10 +99,30 @@ const AccountSwitcher = () => {
               <div>{acc.loginid}</div>
             </div>
             <div class={styles["account_balance"]}>
-              <span>
-                {balance_of_all_accounts()[`${acc.loginid}`]?.balance}{" "}
-                {balance_of_all_accounts()[`${acc.loginid}`]?.currency}
-              </span>
+              {acc.is_virtual == 1 ? (
+                <div>
+                  <span>
+                    {balance_of_all_accounts()[`${acc.loginid}`]?.balance}{" "}
+                    {balance_of_all_accounts()[`${acc.loginid}`]?.currency}
+                  </span>
+                  {!has_reset_balance() && (
+                    <Button
+                      type="reset"
+                      onClick={() => {
+                        resetBalance();
+                      }}
+                    >
+                      {" "}
+                      Reset Balance
+                    </Button>
+                  )}
+                </div>
+              ) : (
+                <span>
+                  {balance_of_all_accounts()[`${acc.loginid}`]?.balance}{" "}
+                  {balance_of_all_accounts()[`${acc.loginid}`]?.currency}
+                </span>
+              )}
             </div>
           </div>
         )}

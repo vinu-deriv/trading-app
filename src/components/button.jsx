@@ -14,6 +14,7 @@ export const Button = (props) => {
         [styles.tertiary_light]: props.type === "teriary_light",
         [styles.flat]: props.type === "flat",
         [styles.trade]: props.type === "trade",
+        [styles.reset]: props.type === "reset",
       })}`}
     >
       {props.children}
