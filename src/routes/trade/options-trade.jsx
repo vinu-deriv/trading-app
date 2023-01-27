@@ -8,21 +8,28 @@ import {
   setSymbol,
   symbol,
   trade_types,
+  setTradeTypes,
 } from "../../stores";
-import { createEffect, createSignal } from "solid-js";
+import { createEffect, createSignal, For } from "solid-js";
+import { useNavigate } from "solid-app-router";
 
 import { Show } from "solid-js";
 import classNames from "classnames";
 import { createStore } from "solid-js/store";
 import styles from "./trade.module.scss";
+import { ContractType } from "Utils/contract-type";
 import { subscribe } from "Utils/socket-base";
-import { useNavigate } from "solid-app-router";
+import { convertDurationLimit } from "Utils/format-value";
+import { RISE_FALL_TITLE } from "Constants/trade-config";
 
 const [slider_value, setSliderValue] = createSignal(1);
 const [duration_unit, setDurationUnit] = createSignal("");
 const [duration_value, setDurationValue] = createSignal(0);
+const [allow_equal, setAllowEqual] = createSignal(false);
 const [amount, setAmountValue] = createSignal(0);
+const [hide_equal, setHideEqual] = createSignal(false);
 
+let duration = { min: 0, max: 0 };
 let unsubscribe_buy;
 let unsubscribe_sell;
 
@@ -32,12 +39,14 @@ const [proposal_buy, setProposalBuy] = createStore({
   payout: "",
   subscriptionId: "",
 });
+
 const [proposal_sell, setProposalSell] = createStore({
   id: "",
   ask_price: "",
   payout: "",
   subscriptionId: "",
 });
+
 const [proposal_error_message, setProposalErrorMessage] = createSignal();
 
 const getProposal = async (
@@ -160,12 +169,27 @@ const forgetProposal = async () => {
   if (unsubscribe_sell) unsubscribe_sell.unsubscribe();
 };
 
-const OptionsTrade = () => {
+const OptionsTrade = (props) => {
   const navigate = useNavigate();
 
   const { currency, token } = JSON.parse(
     localStorage.getItem("active_account")
   );
+
+  createEffect(() => {
+    if (props.durations_list.length) {
+      const duration_unit = props.durations_list[0].value;
+      setDurationMinMax(duration_unit);
+    }
+  });
+
+  createEffect(() => {
+    if (symbol() && props.selected_contract_type === "rise_fall") {
+      setHideEqual("rise_fall_equal" in ContractType.getFullContractTypes());
+    } else {
+      setHideEqual(false);
+    }
+  });
 
   createEffect(() => {
     setSymbol(selectedTradeType().symbol);
@@ -185,10 +209,62 @@ const OptionsTrade = () => {
     );
   });
 
+  const setDurationMinMax = (duration_unit) => {
+    setDurationUnit(duration_unit);
+    duration = {
+      ...ContractType.getDurationMinMax(
+        props.selected_contract_type,
+        "spot",
+        duration_unit === "d"
+          ? "daily"
+          : duration_unit === "t"
+          ? "tick"
+          : "intraday"
+      ).duration_min_max,
+    };
+
+    duration.min = convertDurationLimit(duration.min, duration_unit);
+    duration.max = convertDurationLimit(duration.max, duration_unit);
+  };
+
   const handleBuyContractClicked = async (id) => {
     await buyContract(id, amount(), token);
 
     if (!error_message()) navigate("/reports", { replace: true });
+  };
+
+  const handleAllowEqualChange = () => {
+    setAllowEqual(!allow_equal());
+
+    if (trade_types.title === RISE_FALL_TITLE) {
+      setTradeTypes(
+        ContractType.getFullContractTypes()[
+          allow_equal() ? "rise_fall_equal" : "rise_fall"
+        ]
+      );
+      getProposal(
+        duration_unit(),
+        symbol(),
+        amount(),
+        is_stake(),
+        slider_value(),
+        duration_value(),
+        currency
+      );
+    }
+  };
+
+  const handleDurationChange = (event) => {
+    setDurationMinMax(event.target.value);
+  };
+
+  const displayValidationMessage = () => {
+    const is_duration_valid =
+      duration_value() >= duration.min && duration_value() <= duration.max;
+    if (!is_duration_valid) {
+      return `Should be between ${duration.min} and ${duration.max}`;
+    }
+    return proposal_error_message();
   };
 
   return (
@@ -196,16 +272,17 @@ const OptionsTrade = () => {
       <div class={styles["trading-layout"]}>
         <select
           class={styles["duration-dropdown"]}
-          onChange={(event) => setDurationUnit(event.target.value)}
+          onChange={(event) => handleDurationChange(event)}
+          value={props.durations_list[0]?.value}
         >
           <option selected="true" disabled="disabled">
             Select Duration
           </option>
-          <option value="t">Ticks</option>
-          <option value="s">Seconds</option>
-          <option value="m">Minutes</option>
-          <option value="h">Hours</option>
-          <option value="d">Days</option>
+          <For each={props.durations_list}>
+            {(duration) => (
+              <option value={duration.value}>{duration.text}</option>
+            )}
+          </For>
         </select>
         <Show
           when={duration_unit() === "t"}
@@ -274,9 +351,19 @@ const OptionsTrade = () => {
             value={amount()}
             onInput={(e) => setAmountValue(Number(e.target.value))}
           />
-          <p>USD</p>
+          <p>{currency}</p>
         </div>
-
+        <Show when={hide_equal()}>
+          <div class={styles["allow-equals"]}>
+            <input
+              type="checkbox"
+              name="allowEquals"
+              checked={allow_equal()}
+              onChange={handleAllowEqualChange}
+            />
+            <label for="allowEquals">Allow equals</label>
+          </div>
+        </Show>
         <div class={`${classNames(styles["button"], styles["buy-sell"])}`}>
           <div class={styles["buy-sell__buy-wrapper"]}>
             {buySellButtonWrapper(proposal_buy)}
@@ -309,7 +396,7 @@ const OptionsTrade = () => {
         </div>
         <Show when={proposal_error_message()}>
           <span class={styles["error-message"]}>
-            {proposal_error_message()}
+            {displayValidationMessage()}
           </span>
         </Show>
         <Show when={error_message()}>

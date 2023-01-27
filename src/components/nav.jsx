@@ -1,23 +1,27 @@
 import { Show, createSignal, onMount } from "solid-js";
-import { useNavigate } from "solid-app-router";
-import classNames from "classnames";
-import Logo from "../../src/assets/logo2.png";
-import styles from "../styles/navbar.module.scss";
-import { loginUrl } from "Constants/deriv-urls";
 import {
+  balance_of_all_accounts,
   login_information,
   logout,
-  balance_of_all_accounts,
 } from "Stores/base-store";
-import { setshowAccountSwitcher } from "Stores/ui-store";
-import { is_light_theme, setIsLightTheme } from "../stores";
 import { isDesktop, isMobile } from "Utils/responsive";
+import { is_light_theme, setIsLightTheme } from "../stores";
+
+import { Button } from "../components";
+import Logo from "../../src/assets/logo2.png";
+import classNames from "classnames";
+import { loginUrl } from "Constants/deriv-urls";
+import { setshowAccountSwitcher } from "Stores/ui-store";
+import styles from "../styles/navbar.module.scss";
+import { useNavigate } from "solid-app-router";
 
 const NavBar = () => {
   const navigate = useNavigate();
   const current_acc_data = () => {
     const account = JSON.parse(login_information?.active_account);
-    return balance_of_all_accounts()[account.loginid];
+    if (account) return balance_of_all_accounts()[account.loginid];
+
+    logout();
   };
 
   const [checked, setChecked] = createSignal(false);
@@ -91,14 +95,14 @@ const NavBar = () => {
         {login_information.is_logged_in && <li onClick={logout}> Sign Out</li>}
       </ul>
       {login_information.is_logged_in ? (
-        <button
-          class={styles.account_info}
+        <Button
+          category="secondrary"
           onClick={() => setshowAccountSwitcher(true)}
         >
           <div class={styles.account_wrapper}>
             <AccountHeader />
           </div>
-        </button>
+        </Button>
       ) : (
         !login_information.is_logging_in && (
           <div

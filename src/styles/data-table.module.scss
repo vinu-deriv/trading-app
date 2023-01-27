@@ -1,0 +1,77 @@
+@import "colors";
+
+table {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  padding: 0 0.4rem;
+}
+
+.data-table {
+  .title {
+    text-align: start;
+    font-size: smaller;
+  }
+  border-collapse: collapse;
+  width: 100%;
+  font-size: var(--text-size-s);
+
+  tr {
+    display: grid;
+    border-top: 1px solid #ddd;
+  }
+
+  th,
+  .data-table {
+    padding: 8px;
+  }
+
+  th,
+  td {
+    text-align: end;
+    line-height: var(--text-lh-m);
+  }
+
+  th:first-child,
+  td:first-child {
+    text-align: start;
+  }
+
+  thead {
+    tr {
+      grid-template-columns: 1.5fr 1fr 1fr;
+      th:first-child {
+        text-align: start;
+      }
+    }
+  }
+
+  td {
+    position: relative;
+    padding: unset;
+  }
+
+  .data-layout {
+    z-index: 1;
+    position: relative;
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr;
+    background-color: var(--section-background-1);
+    gap: 0.8rem;
+    padding: 8px;
+    width: 100%;
+    transition: width 0.5s;
+    align-items: center;
+    div:not(:first-child) {
+      text-align: end;
+    }
+    div:last-child {
+      display: flex;
+      justify-content: end;
+    }
+  }
+}
+
+.slider--active {
+  width: 85% !important;
+}

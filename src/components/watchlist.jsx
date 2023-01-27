@@ -7,6 +7,7 @@ import {
   watch_list_ref,
 } from "../stores";
 
+import { Button } from "../components";
 import classNames from "classnames";
 import { sendRequest } from "../utils/socket-base";
 import styles from "../styles/watchlist.module.scss";
@@ -89,15 +90,15 @@ const Watchlist = (props) => {
         </section>
         <MarketValue symbol={props.symbol} />
       </div>
-      <button
+      <Button
+        category="primary"
         onClick={(event) => {
           event.stopPropagation();
           removeWatchlistHandler(props.symbol);
         }}
-        class={styles["button"]}
       >
         Remove from Watchlist
-      </button>
+      </Button>
     </div>
   );
 };
