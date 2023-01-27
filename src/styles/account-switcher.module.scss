@@ -42,18 +42,18 @@
             color:var(--text-main);
             
             .selected{
-              background-color:grey;
+              background-color: var(--card-highlight);
             }
             .account{
-                font-size: x-small;
-                border: 0.5px solid grey;
+                font-size: var(--text-size-s);
                 padding: 0.5rem;
                 display: flex;
                 flex-direction: row;
+                border-radius: 8px;
                 
                 &:hover {
-                    opacity: 0.7;
-                    background-color:grey;
+                   background-color: var(--card-highlight);
+
                   }
                   .account_info{
                     display: flex;
@@ -67,7 +67,7 @@
 
     }
     .separator{
-        border-top: 2px solid grey;
+        border-top: 2px solid var(--border-1);
     }
     .separator-light{
         border-top: 0.5px solid grey;
