@@ -14,6 +14,7 @@ const Button = (props) => {
         [styles.tertiary_light]: props.category === "teriary_light",
         [styles.flat]: props.category === "flat",
         [styles.trade]: props.category === "trade",
+        [styles.reset]: props.category === "reset",
       })}`}
     >
       {props.children}
