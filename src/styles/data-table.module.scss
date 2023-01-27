@@ -4,7 +4,6 @@ table {
   display: flex;
   flex-direction: column;
   position: relative;
-  padding: 0 0.4rem;
 }
 
 .data-table {
@@ -23,7 +22,7 @@ table {
 
   th,
   .data-table {
-    padding: 8px;
+    padding: 16px;
   }
 
   th,
@@ -58,9 +57,9 @@ table {
     grid-template-columns: 1.5fr 1fr 1fr;
     background-color: var(--section-background-1);
     gap: 0.8rem;
-    padding: 8px;
+    padding: 16px;
     width: 100%;
-    transition: width 0.5s;
+    transition: 0.5s;
     align-items: center;
     div:not(:first-child) {
       text-align: end;
@@ -73,5 +72,5 @@ table {
 }
 
 .slider--active {
-  width: 85% !important;
+  transform: translate(-56px);
 }
