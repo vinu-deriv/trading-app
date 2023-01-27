@@ -1,13 +1,15 @@
+export const RISE_FALL_TITLE = 'Rise/Fall';
+
 export const getContractTypesConfig = () => ({
   rise_fall: {
-    title: "Rise/Fall",
+    title: RISE_FALL_TITLE,
     trade_types: ["CALL", "PUT"],
     basis: ["stake", "payout"],
     components: ["start_date"],
     barrier_count: 0,
   },
   rise_fall_equal: {
-    title: "Rise/Fall",
+    title: RISE_FALL_TITLE,
     trade_types: ["CALLE", "PUTE"],
     basis: ["stake", "payout"],
     components: ["start_date"],

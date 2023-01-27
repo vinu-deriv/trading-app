@@ -20,6 +20,7 @@ import styles from "./trade.module.scss";
 import { ContractType } from "Utils/contract-type";
 import { subscribe } from "Utils/socket-base";
 import { convertDurationLimit } from "Utils/format-value";
+import { RISE_FALL_TITLE } from "Constants/trade-config";
 
 const [slider_value, setSliderValue] = createSignal(1);
 const [duration_unit, setDurationUnit] = createSignal("");
@@ -235,7 +236,7 @@ const OptionsTrade = (props) => {
   const handleAllowEqualChange = () => {
     setAllowEqual(!allow_equal());
 
-    if (trade_types.title === "Rise/Fall") {
+    if (trade_types.title === RISE_FALL_TITLE) {
       setTradeTypes(
         ContractType.getFullContractTypes()[
           allow_equal() ? "rise_fall_equal" : "rise_fall"
