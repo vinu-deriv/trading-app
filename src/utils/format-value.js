@@ -36,7 +36,7 @@ export const timePeriod = (end_time_epoc, start_time_epoc) => {
   return `${hours}h ${minutes}m ${seconds}s`;
 };
 
-const toMoment = (value) => {
+export const toMoment = (value) => {
   if (!value) return moment().utc();
   if (value instanceof moment && value.isValid() && value.isUTC()) return value;
   if (typeof value === "number") return epochToMoment(value);
