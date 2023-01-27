@@ -1,4 +1,4 @@
-export const RISE_FALL_TITLE = 'Rise/Fall';
+export const RISE_FALL_TITLE = "Rise/Fall";
 
 export const getContractTypesConfig = () => ({
   rise_fall: {
