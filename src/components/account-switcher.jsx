@@ -41,7 +41,6 @@ const AccountSwitcher = () => {
   });
 
   const doSwitch = async (loginid) => {
-    loginid.stopPropagation();
     if (loginid === login_information.active_loginid) return;
     else {
       const { token } = JSON.parse(login_information?.accounts).find(
@@ -67,8 +66,7 @@ const AccountSwitcher = () => {
       });
     }
   };
-  const resetBalance = async (event) => {
-    event.stopPropagation();
+  const resetBalance = async () => {
     let newbalance;
     const account = await JSON.parse(login_information.active_account);
     sendRequest({
