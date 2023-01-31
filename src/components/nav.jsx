@@ -1,12 +1,12 @@
-import { Show, createSignal, onMount } from "solid-js";
+import { Show, createSignal, onMount, For } from "solid-js";
 import {
   balance_of_all_accounts,
+  icons,
   login_information,
   logout,
 } from "Stores/base-store";
 import { isDesktop, isMobile } from "Utils/responsive";
 import { is_light_theme, setIsLightTheme } from "../stores";
-
 import { Button } from "../components";
 import Logo from "../../src/assets/logo2.png";
 import classNames from "classnames";
@@ -29,10 +29,23 @@ const NavBar = () => {
   const AccountHeader = () => {
     return (
       <Show
-        when={login_information.is_logged_in && balance_of_all_accounts()}
+        when={
+          login_information.is_logged_in &&
+          balance_of_all_accounts() &&
+          current_acc_data()
+        }
         fallback={<>Waiting for Accounts</>}
       >
         <div class={styles.account_wrapper}>
+          <For each={icons}>
+            {({ name, SvgComponent }) => {
+              return (
+                name === current_acc_data()?.currency.toLowerCase() && (
+                  <SvgComponent height="24" width="24" />
+                )
+              );
+            }}
+          </For>
           <span>
             {current_acc_data()?.balance} {current_acc_data()?.currency}
           </span>

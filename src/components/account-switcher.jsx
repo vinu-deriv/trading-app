@@ -1,6 +1,7 @@
 import { createEffect, createSignal, For, Show } from "solid-js";
 import classNames from "classnames";
 import {
+  icons,
   login_information,
   setLoginInformation,
   setLocalValues,
@@ -99,6 +100,21 @@ const AccountSwitcher = () => {
             })}
             onClick={() => doSwitch(acc.loginid)}
           >
+            <div>
+              <For each={icons}>
+                {({ name, SvgComponent }) => {
+                  const currency_icon = acc.is_virtual
+                    ? "virtual"
+                    : acc?.currency;
+
+                  return (
+                    name === currency_icon.toLowerCase() && (
+                      <SvgComponent height="24" width="24" />
+                    )
+                  );
+                }}
+              </For>
+            </div>
             <div class={styles["account_info"]}>
               <div>{getCurrencyDisplayCode(acc.currency)}</div>
               <div>{acc.loginid}</div>

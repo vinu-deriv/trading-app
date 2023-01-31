@@ -4,8 +4,7 @@ import {
   subscribe,
   pingWebsocket,
 } from "Utils/socket-base";
-
-import { createSignal } from "solid-js";
+import { createSignal, lazy } from "solid-js";
 /* eslint-disable no-console */
 import { createStore } from "solid-js/store";
 import { setErrorMessage } from "./trade-store";
@@ -18,6 +17,17 @@ export const [endpoint, setEndpoint] = createSignal({
 export const [balance_of_all_accounts, setBalanceOfAllAccounts] = createSignal(
   {}
 );
+
+const modules = import.meta.glob("../assets/svg/currency/*.svg", {
+  as: "component-solid",
+});
+
+export const icons = Object.entries(modules).map(([key, value]) => {
+  return {
+    name: key.split("/").pop().split(".").shift(),
+    SvgComponent: lazy(value),
+  };
+});
 
 const getBalanceOfAllAccounts = (token) => {
   authorize(token)
