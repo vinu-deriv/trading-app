@@ -149,17 +149,22 @@
   }
   .account_wrapper svg {
     vertical-align: middle;
+    margin-left: 0.5rem;
   }
   span {
     padding-left: 10px;
     vertical-align: middle;
   }
+
+  button {
+    border: 0;
+  }
   .arrow_down {
-    border: solid var(--button-red);
+    border: solid var(--text-main);
     border-width: 0 2px 2px 0;
     display: inline-block;
-    padding: 3px;
-    margin-left: 0.5rem;
+    padding: 4px;
+    margin-left: 0.8rem;
     transform: rotate(45deg);
     -webkit-transform: rotate(45deg);
   }
@@ -174,12 +179,22 @@
   padding: 0 1rem;
   border-bottom: 1px solid var(--border-1);
 
+  .account_wrapper svg {
+      vertical-align: middle;
+      margin-left: 0.5rem;
+  }
+
+  button {
+    border: 0;
+  } 
+
   .menu {
     display: flex;
     flex-direction: row;
     list-style-type: none;
     padding: 0;
     margin: 0;
+
   }
 
   .menu > li {
@@ -194,6 +209,7 @@
     &:hover {
       font-weight: bold;
     }
+   
   }
 
   .account_info {
@@ -207,13 +223,14 @@
   }
   span {
     padding-left: 10px;
+    vertical-align: middle;
   }
   .arrow_down {
-    border: solid var(--button-red);
+    border: solid var(--text-main);
     border-width: 0 2px 2px 0;
     display: inline-block;
-    padding: 3px;
-    margin-left: 0.5rem;
+    padding: 4px;
+    margin-left: 0.8rem;
     transform: rotate(45deg);
     -webkit-transform: rotate(45deg);
     margin-left: 0.5rem;

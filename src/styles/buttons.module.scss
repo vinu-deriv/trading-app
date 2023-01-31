@@ -8,7 +8,6 @@
   &:focus,
   &:active {
     outline: none;
-    transform: scale(0.95);
   }
 }
 .primary {
@@ -22,7 +21,7 @@
     background-color: #059862;
   }
 }
-.secondrary {
+.secondary {
   color: var(--button-red);
   border: 1px solid var(--button-red);
   background: transparent;
@@ -73,6 +72,7 @@
 }
 
 .reset{
+  display: block;
   border: 2px solid var(--color-grey-5);
   color: var(--color-black);
   background: var(--trade-block-background);

@@ -9,7 +9,7 @@ const Button = (props) => {
       disabled={props.disabled}
       class={`${classNames(styles.btn, {
         [styles.primary]: props.category === "primary",
-        [styles.secondrary]: props.category === "secondrary",
+        [styles.secondary]: props.category === "secondary",
         [styles.tertiary]: props.category === "tertiary",
         [styles.tertiary_light]: props.category === "teriary_light",
         [styles.flat]: props.category === "flat",

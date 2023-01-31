@@ -45,30 +45,41 @@
             
             .selected{
               background-color: var(--card-highlight);
+              .account_info{
+                div:first-child {
+                  font-weight: bold;
+                }
+              }
+
+              .account_balance{
+                font-weight: bold;
+              }
             }
             .account{
                 font-size: var(--text-size-s);
                 padding: 0.5rem;
                 display: flex;
+                align-items: center;
                 flex-direction: row;
-                border-radius: 8px;
+                border-radius: 4px;
+                margin-bottom: 0.2rem;
                 
+                .account_info{
+                  display: flex;
+                  flex-direction: column;
+                }
+                .account_balance{
+                  margin-left: auto;
+                  text-align: right;
+                }
+
                 &:hover {
                    background-color: var(--card-highlight);
-
-                  }
-                  .account_info{
-                    display: flex;
-                flex-direction: column;
-                  }
-                  .account_balance{
-                    margin-left: auto;
-                    text-align: right;
-                  }
-
-                  svg {
-                    margin-right: 5px;
-                  }
+                }
+          
+                svg {
+                  margin-right: 5px;
+                }
             }
 
     }
@@ -86,6 +97,7 @@
       justify-content: center;
       align-items: center;
       right: 0;
+      cursor: pointer;
     }
     .close:hover {
       opacity: 1;

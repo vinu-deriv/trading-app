@@ -1,6 +1,7 @@
 import { Show, createSignal, onMount, For } from "solid-js";
 import {
   balance_of_all_accounts,
+  currencies_config,
   icons,
   login_information,
   logout,
@@ -14,6 +15,7 @@ import { loginUrl } from "Constants/deriv-urls";
 import { setshowAccountSwitcher } from "Stores/ui-store";
 import styles from "../styles/navbar.module.scss";
 import { useNavigate } from "solid-app-router";
+import { addComma } from "Utils/format-value";
 
 const NavBar = () => {
   const navigate = useNavigate();
@@ -34,7 +36,7 @@ const NavBar = () => {
           balance_of_all_accounts() &&
           current_acc_data()
         }
-        fallback={<>Waiting for Accounts</>}
+        fallback={<></>}
       >
         <div class={styles.account_wrapper}>
           <For each={icons}>
@@ -47,7 +49,12 @@ const NavBar = () => {
             }}
           </For>
           <span>
-            {current_acc_data()?.balance} {current_acc_data()?.currency}
+            {addComma(
+              current_acc_data()?.balance,
+              currencies_config()[current_acc_data()?.currency]
+                ?.fractional_digits
+            )}{" "}
+            {current_acc_data()?.currency}
           </span>
           <i class={styles.arrow_down} />
         </div>
@@ -109,7 +116,7 @@ const NavBar = () => {
       </ul>
       {login_information.is_logged_in ? (
         <Button
-          category="secondrary"
+          category="secondary"
           onClick={() => setshowAccountSwitcher(true)}
         >
           <div class={styles.account_wrapper}>

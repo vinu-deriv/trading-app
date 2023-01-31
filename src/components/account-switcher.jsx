@@ -1,22 +1,23 @@
 import { createEffect, createSignal, For, Show } from "solid-js";
 import classNames from "classnames";
 import {
+  currencies_config,
   icons,
   login_information,
   setLoginInformation,
   setLocalValues,
   balance_of_all_accounts,
+  logout,
 } from "Stores/base-store";
 import { is_light_theme } from "Stores";
 import { currency_config } from "Constants/currency";
 import { Portal } from "solid-js/web";
-import { authorize } from "Utils/socket-base";
+import { authorize, sendRequest } from "Utils/socket-base";
 import { setshowAccountSwitcher } from "Stores/ui-store";
 import Loader from "./loader";
 import styles from "../styles/account-switcher.module.scss";
-import { logout } from "Stores/base-store";
 import Button from "./button";
-import { sendRequest } from "Utils/socket-base";
+import { addComma } from "Utils/format-value";
 
 const getCurrencyDisplayCode = (currency = "") => {
   if (currency !== "eUSDT" && currency !== "tUSDT") {
@@ -123,8 +124,13 @@ const AccountSwitcher = () => {
               {acc.is_virtual == 1 ? (
                 <div>
                   <span>
-                    {balance_of_all_accounts()[`${acc.loginid}`]?.balance}{" "}
-                    {balance_of_all_accounts()[`${acc.loginid}`]?.currency}
+                    {addComma(
+                      balance_of_all_accounts()[acc.loginid]?.balance,
+                      currencies_config()[
+                        balance_of_all_accounts()[acc.loginid]?.currency
+                      ]?.fractional_digits
+                    )}{" "}
+                    {balance_of_all_accounts()[acc.loginid]?.currency}
                   </span>
                   {!has_reset_balance() && (
                     <Button category="reset" onClick={resetBalance}>
@@ -135,8 +141,13 @@ const AccountSwitcher = () => {
                 </div>
               ) : (
                 <span>
-                  {balance_of_all_accounts()[`${acc.loginid}`]?.balance}{" "}
-                  {balance_of_all_accounts()[`${acc.loginid}`]?.currency}
+                  {addComma(
+                    balance_of_all_accounts()[acc.loginid]?.balance,
+                    currencies_config()[
+                      balance_of_all_accounts()[acc.loginid]?.currency
+                    ]?.fractional_digits
+                  )}{" "}
+                  {balance_of_all_accounts()[acc.loginid]?.currency}
                 </span>
               )}
             </div>

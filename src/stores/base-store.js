@@ -17,6 +17,7 @@ export const [endpoint, setEndpoint] = createSignal({
 export const [balance_of_all_accounts, setBalanceOfAllAccounts] = createSignal(
   {}
 );
+export const [currencies_config, setCurrenciesConfig] = createSignal({});
 
 const modules = import.meta.glob("../assets/svg/currency/*.svg", {
   as: "component-solid",
@@ -49,6 +50,14 @@ const getBalanceOfAllAccounts = (token) => {
     .catch((err) => {
       setErrorMessage(err.message);
     });
+};
+
+const getWebsiteStatus = () => {
+  sendRequest({ website_status: 1 }).then((response) => {
+    if (!response.error) {
+      setCurrenciesConfig(response.website_status?.currencies_config);
+    }
+  });
 };
 
 export const init = () => {
@@ -120,6 +129,7 @@ export const init = () => {
             });
 
             setLocalValues();
+            getWebsiteStatus();
           }
           resolve();
         });
@@ -140,6 +150,8 @@ export const init = () => {
               : false,
           active_account: localStorage.getItem("active_account"),
         });
+
+        getWebsiteStatus();
         resolve();
       }
     } catch (err) {
