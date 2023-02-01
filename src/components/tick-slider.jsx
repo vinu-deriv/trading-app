@@ -39,7 +39,7 @@ const Slider = (props) => {
   onMount(async () => {
     await subscribe(
       {
-        ticks_history: symbol(),
+        ticks_history: props.symbol(),
         style: "candles",
         end: "latest",
         count: 1000,
@@ -49,7 +49,7 @@ const Slider = (props) => {
       },
       getOHLC
     );
-    await subscribe({ ticks: symbol(), subscribe: 1 }, getTickValue);
+    await subscribe({ ticks: props.symbol(), subscribe: 1 }, getTickValue);
   });
 
   createEffect(() => {
@@ -66,7 +66,7 @@ const Slider = (props) => {
           type="range"
           id="input-left"
           class={Styles.slider1}
-          min={day_low()}
+          min={props.day_low()}
           max={day_mid()}
           value={data().left}
           step={1 / Math.pow(10, step_value())}
@@ -75,8 +75,8 @@ const Slider = (props) => {
         <input
           type="range"
           id={Styles.range}
-          min={day_low()}
-          max={day_high()}
+          min={day_mid()}
+          max={props.day_high()}
           class={Styles.slider2}
           value={data().right}
           step={1 / Math.pow(10, step_value())}
@@ -84,11 +84,11 @@ const Slider = (props) => {
         <div class={Styles.indicator}>
           <div>
             <div class={Styles.arrow_down} />
-            <output class={Styles.output_low}>{day_low()}</output>
+            <output class={Styles.output_low}>{props.day_low()}</output>
           </div>
           <output class={Styles.output_mid}>{day_mid()}</output>
           <div>
-            <output class={Styles.output_high}>{day_high()}</output>
+            <output class={Styles.output_high}>{props.day_high()}</output>
             <div class={Styles.arrow_up} />
           </div>
         </div>
