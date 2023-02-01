@@ -1,71 +1,93 @@
-.ticks{
-    display: flex;
-    justify-content: space-around;
-    flex-direction: row;
-  }
-  
-    .span{
-    font-weight:bold;
-    }
+.ticks {
+  display: flex;
+  justify-content: space-around;
+  flex-direction: row;
+}
 
-  .slider1{
-    -webkit-appearance: none;
-    background: red;
-    margin: unset !important;
-  
-  }
-  .slider2{
-    -webkit-appearance: none;
-    background: green;
-    margin: unset !important;
-  }
-  
-  .slider1::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 5px;
-    height: 15px;
-    background: blue;
-    cursor: pointer;
-  }
-  
-  .slider2::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 5px;
-    height: 15px;
-    background: blue;
-    cursor: pointer;
-  }
-  .low{
-    padding-left: 5px;
-  }
-  .high{
-    padding-right: 5px;
-  }
-  .right_arrow{
-    display:flex;
-    flex-direction: column;
-  }
-  .arrow_down{
-    border: solid red;
-    border-width: 0 3px 3px 0;
-    display: inline-block;
-    padding: 3px;
-    transform: rotate(45deg);
+.span {
+  font-weight: bold;
+}
+
+.slider1 {
+  -webkit-appearance: none;
+  background: red;
+  margin: unset !important;
+  width:50%;
+}
+
+.slider2 {
+  -webkit-appearance: none;
+  background: green;
+  margin: unset !important;
+  width:50%;
+}
+
+.slider1::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 5px;
+  height: 15px;
+  background: blue;
+
+}
+
+.slider2::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 5px;
+  height: 15px;
+  background: blue;
+
+}
+
+.low {
+  padding-left: 5px;
+}
+
+.high {
+  padding-right: 5px;
+}
+
+.right_arrow {
+  display: flex;
+  flex-direction: column;
+}
+
+.arrow_down {
+  border: solid red;
+  border-width: 0 3px 3px 0;
+  display: inline-block;
+  padding: 3px;
+  transform: rotate(45deg);
   -webkit-transform: rotate(45deg);
   margin-right: 10px;
-  }
-  .arrow_up{
-    border: solid green;
-    border-width: 0 3px 3px 0;
-    display: inline-block;
-    padding: 3px;
-    transform: rotate(-135deg);
+}
+
+.arrow_up {
+  border: solid green;
+  border-width: 0 3px 3px 0;
+  display: inline-block;
+  padding: 3px;
+  transform: rotate(-135deg);
   -webkit-transform: rotate(-135deg);
   margin-left: 10px;
-  }
-  .indicator{
-    display: flex;
-    justify-content: space-around;
-  }
+}
+
+.indicator {
+  display: flex;
+  justify-content: space-between;
+}
+
+.output_high{
+    padding-left: "5px";
+    font-weight:bold
+}
+.output_low{
+    padding-right: "5px";
+    font-weight:bold
+}
+.output_mid{
+   
+    font-weight:bold
+}
+
