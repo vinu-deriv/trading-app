@@ -1,4 +1,4 @@
-import { Show, createSignal, onMount, For } from "solid-js";
+import { Show, createEffect, createSignal, onMount, For } from "solid-js";
 import {
   balance_of_all_accounts,
   currencies_config,
@@ -27,6 +27,19 @@ const NavBar = () => {
   };
 
   const [checked, setChecked] = createSignal(false);
+  const [account_currency_icon, setAccountCurrencyIcon] = createSignal([]);
+
+  createEffect(() => {
+    const currency = current_acc_data()?.demo_account
+      ? "virtual"
+      : current_acc_data()?.currency;
+
+    const account_currency_icon = icons.filter(
+      (icon) => icon.name === currency?.toLowerCase()
+    );
+
+    setAccountCurrencyIcon(account_currency_icon);
+  });
 
   const AccountHeader = () => {
     return (
@@ -39,13 +52,9 @@ const NavBar = () => {
         fallback={<></>}
       >
         <div class={styles.account_wrapper}>
-          <For each={icons}>
-            {({ name, SvgComponent }) => {
-              return (
-                name === current_acc_data()?.currency.toLowerCase() && (
-                  <SvgComponent height="24" width="24" />
-                )
-              );
+          <For each={account_currency_icon()}>
+            {({ SvgComponent }) => {
+              return <SvgComponent height="24" width="24" />;
             }}
           </For>
           <span>

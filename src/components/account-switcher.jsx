@@ -40,10 +40,14 @@ const AccountSwitcher = () => {
       setDemoAccounts(accounts.filter((acc) => acc.is_virtual === 1));
       setRealAccounts(accounts.filter((acc) => acc.is_virtual === 0));
     }
+
+    const active_account = JSON.parse(login_information?.active_account);
+    if (balance_of_all_accounts()[active_account.loginid].balance == 10000)
+      setHasResetBalance(false);
+    else setHasResetBalance(true);
   });
 
   const doSwitch = async (loginid) => {
-    loginid.stopPropagation();
     if (loginid === login_information.active_loginid) return;
     else {
       const { token } = JSON.parse(login_information?.accounts).find(
@@ -82,7 +86,6 @@ const AccountSwitcher = () => {
     if (account.is_virtual === 1) {
       if (topup() != 0) {
         setTopup(0);
-        setHasResetBalance(false);
         newbalance = 10000;
         account.balance = newbalance;
       }
@@ -99,7 +102,10 @@ const AccountSwitcher = () => {
               [styles["selected"]]:
                 acc.loginid === login_information.active_loginid,
             })}
-            onClick={() => doSwitch(acc.loginid)}
+            onClick={(event) => {
+              event.stopPropagation();
+              doSwitch(acc.loginid);
+            }}
           >
             <div>
               <For each={icons}>
@@ -132,7 +138,7 @@ const AccountSwitcher = () => {
                     )}{" "}
                     {balance_of_all_accounts()[acc.loginid]?.currency}
                   </span>
-                  {!has_reset_balance() && (
+                  {has_reset_balance() && (
                     <Button category="reset" onClick={resetBalance}>
                       {" "}
                       Reset Balance
