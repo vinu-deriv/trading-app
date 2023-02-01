@@ -41,8 +41,7 @@ const AccountSwitcher = () => {
       setRealAccounts(accounts.filter((acc) => acc.is_virtual === 0));
     }
 
-    const active_account = JSON.parse(login_information?.active_account);
-    if (balance_of_all_accounts()[active_account.loginid].balance == 10000)
+    if (balance_of_all_accounts()[demo_accounts()[0].loginid].balance == 10000)
       setHasResetBalance(false);
     else setHasResetBalance(true);
   });

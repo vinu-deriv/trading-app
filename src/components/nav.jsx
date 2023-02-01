@@ -20,7 +20,9 @@ import { addComma } from "Utils/format-value";
 const NavBar = () => {
   const navigate = useNavigate();
   const current_acc_data = () => {
-    const account = JSON.parse(login_information?.active_account);
+    const account = login_information?.active_account
+      ? JSON.parse(login_information?.active_account)
+      : {};
     if (account) return balance_of_all_accounts()[account.loginid];
 
     logout();
