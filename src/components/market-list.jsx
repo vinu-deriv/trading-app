@@ -27,8 +27,8 @@ import {
 import { addDays, formatDate } from "../utils/format-value";
 import { forgetAll, sendRequest, wait } from "../utils/socket-base";
 import { ERROR_CODE } from "../constants/error-codes";
-import StarIcon from "../assets/svg/action/star.svg";
-import TrashBinIcon from "../assets/svg/action/trash.svg";
+import StarIcon from "../assets/svg/action/star.svg?url";
+import TrashBinIcon from "../assets/svg/action/trash.svg?url";
 import { getFavourites } from "../utils/map-markets";
 import { segregateMarkets } from "../utils/map-markets";
 import shared from "../styles/shared.module.scss";

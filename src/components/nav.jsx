@@ -1,12 +1,13 @@
-import { Show, createSignal, onMount } from "solid-js";
+import { Show, createEffect, createSignal, onMount, For } from "solid-js";
 import {
   balance_of_all_accounts,
+  currencies_config,
+  icons,
   login_information,
   logout,
 } from "Stores/base-store";
 import { isDesktop, isMobile } from "Utils/responsive";
 import { is_light_theme, setIsLightTheme } from "../stores";
-
 import { Button } from "../components";
 import Logo from "../../src/assets/logo2.png";
 import classNames from "classnames";
@@ -14,27 +15,57 @@ import { loginUrl } from "Constants/deriv-urls";
 import { setshowAccountSwitcher } from "Stores/ui-store";
 import styles from "../styles/navbar.module.scss";
 import { useNavigate } from "solid-app-router";
+import { addComma } from "Utils/format-value";
 
 const NavBar = () => {
   const navigate = useNavigate();
   const current_acc_data = () => {
-    const account = JSON.parse(login_information?.active_account);
+    const account = login_information?.active_account
+      ? JSON.parse(login_information?.active_account)
+      : {};
     if (account) return balance_of_all_accounts()[account.loginid];
 
     logout();
   };
 
   const [checked, setChecked] = createSignal(false);
+  const [account_currency_icon, setAccountCurrencyIcon] = createSignal([]);
+
+  createEffect(() => {
+    const currency = current_acc_data()?.demo_account
+      ? "virtual"
+      : current_acc_data()?.currency;
+
+    const account_currency_icon = icons.filter(
+      (icon) => icon.name === currency?.toLowerCase()
+    );
+
+    setAccountCurrencyIcon(account_currency_icon);
+  });
 
   const AccountHeader = () => {
     return (
       <Show
-        when={login_information.is_logged_in && balance_of_all_accounts()}
-        fallback={<>Waiting for Accounts</>}
+        when={
+          login_information.is_logged_in &&
+          balance_of_all_accounts() &&
+          current_acc_data()
+        }
+        fallback={<></>}
       >
         <div class={styles.account_wrapper}>
+          <For each={account_currency_icon()}>
+            {({ SvgComponent }) => {
+              return <SvgComponent height="24" width="24" />;
+            }}
+          </For>
           <span>
-            {current_acc_data()?.balance} {current_acc_data()?.currency}
+            {addComma(
+              current_acc_data()?.balance,
+              currencies_config()[current_acc_data()?.currency]
+                ?.fractional_digits
+            )}{" "}
+            {current_acc_data()?.currency}
           </span>
           <i class={styles.arrow_down} />
         </div>
@@ -96,7 +127,7 @@ const NavBar = () => {
       </ul>
       {login_information.is_logged_in ? (
         <Button
-          category="secondrary"
+          category="secondary"
           onClick={() => setshowAccountSwitcher(true)}
         >
           <div class={styles.account_wrapper}>

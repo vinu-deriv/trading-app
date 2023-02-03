@@ -12,7 +12,7 @@ const ErrorComponent = (props) => {
     <Show when={props.message}>
       <div class={styles["popup__div"]} onClick={() => setErrorMessage(null)}>
         <div class={styles["popup"]}>
-          <Button category="secondrary" onClick={() => setErrorMessage(null)}>
+          <Button category="secondary" onClick={() => setErrorMessage(null)}>
             X
           </Button>
           <p class={styles["popup__text"]}>{props.message}</p>

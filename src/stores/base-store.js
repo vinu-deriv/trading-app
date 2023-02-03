@@ -4,8 +4,7 @@ import {
   subscribe,
   pingWebsocket,
 } from "Utils/socket-base";
-
-import { createSignal } from "solid-js";
+import { createSignal, lazy } from "solid-js";
 /* eslint-disable no-console */
 import { createStore } from "solid-js/store";
 import { setErrorMessage } from "./trade-store";
@@ -18,6 +17,18 @@ export const [endpoint, setEndpoint] = createSignal({
 export const [balance_of_all_accounts, setBalanceOfAllAccounts] = createSignal(
   {}
 );
+export const [currencies_config, setCurrenciesConfig] = createSignal({});
+
+const modules = import.meta.glob("../assets/svg/currency/*.svg", {
+  as: "component-solid",
+});
+
+export const icons = Object.entries(modules).map(([key, value]) => {
+  return {
+    name: key.split("/").pop().split(".").shift(),
+    SvgComponent: lazy(value),
+  };
+});
 
 const getBalanceOfAllAccounts = (token) => {
   authorize(token)
@@ -39,6 +50,14 @@ const getBalanceOfAllAccounts = (token) => {
     .catch((err) => {
       setErrorMessage(err.message);
     });
+};
+
+const getWebsiteStatus = () => {
+  sendRequest({ website_status: 1 }).then((response) => {
+    if (!response.error) {
+      setCurrenciesConfig(response.website_status?.currencies_config);
+    }
+  });
 };
 
 export const init = () => {
@@ -110,6 +129,7 @@ export const init = () => {
             });
 
             setLocalValues();
+            getWebsiteStatus();
           }
           resolve();
         });
@@ -130,6 +150,8 @@ export const init = () => {
               : false,
           active_account: localStorage.getItem("active_account"),
         });
+
+        getWebsiteStatus();
         resolve();
       }
     } catch (err) {
