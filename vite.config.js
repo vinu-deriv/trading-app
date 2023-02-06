@@ -19,7 +19,7 @@ export default defineConfig({
   plugins: [
     solidPlugin(),
     solidSvg({
-      defaultExport: "url",
+      defaultAsComponent: true,
       svgo: {
         enabled: true, // optional, by default is true
       },
