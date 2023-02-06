@@ -96,7 +96,7 @@ const NavBar = () => {
       </ul>
       {login_information.is_logged_in ? (
         <Button
-          category="secondrary"
+          category="secondary"
           onClick={() => setshowAccountSwitcher(true)}
         >
           <div class={styles.account_wrapper}>

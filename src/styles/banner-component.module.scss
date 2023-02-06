@@ -1,0 +1,66 @@
+.popup {
+    position: absolute;
+    background-color: var(--section-background-1);
+    opacity: 1;
+    padding: 1rem;
+    width: 40vw;
+    top: 25%;
+    margin: 0 auto;
+    left: 0;
+    right: 0;
+    border-radius: 4px;
+    color: var(--section-background-4);
+
+    @media (max-width: 768px) {
+        width: 100%;
+        border-radius: 0px;
+        top: 80px;
+        box-shadow: 0px 4px 6px -2px var(--row-hover);
+        background-color: var(--banner-background);
+        opacity: 1;
+      }
+
+      &__text {
+        padding: 2px 5px;
+      }
+  }
+
+  .popup__div {
+    width: 100%;
+    height: 100%; 
+    overflow: auto; 
+    position: fixed;
+    z-index: 2;
+    background-color: rgba(0,0,0,0.4);
+  }
+
+  .popup__div_close {
+    display: flex;
+    justify-content: flex-end; 
+  }
+
+  .popup__div_close button {
+    border: none;
+    padding: 0;
+    font-weight: bold;
+  }
+
+  .popup__div_confirm {
+    display: flex;
+    justify-content: center; 
+  }
+
+  // TODO: add info styles
+  // .info {
+
+  // }
+
+  // TODO: add warning styles
+  // .warning {
+
+  // }
+
+    // TODO: add warning styles
+  // .error {
+  
+  // }
