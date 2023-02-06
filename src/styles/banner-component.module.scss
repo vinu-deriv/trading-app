@@ -10,6 +10,7 @@
     right: 0;
     border-radius: 4px;
     color: var(--section-background-4);
+    z-index: 1;
 
     @media (max-width: 768px) {
         width: 100%;
@@ -17,7 +18,6 @@
         top: 80px;
         box-shadow: 0px 4px 6px -2px var(--row-hover);
         background-color: var(--banner-background);
-        opacity: 1;
       }
 
       &__text {

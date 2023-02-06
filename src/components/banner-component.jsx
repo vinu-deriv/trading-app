@@ -10,6 +10,8 @@ const OverlayWrapper = ({ condition, wrapper, children }) =>
   condition ? wrapper(children) : children;
 
 const BannerComponent = (props) => {
+  const nav_height = document.getElementById("app_navbar")?.offsetHeight;
+
   onCleanup(() => {
     setBannerMessage(null);
   });
@@ -27,6 +29,7 @@ const BannerComponent = (props) => {
         )}
       >
         <div
+          style={{ top: nav_height }}
           class={`${classNames(styles.popup, {
             [styles.error]: props.category === banner_category.ERROR,
             [styles.info]: props.category === banner_category.INFO,
