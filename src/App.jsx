@@ -5,15 +5,12 @@ import {
   error_message,
   fetchActiveSymbols,
   is_light_theme,
-  selected_markets,
-  setSelectedMarkets,
   showAccountSwitcher,
-  watch_list_ref,
 } from "./stores";
 import { configureEndpoint, getAppId, getSocketUrl } from "./utils/config";
 import { endpoint, init, login_information } from "Stores/base-store";
+import { selected_markets, setSelectedMarkets } from "Stores/trade-store";
 import { loginUrl } from "Constants/deriv-urls";
-
 import { AccountSwitcher } from "./components";
 import ErrorComponent from "./components/error-component";
 import NavBar from "./components/nav";
@@ -22,13 +19,11 @@ import classNames from "classnames";
 import { getFavourites } from "./utils/map-markets";
 import { mapMarket } from "./utils/map-markets";
 import monitorNetwork from "Utils/network-status";
-import { onCleanup } from "solid-js";
 import { onMount } from "solid-js";
-import { sendRequest } from "./utils/socket-base";
 import styles from "./App.module.scss";
 
 const Endpoint = lazy(() => import("Routes/endpoint"));
-const Dashboard = lazy(() => import("Routes/dashboard/dashboard"));
+const MarketList = lazy(() => import("Routes/market-list"));
 const Trade = lazy(() => import("Routes/trade/trade"));
 const Reports = lazy(() => import("Routes/reports/reports"));
 
@@ -69,12 +64,6 @@ function App() {
     });
   });
 
-  onCleanup(() => {
-    Object.values(watch_list_ref()).forEach((symbol) =>
-      sendRequest({ forget: watch_list_ref()[symbol] })
-    );
-  });
-
   return (
     <div
       class={classNames(styles.App, {
@@ -102,7 +91,7 @@ function App() {
         {showAccountSwitcher() && <AccountSwitcher />}
         <Routes>
           <Route element={<Endpoint />} path="/endpoint" />
-          <Route path="/" element={<Dashboard />} />
+          <Route path="/" element={<MarketList />} />
           <Route path="/trade" element={<Trade />} />
           <Route path="/reports" element={<Reports />} />
         </Routes>

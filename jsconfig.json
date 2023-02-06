@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "module": "CommonJS",
+    "target": "es2020",
+    "baseUrl": "src",
+    "paths": {
+      "Assets/*": ["./assets/*"],
+      "Components/*": ["./components/*"],
+      "Constants/*": ["./constants/*"],
+      "Containers/*": ["./containers/*"],
+      "Routes/*": ["./routes/*"],
+      "Stores/*": ["./stores/*"],
+      "Styles/*": ["./styles/*"],
+      "Utils/*": ["./utils/*"],
+    },
+  },
+  "include": ["src"],
+  "exclude": ["node_modules"]
+}
