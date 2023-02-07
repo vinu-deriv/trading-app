@@ -4,8 +4,13 @@
     padding-left: 0;
     display: flex;
     overflow: auto;
+    margin-bottom: 0px;
+    -ms-overflow-style: none;  /* Internet Explorer 10+ */
+    scrollbar-width: none;  /* Firefox */
   }
-
+  ul::-webkit-scrollbar{
+    display: none;
+  }
   &__content {
     color: var(--text-main);
     // padding: 0 16px;
