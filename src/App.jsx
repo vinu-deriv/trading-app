@@ -2,7 +2,7 @@ import { Route, Routes, useLocation } from "solid-app-router";
 import { Show, createEffect, lazy } from "solid-js";
 import {
   activeSymbols,
-  error_message,
+  banner_message,
   fetchActiveSymbols,
   is_light_theme,
   showAccountSwitcher,
@@ -12,7 +12,7 @@ import { endpoint, init, login_information } from "Stores/base-store";
 import { selected_markets, setSelectedMarkets } from "Stores/trade-store";
 import { loginUrl } from "Constants/deriv-urls";
 import { AccountSwitcher } from "./components";
-import ErrorComponent from "./components/error-component";
+import BannerComponent from "./components/banner-component";
 import NavBar from "./components/nav";
 import { Portal } from "solid-js/web";
 import classNames from "classnames";
@@ -21,6 +21,7 @@ import { mapMarket } from "./utils/map-markets";
 import monitorNetwork from "Utils/network-status";
 import { onMount } from "solid-js";
 import styles from "./App.module.scss";
+import { banner_category } from "./constants/banner-category";
 
 const Endpoint = lazy(() => import("Routes/endpoint"));
 const MarketList = lazy(() => import("Routes/market-list"));
@@ -71,8 +72,12 @@ function App() {
         "theme-dark": !is_light_theme(),
       })}
     >
-      <Show when={error_message()}>
-        <ErrorComponent message={error_message()} />
+      <Show when={banner_message()}>
+        <BannerComponent
+          message={banner_message()}
+          category={banner_category.ERROR}
+          showCloseButton
+        />
       </Show>
       <NavBar />
       <section

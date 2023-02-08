@@ -31,6 +31,7 @@
     --border-1: #{$border-1};
     --row-hover: #{$brand-disabled-1};
     --loader: #{$accent-blue-1};
+    --banner-background: #{$color-grey-2};
   }
 
   .theme-dark {
@@ -54,6 +55,7 @@
     --overlay: #{$overlay-2};
     --row-hover: #{$color-grey-7};
     --loader: #{$accent-blue-2};
+    --banner-background: #{$color-grey-1};
   }
 }
 

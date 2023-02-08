@@ -14,7 +14,7 @@ const [selectedTrade, setSelectedTrade] = createSignal({
 const [is_stake, setIsStake] = createSignal(true);
 const [symbol, setSymbol] = createSignal();
 const [trade_types, setTradeTypes] = createStore({ trade_types: [] });
-const [error_message, setErrorMessage] = createSignal();
+const [banner_message, setBannerMessage] = createSignal();
 const [open_contract_ids, setOpenContractId] = createSignal([]);
 const [open_contract_info, setOpenContractInfo] = createSignal({});
 const [statements, setStatements] = createSignal([]);
@@ -46,7 +46,7 @@ const buyContract = async (id, amount, token) => {
       setOpenContractId([...open_contract_ids(), response.buy.contract_id]);
     }
   } catch (error) {
-    setErrorMessage(error.error.message);
+    setBannerMessage(error.error.message);
   }
 };
 
@@ -83,8 +83,8 @@ export {
   setSymbol,
   trade_types,
   setTradeTypes,
-  error_message,
-  setErrorMessage,
+  banner_message,
+  setBannerMessage,
   buyContract,
   open_contract_ids,
   setOpenContractId,
