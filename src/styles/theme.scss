@@ -31,6 +31,8 @@
     --border-1: #{$border-1};
     --row-hover: #{$brand-disabled-1};
     --loader: #{$accent-blue-1};
+    --text-secondary: #{$text-white};
+    --trade-parameter-background: #{$trade-parameter-light};
   }
 
   .theme-dark {
@@ -54,6 +56,8 @@
     --overlay: #{$overlay-2};
     --row-hover: #{$color-grey-7};
     --loader: #{$accent-blue-2};
+    --text-secondary: #{$text-black};
+    --trade-parameter-background: #{$trade-block-dark};
   }
 }
 
