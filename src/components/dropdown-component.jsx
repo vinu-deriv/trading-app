@@ -13,24 +13,28 @@ const DropdownComponent = (props) => {
 
   const onClickSelectMenu = () => setShowDropdownList((toggle) => !toggle);
 
+  document.addEventListener("click", (event) => {
+    if (!document.getElementById("dropdown-wrapper")?.contains(event.target)) {
+      setShowDropdownList(false);
+    }
+  });
+
   return (
-    <div class={styles["container"]}>
-      <div class={styles["input-wrapper"]}>
-        <input
-          placeholder={props.placeholder}
-          class={styles["input"]}
-          disabled={true}
-          value={props.value}
+    <div id="dropdown-wrapper" class={styles["input-wrapper"]}>
+      <input
+        placeholder={props.placeholder}
+        class={styles["input"]}
+        disabled={true}
+        value={props.value}
+      />
+      <div class={styles["overlay"]} onClick={onClickSelectMenu} />
+      <i class={styles["arrow-down"]} />
+      <Show when={showDropdownList()}>
+        <DropdownList
+          items={props.list_items}
+          onClickDropdownItem={onClickDropdownItem}
         />
-        <div class={styles["overlay"]} onClick={onClickSelectMenu} />
-        <i class={styles["arrow-down"]} />
-        <Show when={showDropdownList()}>
-          <DropdownList
-            items={props.list_items}
-            onClickDropdownItem={onClickDropdownItem}
-          />
-        </Show>
-      </div>
+      </Show>
     </div>
   );
 };
