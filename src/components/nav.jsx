@@ -74,7 +74,10 @@ const NavBar = () => {
   };
 
   return (
-    <section class={isDesktop() ? styles.topnav_desktop : styles.topnav_mobile}>
+    <section
+      id="app_navbar"
+      class={isDesktop() ? styles.topnav_desktop : styles.topnav_mobile}
+    >
       {isMobile() && (
         <>
           <input
