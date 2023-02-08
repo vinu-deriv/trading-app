@@ -30,11 +30,11 @@ const BannerComponent = (props) => {
       >
         <div
           style={{ top: nav_height }}
-          class={`${classNames(styles.popup, {
+          class={classNames(styles.popup, {
             [styles.error]: props.category === banner_category.ERROR,
             [styles.info]: props.category === banner_category.INFO,
             [styles.warning]: props.category === banner_category.WARNING,
-          })}`}
+          })}
         >
           <Show when={props.showCloseButton}>
             <div class={styles["popup__div_close"]}>
