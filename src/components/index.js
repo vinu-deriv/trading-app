@@ -6,7 +6,7 @@ import DataTable from "./data-table";
 import DisplayChangePercent from "./display-change-percent";
 import DisplayTickValue from "./display-tick-value";
 import Loader from "./loader";
-import MarketList from "../routes/market-list/market-list";
+import MarketList from "Routes/market-list/market-list";
 import NavBar from "./nav";
 import OpenPosition from "./open-position";
 import Statements from "./statements";
