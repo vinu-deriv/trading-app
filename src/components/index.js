@@ -1,5 +1,4 @@
 import { Tab, Tabs } from "./tabs";
-
 import AccountSwitcher from "./account-switcher";
 import Button from "./button";
 import DataTable from "./data-table";
@@ -13,6 +12,7 @@ import Statements from "./statements";
 import DropdownComponent from "./dropdown-component";
 import DropdownList from "./dropdown-list";
 import InputComponent from "./input-component";
+import Slider from "./tick-slider";
 
 export {
   NavBar,
@@ -30,4 +30,5 @@ export {
   DropdownComponent,
   DropdownList,
   InputComponent,
+  Slider,
 };
