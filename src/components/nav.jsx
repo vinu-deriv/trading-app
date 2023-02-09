@@ -101,7 +101,7 @@ const NavBar = () => {
           <ThemeToggle />
       {login_information.is_logged_in ? (
         <Button
-          category="secondrary"
+          category="secondary"
           onClick={() => setshowAccountSwitcher(true)}
         >
           <div class={styles.account_wrapper}>
@@ -141,7 +141,6 @@ const ThemeToggle = () => {
         checked={is_light_theme()}
         onChange={toggleThemeHandler}
       />
-      {/* <span class={classNames(styles["slider"], styles["round"])}/> */}
 {is_light_theme()?<img src='https://i.ibb.co/7JfqXxB/sunny.png' class={styles.themeLogo}/>:<img src='https://i.ibb.co/FxzBYR9/night.png' class={styles.themeLogo}/>}
     </label>
 
