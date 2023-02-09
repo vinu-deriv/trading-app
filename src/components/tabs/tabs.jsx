@@ -1,5 +1,11 @@
-import { For, Show, children, createEffect, createSignal } from "solid-js";
-
+import {
+  For,
+  Show,
+  children,
+  createEffect,
+  createSignal,
+  onMount,
+} from "solid-js";
 import TabTitle from "./tab-title";
 import styles from "./tabs.module.scss";
 
@@ -8,6 +14,13 @@ const toArray = (children) => (Array.isArray(children) ? children : [children]);
 const Tabs = (props) => {
   const [selected_tab, setSelectedTab] = createSignal();
   const c = children(() => props.children);
+
+  onMount(() => {
+    props.onTabItemClick({
+      index: props.active_index,
+      id: props.default_selected,
+    });
+  });
 
   createEffect(() => {
     setSelectedTab(props.active_index ?? 0);

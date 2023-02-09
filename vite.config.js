@@ -21,7 +21,7 @@ export default defineConfig({
     solidSvg({
       defaultAsComponent: true,
       svgo: {
-        enabled: true, // optional, by default is true
+        enabled: true,
       },
     }),
     VitePWA({

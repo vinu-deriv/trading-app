@@ -1,4 +1,5 @@
 import moment from "moment";
+import { getTradeTimings } from "Stores/trade-store";
 
 export const addComma = (num, decimal_points = 2) => {
   let number = String(num || 0).replace(/,/g, "");
@@ -75,4 +76,61 @@ export const convertDurationLimit = (value, unit) => {
   }
 
   return value;
+};
+
+export const generateTickData = ({
+  previous = 0,
+  current = 0,
+  is_closed = false,
+  is_suspended = false,
+  opens_at = null,
+}) => ({ previous, current, is_closed, is_suspended, opens_at });
+
+export const calculateTimeLeft = (remaining_time_to_open) => {
+  const difference = remaining_time_to_open - Date.now();
+  return difference > 0
+    ? {
+        days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+        hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
+        minutes: Math.floor((difference / 1000 / 60) % 60),
+        seconds: Math.floor((difference / 1000) % 60),
+      }
+    : {};
+};
+
+export const getSymbol = (target_symbol, trading_times) => {
+  let symbol;
+  const { markets } = trading_times;
+  for (let i = 0; i < markets.length; i++) {
+    const { submarkets } = markets[i];
+    for (let j = 0; j < submarkets.length; j++) {
+      const { symbols } = submarkets[j];
+      symbol = symbols.find((item) => item.symbol === target_symbol);
+      if (symbol) return symbol;
+    }
+  }
+};
+
+export const checkWhenMarketOpens = async (days_offset, target_symbol) => {
+  const target_date = addDays(new Date(), days_offset);
+  const api_response = await getTradeTimings(formatDate(target_date));
+  if (!api_response.api_initial_load_error) {
+    const { times } = getSymbol(target_symbol, api_response.trading_times);
+    const { open, close } = times;
+    const is_closed_all_day =
+      open?.length === 1 && open[0] === "--" && close[0] === "--";
+    if (is_closed_all_day) {
+      return checkWhenMarketOpens(days_offset + 1, target_symbol);
+    }
+    const date_str = target_date.toISOString().substring(0, 11);
+    const getUTCDate = (hour) => new Date(`${date_str}${hour}Z`);
+    let remaining_time_to_open;
+    for (let i = 0; i < open?.length; i++) {
+      const diff = +getUTCDate(open[i]) - Date.now();
+      if (diff > 0) {
+        remaining_time_to_open = +getUTCDate(open[i]);
+        return remaining_time_to_open;
+      }
+    }
+  }
 };
