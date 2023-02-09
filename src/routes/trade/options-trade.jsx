@@ -32,6 +32,7 @@ const [amount, setAmountValue] = createSignal(0);
 const [hide_equal, setHideEqual] = createSignal(false);
 const [duration_text, setDurationText] = createSignal("");
 const [barrier, setBarrier] = createSignal("");
+const [form_validation, setFormValidation] = createSignal({});
 
 let duration = { min: 0, max: 0 };
 let unsubscribe_buy;
@@ -274,6 +275,7 @@ const OptionsTrade = (props) => {
     setDurationValue(0);
     setSliderValue(1);
     setAmountValue(0);
+    setFormValidation({});
   });
 
   return (
@@ -292,7 +294,14 @@ const OptionsTrade = (props) => {
               <input
                 class={styles["duration__input"]}
                 type="number"
-                onInput={(e) => setDurationValue(Number(e.target.value))}
+                onInput={(e) => {
+                  !form_validation().duration_touched &&
+                    setFormValidation((fields) => ({
+                      ...fields,
+                      duration_touched: true,
+                    }));
+                  setDurationValue(Number(e.target.value));
+                }}
                 value={duration_value()}
               />
             }
@@ -308,7 +317,14 @@ const OptionsTrade = (props) => {
                 name="fader"
                 step="1"
                 list="ticks"
-                onChange={(event) => setSliderValue(Number(event.target.value))}
+                onChange={(event) => {
+                  !form_validation().duration_touched &&
+                    setFormValidation((fields) => ({
+                      ...fields,
+                      duration_touched: true,
+                    }));
+                  setSliderValue(Number(event.target.value));
+                }}
               />
               <datalist id="ticks">
                 <option>1</option>
@@ -325,7 +341,12 @@ const OptionsTrade = (props) => {
               <p>{slider_value()}</p>
             </div>
           </Show>
-          <Show when={proposal_error_message()?.response_message}>
+          <Show
+            when={
+              form_validation().duration_touched &&
+              proposal_error_message()?.response_message
+            }
+          >
             <span class={styles["error-proposal"]}>
               {displayValidationMessage()}
             </span>
@@ -358,11 +379,23 @@ const OptionsTrade = (props) => {
               class={styles["amount__input"]}
               type="number"
               value={amount()}
-              onInput={(e) => setAmountValue(Number(e.target.value))}
+              onInput={(e) => {
+                !form_validation().amount_touched &&
+                  setFormValidation({
+                    ...form_validation(),
+                    amount_touched: true,
+                  });
+                setAmountValue(Number(e.target.value));
+              }}
             />
             <p>{currency}</p>
           </div>
-          <Show when={proposal_error_message()?.response_message}>
+          <Show
+            when={
+              form_validation().amount_touched &&
+              proposal_error_message()?.response_message
+            }
+          >
             <span class={styles["error-proposal"]}>
               {proposal_error_message()?.response_message}
             </span>

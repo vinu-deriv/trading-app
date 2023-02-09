@@ -1,4 +1,4 @@
-import { onCleanup } from "solid-js";
+import { onCleanup, Show } from "solid-js";
 import styles from "Styles/input-component.module.scss";
 
 const InputComponent = (props) => {
@@ -7,13 +7,18 @@ const InputComponent = (props) => {
   });
 
   return (
-    <input
-      type={props.type}
-      class={styles["input"]}
-      placeholder={props.placeholder}
-      value={props.value}
-      onChange={props.onChange}
-    />
+    <>
+      <input
+        type={props.type}
+        class={styles["input"]}
+        placeholder={props.placeholder ?? ""}
+        value={props.value}
+        onChange={props.onChange}
+      />
+      <Show when={props.error_message}>
+        <span>{props.error_message}</span>
+      </Show>
+    </>
   );
 };
 
