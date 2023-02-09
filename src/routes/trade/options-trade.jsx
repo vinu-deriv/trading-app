@@ -182,8 +182,7 @@ const OptionsTrade = (props) => {
       batch(() => {
         setDurationMinMax(duration_unit);
         setDurationValue(duration.min);
-      })
-      
+      });
     }
   });
 
