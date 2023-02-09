@@ -7,10 +7,6 @@
   width: 100%;
   margin: 10px auto;
   padding: 10px;
-
-  @media (max-width: 768px) {
-    width: 90%;
-  }
 }
 
 @mixin dropdown-mixin {
@@ -50,11 +46,10 @@
   display: flex;
   flex: 1 0 50%;
   width: 100%;
-  margin: 10px;
+  margin: 10px 10px 0px 10px;
 
   button {
     padding: 15px;
-    margin: 10px 0px 0px 0px;
     width: 100%;
     border: none;
     
@@ -193,8 +188,14 @@
 
 .error-proposal {
   @include error-mixin();
-    position: absolute;
-    top: 50px;
+  font-weight: normal;
+}
+
+.no-error {
+  @include error-mixin();
+  font-weight: normal;
+  color: var(--placeholder-text);
+  float: left;
 }
 
 .select-trade {
@@ -254,7 +255,7 @@
   width: 100%;
   text-align: left;
   font-size: small;
-  margin: 10px 0px;
+  margin-top: 10px;
 
   input[type="checkbox"] {
     accent-color: var(--button-red);

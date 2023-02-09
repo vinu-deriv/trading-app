@@ -81,19 +81,24 @@ const getProposal = async (
           if (response.proposal) {
             const { id, ask_price, payout } = response.proposal;
 
-            if (id)
+            if (id) {
+              setProposalErrorMessage((error) => ({
+                ...error,
+                highlight: false,
+              }));
               setProposalBuy({
                 id,
                 ask_price,
                 payout,
                 subscriptionId: response.subscription.id,
               });
+            }
           }
-
-          if (!proposal_error_message()?.response_message && response.error)
+          if (response.error)
             setProposalErrorMessage((error) => ({
               ...error,
-              response_message: response.error.message,
+              amount_message: response.error.message,
+              highlight: true,
             }));
         }
       );
@@ -114,18 +119,24 @@ const getProposal = async (
           if (response.proposal) {
             const { id, ask_price, payout } = response.proposal;
 
-            if (id)
+            if (id) {
+              setProposalErrorMessage((error) => ({
+                ...error,
+                highlight: false,
+              }));
               setProposalSell({
                 id,
                 ask_price,
                 payout,
                 subscriptionId: response.subscription.id,
               });
+            }
           }
-          if (!proposal_error_message()?.response_message && response.error)
+          if (response.error)
             setProposalErrorMessage((error) => ({
               ...error,
-              response_message: response.error.message,
+              amount_message: response.error.message,
+              highlight: true,
             }));
         }
       );
@@ -194,7 +205,6 @@ const OptionsTrade = (props) => {
     setSymbol(selectedTradeType().symbol);
     setProposalBuy({ id: "", ask_price: "", payout: "" });
     setProposalSell({ id: "", ask_price: "", payout: "" });
-    setProposalErrorMessage(null);
     setBannerMessage(null);
 
     getProposal(
@@ -256,15 +266,16 @@ const OptionsTrade = (props) => {
   const handleDurationChange = (selected_item) => {
     setDurationMinMax(selected_item?.value);
     setDurationText(selected_item?.text);
+    setProposalErrorMessage((response) => ({
+      ...response,
+      duration_message: `Should be between ${duration.min} and ${duration.max}`,
+    }));
   };
 
   const displayValidationMessage = () => {
     const is_duration_valid =
       duration_value() >= duration.min && duration_value() <= duration.max;
-    if (!is_duration_valid) {
-      return `Should be between ${duration.min} and ${duration.max}`;
-    }
-    return null;
+    return !is_duration_valid;
   };
 
   onCleanup(() => {
@@ -293,12 +304,14 @@ const OptionsTrade = (props) => {
               <input
                 class={styles["duration__input"]}
                 type="number"
-                onInput={(e) => {
+                onFocus={(e) => {
                   !form_validation().duration_touched &&
                     setFormValidation((fields) => ({
                       ...fields,
                       duration_touched: true,
                     }));
+                }}
+                onInput={(e) => {
                   setDurationValue(Number(e.target.value));
                 }}
                 value={duration_value()}
@@ -316,12 +329,15 @@ const OptionsTrade = (props) => {
                 name="fader"
                 step="1"
                 list="ticks"
-                onChange={(event) => {
+                onFocus={(event) => {
                   !form_validation().duration_touched &&
                     setFormValidation((fields) => ({
                       ...fields,
                       duration_touched: true,
                     }));
+                  setSliderValue(Number(event.target.value));
+                }}
+                onChange={(event) => {
                   setSliderValue(Number(event.target.value));
                 }}
               />
@@ -340,16 +356,15 @@ const OptionsTrade = (props) => {
               <p>{slider_value()}</p>
             </div>
           </Show>
-          <Show
-            when={
-              form_validation().duration_touched &&
-              proposal_error_message()?.response_message
+          <span
+            class={
+              form_validation().duration_touched && displayValidationMessage()
+                ? styles["error-proposal"]
+                : styles["no-error"]
             }
           >
-            <span class={styles["error-proposal"]}>
-              {displayValidationMessage()}
-            </span>
-          </Show>
+            {proposal_error_message()?.duration_message}
+          </span>
         </div>
         <div class={`${classNames(styles["button"], styles["stake-payout"])}`}>
           <button
@@ -371,34 +386,35 @@ const OptionsTrade = (props) => {
             Payout
           </button>
         </div>
-
         <div class={styles["wrapper"]}>
           <div class={styles["amount"]}>
             <input
               class={styles["amount__input"]}
               type="number"
               value={amount()}
-              onInput={(e) => {
+              onFocus={(e) => {
                 !form_validation().amount_touched &&
                   setFormValidation({
                     ...form_validation(),
                     amount_touched: true,
                   });
+              }}
+              onInput={(e) => {
                 setAmountValue(Number(e.target.value));
               }}
             />
             <p>{currency}</p>
           </div>
-          <Show
-            when={
+          <span
+            class={
               form_validation().amount_touched &&
-              proposal_error_message()?.response_message
+              proposal_error_message()?.highlight
+                ? styles["error-proposal"]
+                : styles["no-error"]
             }
           >
-            <span class={styles["error-proposal"]}>
-              {proposal_error_message()?.response_message}
-            </span>
-          </Show>
+            {proposal_error_message()?.amount_message}
+          </span>
         </div>
         <Show when={hide_equal()}>
           <div class={styles["allow-equals"]}>

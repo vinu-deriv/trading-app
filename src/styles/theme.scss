@@ -38,6 +38,7 @@
     --rise-background: #{$color-green-2};
     --payout-fall-background: #{$color-red-1};
     --fall-background: #{$color-red-2};
+    --placeholder-text: #{$brand-disabled-2};
   }
 
   .theme-dark {
@@ -68,6 +69,7 @@
     --rise-background: #{$color-green-2};
     --payout-fall-background: #{$color-red-1};
     --fall-background: #{$color-red-2};
+    --placeholder-text: #{$brand-disabled-1};
   }
 }
 
