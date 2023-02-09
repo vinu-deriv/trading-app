@@ -104,14 +104,6 @@ const NavBar = () => {
             </a>
           </li>
         )}
-        <li
-          onClick={() => {
-            navigate("/trade", { replace: true });
-            setChecked(false);
-          }}
-        >
-          Trade
-        </li>
         {login_information.is_logged_in && (
           <li
             onClick={() => {
