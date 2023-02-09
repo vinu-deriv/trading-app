@@ -22,7 +22,6 @@ import { subscribe } from "Utils/socket-base";
 import { convertDurationLimit } from "Utils/format-value";
 import { RISE_FALL_TITLE } from "Constants/trade-config";
 import { DropdownComponent } from "Components";
-import { InputComponent } from "../../components";
 
 const [slider_value, setSliderValue] = createSignal(1);
 const [duration_unit, setDurationUnit] = createSignal("");
@@ -31,7 +30,6 @@ const [allow_equal, setAllowEqual] = createSignal(false);
 const [amount, setAmountValue] = createSignal(0);
 const [hide_equal, setHideEqual] = createSignal(false);
 const [duration_text, setDurationText] = createSignal("");
-const [barrier, setBarrier] = createSignal("");
 const [form_validation, setFormValidation] = createSignal({});
 
 let duration = { min: 0, max: 0 };
@@ -411,15 +409,6 @@ const OptionsTrade = (props) => {
             />
             <label for="allowEquals">Allow equals</label>
           </div>
-        </Show>
-        <Show when={!hide_equal()}>
-          <InputComponent
-            type={"text"}
-            placeholder={"Enter Barrier Value"}
-            value={barrier()}
-            onCleanup={() => setBarrier("")}
-            onChange={(event) => setBarrier(event.target.value)}
-          />
         </Show>
         <div class={`${classNames(styles["button"], styles["buy-sell"])}`}>
           <div class={styles["buy-sell__buy-wrapper"]}>
