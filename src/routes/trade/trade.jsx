@@ -4,35 +4,42 @@ import {
   Show,
   Switch,
   onCleanup,
-  onMount,
   createEffect,
   createSignal,
+  onMount,
 } from "solid-js";
-import { Loader, MarketList } from "../../components";
+import { ERROR_CODE } from "Constants/error-codes";
+import { Loader } from "Components";
 import {
-  current_tick,
   is_loading,
-  prev_tick,
   selectedTradeType,
   setSelectedTradeType,
   setTradeTypes,
-  subscribe_id,
-} from "../../stores";
+  fetchMarketTick,
+} from "Stores";
 import { ContractType } from "Utils/contract-type";
+import throttle from "lodash.throttle";
 
 import OptionsTrade from "./options-trade";
 import classNames from "classnames";
-import dashboardStyles from "../../styles/watchlist.module.scss";
+import dashboardStyles from "Styles/watchlist.module.scss";
 import { getContractTypesConfig } from "Constants/trade-config";
-import { login_information } from "../../stores/base-store";
-import { redirectToLogin } from "Utils/user-redirect-to-login";
-import shared from "../../styles/shared.module.scss";
+import { login_information } from "Stores/base-store";
+import shared from "Styles/shared.module.scss";
 import styles from "./trade.module.scss";
+import { forgetAll, wait } from "Utils/socket-base";
+import { market_ticks, setMarketTicks } from "Stores/trade-store";
+import {
+  generateTickData,
+  checkWhenMarketOpens,
+  calculateTimeLeft,
+} from "Utils/format-value";
 
 const Trade = () => {
   const [durations_list, setDurationsList] = createSignal([]);
   const [selected_contract_type, setSelectedContractType] = createSignal();
   const [contract_config, setContractConfig] = createSignal();
+  const [is_market_closed, setIsMarketClosed] = createSignal();
 
   const getConfig = async () => {
     await ContractType.buildContractTypesConfig(selectedTradeType()?.symbol);
@@ -47,6 +54,49 @@ const Trade = () => {
       );
     }
   };
+
+  onCleanup(() => {
+    forgetAll("ticks");
+    setMarketTicks({});
+  });
+
+  const marketDataHandler = async (response) => {
+    if (!response.error) {
+      const { quote, symbol } = response.tick;
+      const prev_value = market_ticks()[symbol]?.current ?? 0;
+      const current_value = quote;
+      setMarketTicks({
+        ...market_ticks(),
+        [symbol]: generateTickData({
+          previous: prev_value,
+          current: current_value,
+        }),
+      });
+    } else {
+      const { echo_req, error } = response;
+      if (error.code === ERROR_CODE.market_closed) {
+        if (!is_market_closed()) {
+          setIsMarketClosed(true);
+          const time_left = await checkWhenMarketOpens(0, echo_req.ticks);
+          setMarketTicks({
+            ...market_ticks(),
+            [echo_req.ticks]: generateTickData({
+              is_closed: true,
+              opens_at: calculateTimeLeft(time_left),
+            }),
+          });
+        }
+      }
+    }
+  };
+
+  onMount(async () => {
+    await wait("forget_all");
+    await fetchMarketTick(
+      selectedTradeType()?.symbol,
+      throttle(marketDataHandler, 500)
+    );
+  });
 
   createEffect(() => {
     if (selectedTradeType()?.symbol) {
@@ -66,15 +116,8 @@ const Trade = () => {
       );
   });
 
-  onMount(() => {
-    redirectToLogin();
-  });
-
   return (
     <div class={styles["trade-flex-layout"]}>
-      <div class={styles["trade-flex-layout__accordion"]}>
-        <MarketList />
-      </div>
       {login_information.is_logged_in && (
         <div class={styles["trade-flex-layout__trade"]}>
           <Show
@@ -92,7 +135,7 @@ const Trade = () => {
               )}
             >
               <strong class={styles["market-text"]}>Market price:</strong>
-              <DisplayTick />
+              <DisplayTick symbol={selectedTradeType()?.symbol} />
             </section>
             <Switch fallback={"Loading trade types"}>
               <Match when={JSON.stringify(contract_config()) === "{}"}>
@@ -146,32 +189,30 @@ const Trade = () => {
   );
 };
 
-const DisplayTick = () => {
+const DisplayTick = (props) => {
   const difference = () => {
-    if (isNaN(current_tick()) && isNaN(prev_tick())) {
+    const { previous, current } = market_ticks()[props.symbol];
+    if (isNaN(previous) && isNaN(current)) {
       return { value: 0, status: "" };
     }
     let status = "same";
     const rateChange =
-      current_tick() && prev_tick()
-        ? ((current_tick() - prev_tick()) / prev_tick()) * 100
-        : 0;
-    if (current_tick() < prev_tick()) {
+      current && previous ? ((current - previous) / previous) * 100 : 0;
+    if (current < previous) {
       status = "decrease";
-    } else if (current_tick() > prev_tick()) {
+    } else if (current > previous) {
       status = "increase";
     }
     return { value: rateChange ?? 0, status };
   };
 
   onCleanup(async () => {
-    await subscribe_id()?.unsubscribe();
     setSelectedTradeType({});
   });
 
   return (
     <Show
-      when={!is_loading()}
+      when={!is_loading() && market_ticks()[props.symbol]}
       fallback={<Loader class={shared["loader-position"]} />}
     >
       <div class={styles["market-tick"]}>
@@ -181,7 +222,7 @@ const DisplayTick = () => {
             dashboardStyles[`badge--${difference().status}`]
           )}
         >
-          {current_tick()}
+          {market_ticks()[props.symbol].current}
         </span>
         <span
           class={classNames(
