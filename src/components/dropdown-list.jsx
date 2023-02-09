@@ -3,7 +3,7 @@ import styles from "Styles/dropdown-list.module.scss";
 
 const DropdownList = (props) => {
   return (
-    <div class={styles["wrapper"]}>
+    <div id="list-wrapper" class={styles["wrapper"]}>
       <For each={props.items}>
         {(item) => (
           <div

@@ -284,6 +284,7 @@ const OptionsTrade = (props) => {
           list_items={props.durations_list}
           onSelect={handleDurationChange}
           value={duration_text()}
+          el_id="duration-input"
         />
         <div class={styles["wrapper"]}>
           <Show
