@@ -30,7 +30,7 @@
 }
 
 @mixin error-mixin {
-  color: #d33636;
+  color: var(--button-red);
   margin-right: auto;
   font-size: small;
   font-weight: bold;
@@ -108,7 +108,7 @@
     }
   }
   &__buy {
-    background-color: #4ab5b3;
+    background-color: var(--rise-background);
     cursor: pointer;
     font-weight: bold;
     color: var(--text-secondary);
@@ -120,7 +120,7 @@
   }
 
   &__sell {
-    background-color: #ec403f;
+    background-color: var(--fall-background);
     cursor: pointer;
     font-weight: bold;
     color: var(--text-secondary);
@@ -134,12 +134,12 @@
   &__buy-wrapper
   {
     @include wrapper-mixin();
-    background-color: #3d9494;
+    background-color: var(--payout-rise-background);
   }
 
   &__sell-wrapper {
     @include wrapper-mixin();
-    background-color: #d23735;
+    background-color: var(--payout-fall-background);
   }
 }
 

@@ -34,6 +34,10 @@
     --text-secondary: #{$text-white};
     --trade-parameter-background: #{$trade-parameter-light};
     --banner-background: #{$color-grey-2};
+    --payout-rise-background: #{$color-green-1};
+    --rise-background: #{$color-green-2};
+    --payout-fall-background: #{$color-red-1};
+    --fall-background: #{$color-red-2};
   }
 
   .theme-dark {
@@ -60,6 +64,10 @@
     --text-secondary: #{$text-black};
     --trade-parameter-background: #{$trade-block-dark};
     --banner-background: #{$color-grey-1};
+    --payout-rise-background: #{$color-green-1};
+    --rise-background: #{$color-green-2};
+    --payout-fall-background: #{$color-red-1};
+    --fall-background: #{$color-red-2};
   }
 }
 
