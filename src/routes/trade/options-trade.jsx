@@ -1,9 +1,9 @@
 import {
   buyContract,
-  error_message,
+  banner_message,
   is_stake,
   selectedTradeType,
-  setErrorMessage,
+  setBannerMessage,
   setIsStake,
   setSymbol,
   symbol,
@@ -196,7 +196,7 @@ const OptionsTrade = (props) => {
     setProposalBuy({ id: "", ask_price: "", payout: "" });
     setProposalSell({ id: "", ask_price: "", payout: "" });
     setProposalErrorMessage(null);
-    setErrorMessage(null);
+    setBannerMessage(null);
 
     getProposal(
       duration_unit(),
@@ -230,7 +230,7 @@ const OptionsTrade = (props) => {
   const handleBuyContractClicked = async (id) => {
     await buyContract(id, amount(), token);
 
-    if (!error_message()) navigate("/reports", { replace: true });
+    if (!banner_message()) navigate("/reports", { replace: true });
   };
 
   const handleAllowEqualChange = () => {
@@ -399,8 +399,8 @@ const OptionsTrade = (props) => {
             {displayValidationMessage()}
           </span>
         </Show>
-        <Show when={error_message()}>
-          <span class={styles["error-message"]}>{error_message()}</span>
+        <Show when={banner_message()}>
+          <span class={styles["error-message"]}>{banner_message()}</span>
         </Show>
       </div>
     </Show>

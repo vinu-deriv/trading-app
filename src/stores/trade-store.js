@@ -14,15 +14,13 @@ const [selectedTrade, setSelectedTrade] = createSignal({
 const [is_stake, setIsStake] = createSignal(true);
 const [symbol, setSymbol] = createSignal();
 const [trade_types, setTradeTypes] = createStore({ trade_types: [] });
-const [error_message, setErrorMessage] = createSignal();
+const [banner_message, setBannerMessage] = createSignal();
 const [open_contract_ids, setOpenContractId] = createSignal([]);
 const [open_contract_info, setOpenContractInfo] = createSignal({});
 const [statements, setStatements] = createSignal([]);
-const [subscribe_id, setSubscribeId] = createSignal(null);
-const [prev_tick, setPrevTick] = createSignal(null);
-const [current_tick, setCurrentTick] = createSignal(null);
 const [is_loading, setIsLoading] = createSignal(false);
 const [market_ticks, setMarketTicks] = createSignal({});
+const [selected_markets, setSelectedMarkets] = createSignal([]);
 
 const fetchActiveSymbols = async () => {
   try {
@@ -48,7 +46,7 @@ const buyContract = async (id, amount, token) => {
       setOpenContractId([...open_contract_ids(), response.buy.contract_id]);
     }
   } catch (error) {
-    setErrorMessage(error.error.message);
+    setBannerMessage(error.error.message);
   }
 };
 
@@ -61,7 +59,14 @@ const fetchMarketTick = (symbol, marketTickHandler) => {
     marketTickHandler
   );
   return market_tick_subscription_ref;
-  // setSubscribeId(market_tick_subscription_ref);
+};
+
+const getTradeTimings = async (date_string) => {
+  const data = await sendRequest({ trading_times: date_string });
+  if (data.error) {
+    return { api_initial_load_error: data.error.message };
+  }
+  return data;
 };
 
 export {
@@ -78,8 +83,8 @@ export {
   setSymbol,
   trade_types,
   setTradeTypes,
-  error_message,
-  setErrorMessage,
+  banner_message,
+  setBannerMessage,
   buyContract,
   open_contract_ids,
   setOpenContractId,
@@ -87,15 +92,12 @@ export {
   setOpenContractInfo,
   statements,
   setStatements,
-  subscribe_id,
-  setSubscribeId,
   fetchMarketTick,
-  prev_tick,
-  setPrevTick,
-  current_tick,
-  setCurrentTick,
   is_loading,
   setIsLoading,
   market_ticks,
   setMarketTicks,
+  getTradeTimings,
+  selected_markets,
+  setSelectedMarkets,
 };
