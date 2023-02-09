@@ -7,7 +7,7 @@ import {
 import { createSignal, lazy } from "solid-js";
 /* eslint-disable no-console */
 import { createStore } from "solid-js/store";
-import { setErrorMessage } from "./trade-store";
+import { setBannerMessage } from "./trade-store";
 
 export const [login_information, setLoginInformation] = createStore();
 export const [endpoint, setEndpoint] = createSignal({
@@ -48,7 +48,7 @@ const getBalanceOfAllAccounts = (token) => {
       });
     })
     .catch((err) => {
-      setErrorMessage(err.message);
+      setBannerMessage(err.message);
     });
 };
 

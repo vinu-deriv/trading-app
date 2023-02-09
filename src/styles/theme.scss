@@ -33,6 +33,7 @@
     --loader: #{$accent-blue-1};
     --text-secondary: #{$text-white};
     --trade-parameter-background: #{$trade-parameter-light};
+    --banner-background: #{$color-grey-2};
   }
 
   .theme-dark {
@@ -58,6 +59,7 @@
     --loader: #{$accent-blue-2};
     --text-secondary: #{$text-black};
     --trade-parameter-background: #{$trade-block-dark};
+    --banner-background: #{$color-grey-1};
   }
 }
 
