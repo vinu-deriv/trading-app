@@ -1,5 +1,4 @@
 import { Tab, Tabs } from "./tabs";
-
 import AccountSwitcher from "./account-switcher";
 import Button from "./button";
 import DataTable from "./data-table";
@@ -10,6 +9,7 @@ import MarketList from "Routes/market-list/market-list";
 import NavBar from "./nav";
 import OpenPosition from "./open-position";
 import Statements from "./statements";
+import Slider from "./tick-slider";
 
 export {
   NavBar,
@@ -24,4 +24,5 @@ export {
   DataTable,
   DisplayTickValue,
   Button,
+  Slider,
 };
