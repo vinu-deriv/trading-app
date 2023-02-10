@@ -23,6 +23,8 @@
   border-radius: 4px;
   color: var(--text-secondary);
   padding-top: 8px;
+  display: flex;
+  flex-direction: column;
 }
 
 @mixin error-mixin {
@@ -97,6 +99,10 @@
   &__stake-payout {
     font-size: small;
     font-weight: 300;
+    padding-bottom: 8px;
+    @media (max-width: 768px) {
+      font-size: 10px;
+    }
 
     &--strong {
       font-weight: bold;
@@ -140,7 +146,7 @@
 
 .amount {
   width: 100%;
-  margin: 10px auto;
+  margin: 10px auto 0px auto;
   align-items: center;
   display: flex;
   gap: 10px;
@@ -171,7 +177,7 @@
 .duration {
   &__input {
     width: 100%;
-    margin: 10px auto;
+    margin: 10px auto 0px auto;
     height: 40px;
     box-sizing: border-box;
     padding: 0 10px;
@@ -189,10 +195,12 @@
 .error-proposal {
   @include error-mixin();
   font-weight: normal;
+  margin-top: 10px;
 }
 
 .no-error {
   @include error-mixin();
+  margin-top: 10px;
   font-weight: normal;
   color: var(--placeholder-text);
   float: left;

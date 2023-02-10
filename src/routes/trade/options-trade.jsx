@@ -190,6 +190,11 @@ const OptionsTrade = (props) => {
       batch(() => {
         setDurationMinMax(duration_unit);
         setDurationValue(duration.min);
+        setDurationText(props.durations_list[0].text);
+        setProposalErrorMessage((response) => ({
+          ...response,
+          duration_message: `Should be between ${duration.min} and ${duration.max}`,
+        }));
       });
     }
   });
@@ -408,11 +413,16 @@ const OptionsTrade = (props) => {
             />
             <p>{currency}</p>
           </div>
-          <span class={styles["error-proposal"]}>
-            {(form_validation()?.amount_touched &&
-              proposal_error_message()?.amount_message) ??
-              ""}
-          </span>
+          <Show
+            when={
+              form_validation()?.amount_touched &&
+              proposal_error_message()?.amount_message
+            }
+          >
+            <span class={styles["error-proposal"]}>
+              {proposal_error_message()?.amount_message}
+            </span>
+          </Show>
         </div>
         <Show when={hide_equal()}>
           <div class={styles["allow-equals"]}>
