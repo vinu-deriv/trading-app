@@ -5,7 +5,7 @@
     display: flex;
     overflow: auto;
     margin-bottom: 0.5px;
-    -ms-overflow-style: none;  /* Internet Explorer 10+ */
+   -ms-overflow-style: none;  /* Internet Explorer 10+ */
     scrollbar-width: none;  /* Firefox */
   }
   ul::-webkit-scrollbar{
