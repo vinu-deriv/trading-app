@@ -9,6 +9,9 @@ import MarketList from "Routes/market-list/market-list";
 import NavBar from "./nav";
 import OpenPosition from "./open-position";
 import Statements from "./statements";
+import DropdownComponent from "./dropdown-component";
+import DropdownList from "./dropdown-list";
+import InputComponent from "./input-component";
 import Slider from "./tick-slider";
 
 export {
@@ -24,5 +27,8 @@ export {
   DataTable,
   DisplayTickValue,
   Button,
+  DropdownComponent,
+  DropdownList,
+  InputComponent,
   Slider,
 };
