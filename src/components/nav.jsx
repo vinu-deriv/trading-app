@@ -60,7 +60,6 @@ const NavBar = () => {
           <label class={styles.menu_button_container} for={styles.menu_toggle}>
             <div class={styles.menu_button} />
           </label>
-
         </>
       )}
       <ul class={styles.menu}>
@@ -71,15 +70,13 @@ const NavBar = () => {
             </a>
           </li>
         )}
-        {
-          isMobile() && checked() && (
-            <li>
-              <a href="/" class={styles.logo}>
-                <img src={Logo} class={styles.logo} />
-              </a>
-            </li>
-          )
-        }
+        {isMobile() && checked() && (
+          <li>
+            <a href="/" class={styles.logo}>
+              <img src={Logo} class={styles.logo} />
+            </a>
+          </li>
+        )}
         <li
           onClick={() => {
             navigate("/trade", { replace: true });
@@ -146,10 +143,8 @@ const ThemeToggle = () => {
         checked={is_light_theme()}
         onChange={toggleThemeHandler}
       />
-      {is_light_theme() ? <LightThemeIcon size={40}/>: <DarkThemeIcon  />}
+      {is_light_theme() ? <LightThemeIcon size={40} /> : <DarkThemeIcon />}
     </label>
-
-
   );
 };
 
