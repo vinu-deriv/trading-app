@@ -10,7 +10,7 @@ import {
   trade_types,
   setTradeTypes,
 } from "../../stores";
-import { createEffect, createSignal, onCleanup } from "solid-js";
+import { createEffect, createSignal, onCleanup, batch } from "solid-js";
 import { useNavigate } from "solid-app-router";
 
 import { Show } from "solid-js";
@@ -27,7 +27,7 @@ const [slider_value, setSliderValue] = createSignal(1);
 const [duration_unit, setDurationUnit] = createSignal("");
 const [duration_value, setDurationValue] = createSignal(0);
 const [allow_equal, setAllowEqual] = createSignal(false);
-const [amount, setAmountValue] = createSignal(0);
+const [amount, setAmountValue] = createSignal(10);
 const [hide_equal, setHideEqual] = createSignal(false);
 const [duration_text, setDurationText] = createSignal("");
 const [form_validation, setFormValidation] = createSignal({});
@@ -84,7 +84,7 @@ const getProposal = async (
             if (id) {
               setProposalErrorMessage((error) => ({
                 ...error,
-                highlight: false,
+                amount_message: "",
               }));
               setProposalBuy({
                 id,
@@ -94,11 +94,10 @@ const getProposal = async (
               });
             }
           }
-          if (response.error)
+          if (!proposal_error_message()?.amount_message && response.error)
             setProposalErrorMessage((error) => ({
               ...error,
               amount_message: response.error.message,
-              highlight: true,
             }));
         }
       );
@@ -122,7 +121,7 @@ const getProposal = async (
             if (id) {
               setProposalErrorMessage((error) => ({
                 ...error,
-                highlight: false,
+                amount_message: "",
               }));
               setProposalSell({
                 id,
@@ -132,11 +131,10 @@ const getProposal = async (
               });
             }
           }
-          if (response.error)
+          if (!proposal_error_message()?.amount_message && response.error)
             setProposalErrorMessage((error) => ({
               ...error,
               amount_message: response.error.message,
-              highlight: true,
             }));
         }
       );
@@ -189,7 +187,10 @@ const OptionsTrade = (props) => {
   createEffect(() => {
     if (props.durations_list.length) {
       const duration_unit = props.durations_list[0].value;
-      setDurationMinMax(duration_unit);
+      batch(() => {
+        setDurationMinMax(duration_unit);
+        setDurationValue(duration.min);
+      });
     }
   });
 
@@ -305,6 +306,7 @@ const OptionsTrade = (props) => {
                 class={styles["duration__input"]}
                 type="number"
                 onFocus={(e) => {
+                  displayValidationMessage();
                   !form_validation().duration_touched &&
                     setFormValidation((fields) => ({
                       ...fields,
@@ -330,6 +332,7 @@ const OptionsTrade = (props) => {
                 step="1"
                 list="ticks"
                 onFocus={(event) => {
+                  displayValidationMessage();
                   !form_validation().duration_touched &&
                     setFormValidation((fields) => ({
                       ...fields,
@@ -405,15 +408,10 @@ const OptionsTrade = (props) => {
             />
             <p>{currency}</p>
           </div>
-          <span
-            class={
-              form_validation().amount_touched &&
-              proposal_error_message()?.highlight
-                ? styles["error-proposal"]
-                : styles["no-error"]
-            }
-          >
-            {proposal_error_message()?.amount_message}
+          <span class={styles["error-proposal"]}>
+            {(form_validation()?.amount_touched &&
+              proposal_error_message()?.amount_message) ??
+              ""}
           </span>
         </div>
         <Show when={hide_equal()}>
