@@ -12,6 +12,8 @@ import { loginUrl } from "Constants/deriv-urls";
 import { setshowAccountSwitcher } from "Stores/ui-store";
 import styles from "../styles/navbar.module.scss";
 import { useNavigate } from "solid-app-router";
+import MoonIcon from "Assets/svg/action/moon.svg";
+import SunIcon from "Assets/svg/action/sun.svg";
 
 const NavBar = () => {
   const navigate = useNavigate();
@@ -144,7 +146,7 @@ const ThemeToggle = () => {
         checked={is_light_theme()}
         onChange={toggleThemeHandler}
       />
-      {is_light_theme() ? <img src='https://i.ibb.co/7JfqXxB/sunny.png' class={styles.themeLogo} /> : <img src='https://i.ibb.co/FxzBYR9/night.png' class={styles.themeLogo} />}
+      {is_light_theme() ? <SunIcon height="50" width="30" />: <MoonIcon height="40" width="30" />}
     </label>
 
 
