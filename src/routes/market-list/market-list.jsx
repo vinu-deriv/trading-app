@@ -3,11 +3,10 @@ import {
   DisplayChangePercent,
   DisplayTickValue,
   Loader,
-  SVGWrapper,
   Tab,
   Tabs,
-} from "../components";
-import { FAVOURITES, MARKET_TYPES } from "../constants/trade-config";
+} from "Components";
+import { FAVOURITES, MARKET_TYPES } from "Constants/trade-config";
 import {
   For,
   Show,
@@ -23,18 +22,22 @@ import {
   market_ticks,
   setMarketTicks,
   setSelectedTradeType,
-} from "../stores";
-import { addDays, formatDate } from "../utils/format-value";
-import { forgetAll, sendRequest, wait } from "../utils/socket-base";
-import { ERROR_CODE } from "../constants/error-codes";
-import StarIcon from "../assets/svg/action/star.svg";
-import TrashBinIcon from "../assets/svg/action/trash.svg";
-import { getFavourites } from "../utils/map-markets";
-import { segregateMarkets } from "../utils/map-markets";
-import shared from "../styles/shared.module.scss";
-import styles from "../styles/accordion.module.scss";
+} from "Stores";
+import {
+  generateTickData,
+  calculateTimeLeft,
+  checkWhenMarketOpens,
+} from "Utils/format-value";
+import { forgetAll, wait } from "Utils/socket-base";
+import { ERROR_CODE } from "Constants/error-codes";
+import StarIcon from "Assets/svg/action/star.svg";
+import TrashBinIcon from "Assets/svg/action/trash.svg";
+import { getFavourites } from "Utils/map-markets";
+import { segregateMarkets } from "Utils/map-markets";
+import shared from "Styles/shared.module.scss";
+import styles from "Styles/accordion.module.scss";
 import throttle from "lodash.throttle";
-import watchlist_styles from "../styles/watchlist.module.scss";
+import { useNavigate } from "solid-app-router";
 
 const MarketList = () => {
   const header_config = [
@@ -55,6 +58,8 @@ const MarketList = () => {
   const [is_market_closed, setIsMarketClosed] = createSignal();
   const [watchlist, setWatchlist] = createSignal([]);
 
+  const navigate = useNavigate();
+
   onMount(() => {
     setActiveTab(0);
     setIsMarketClosed(false);
@@ -68,27 +73,16 @@ const MarketList = () => {
 
   onCleanup(() => {
     forgetAll("ticks");
+    setMarketTicks({});
   });
 
-  const getSymbol = (target_symbol, trading_times) => {
-    let symbol;
-    const { markets } = trading_times;
-    for (let i = 0; i < markets.length; i++) {
-      const { submarkets } = markets[i];
-      for (let j = 0; j < submarkets.length; j++) {
-        const { symbols } = submarkets[j];
-        symbol = symbols.find((item) => item.symbol === target_symbol);
-        if (symbol) return symbol;
-      }
-    }
-  };
-
-  const generateDataSet = () =>
-    available_markets().map((markets) => ({
+  const generateDataSet = () => {
+    return available_markets().map((markets) => ({
       display_name: markets.display_name,
       change: markets.symbol,
       tick: markets.symbol,
     }));
+  };
 
   const fetchAvailableMarketSymbols = (market_type) => {
     const requiredMarkets = available_markets().filter(
@@ -103,64 +97,6 @@ const MarketList = () => {
       Object.keys(abvl_markets).includes(type.ref)
     ),
   ];
-
-  const generateTickData = ({
-    previous = 0,
-    current = 0,
-    is_closed = false,
-    is_suspended = false,
-    opens_at = null,
-  }) => ({ previous, current, is_closed, is_suspended, opens_at });
-
-  const calculateTimeLeft = (remaining_time_to_open) => {
-    const difference = remaining_time_to_open - Date.now();
-    return difference > 0
-      ? {
-          days: Math.floor(difference / (1000 * 60 * 60 * 24)),
-          hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
-          minutes: Math.floor((difference / 1000 / 60) % 60),
-          seconds: Math.floor((difference / 1000) % 60),
-        }
-      : {};
-  };
-
-  const checkWhenMarketOpens = async (days_offset, target_symbol) => {
-    const target_date = addDays(new Date(), days_offset);
-    const api_response = await getTradeTimings(formatDate(target_date));
-    if (!api_response.api_initial_load_error) {
-      const { times } = getSymbol(target_symbol, api_response.trading_times);
-      const { open, close } = times;
-      const is_closed_all_day =
-        open?.length === 1 && open[0] === "--" && close[0] === "--";
-      if (is_closed_all_day) {
-        return checkWhenMarketOpens(days_offset + 1, target_symbol);
-      }
-      const date_str = target_date.toISOString().substring(0, 11);
-      const getUTCDate = (hour) => new Date(`${date_str}${hour}Z`);
-      let remaining_time_to_open;
-      for (let i = 0; i < open?.length; i++) {
-        const diff = +getUTCDate(open[i]) - Date.now();
-        if (diff > 0) {
-          remaining_time_to_open = +getUTCDate(open[i]);
-          setMarketTicks({
-            ...market_ticks(),
-            [target_symbol]: generateTickData({
-              is_closed: true,
-              opens_at: calculateTimeLeft(remaining_time_to_open),
-            }),
-          });
-        }
-      }
-    }
-  };
-
-  const getTradeTimings = async (date_string) => {
-    const data = await sendRequest({ trading_times: date_string });
-    if (data.error) {
-      return { api_initial_load_error: data.error.message };
-    }
-    return data;
-  };
 
   const marketDataHandler = async (response) => {
     if (!response.error) {
@@ -179,7 +115,14 @@ const MarketList = () => {
       if (error.code === ERROR_CODE.market_closed) {
         if (!is_market_closed()) {
           setIsMarketClosed(true);
-          await checkWhenMarketOpens(0, echo_req.ticks);
+          const time_left = await checkWhenMarketOpens(0, echo_req.ticks);
+          setMarketTicks({
+            ...market_ticks(),
+            [echo_req.ticks]: generateTickData({
+              is_closed: true,
+              opens_at: calculateTimeLeft(time_left),
+            }),
+          });
         }
       }
     }
@@ -190,10 +133,12 @@ const MarketList = () => {
       await forgetAll("ticks");
       await wait("forget_all");
     }
+
     setMarketData(generateDataSet());
-    symbol_list.forEach(async (symbol) => {
-      await fetchMarketTick(symbol, throttle(marketDataHandler, 500));
-    });
+    symbol_list.forEach(
+      async (symbol) =>
+        await fetchMarketTick(symbol, throttle(marketDataHandler, 500))
+    );
   };
 
   const getAvailableMarkets = (market_type) =>
@@ -201,8 +146,7 @@ const MarketList = () => {
 
   const fetchSelectedMarket = (tab_ref) => {
     setIsMarketClosed(false);
-    const { index, id } = tab_ref;
-    setActiveTab(index);
+    const { id } = tab_ref;
     if (id === FAVOURITES) {
       getWatchList();
     } else {
@@ -240,8 +184,13 @@ const MarketList = () => {
         fallback={<Loader class={shared["spinner"]} type="2" />}
       >
         <Tabs
-          onTabItemClick={(tab_ref) => fetchSelectedMarket(tab_ref)}
+          onTabItemClick={(tab_ref) => {
+            setActiveTab(tab_ref.index);
+            fetchSelectedMarket(tab_ref);
+            setMarketTicks({});
+          }}
           active_index={active_tab()}
+          default_selected={default_tab.ref}
         >
           <For each={setTabList(all_markets())}>
             {(tabs) => (
@@ -257,6 +206,7 @@ const MarketList = () => {
                         display_name: trade_type.display_name,
                         symbol: trade_type.tick,
                       });
+                      navigate("/trade", { replace: true });
                     }}
                     config={{
                       watchlist: watchlist(),
@@ -287,26 +237,18 @@ const MarketListAction = (props) => {
       <Show
         when={props.data.find((mkt) => mkt === props.selected)}
         fallback={
-          <>
-            <SVGWrapper
-              id={`watch-icon-${props.index}`}
-              icon={StarIcon}
-              stroke="white"
-              class={watchlist_styles["fav-icon-position"]}
-              height="24"
-            />
-          </>
+          <StarIcon
+            height="24"
+            stroke="white"
+            id={`watch-icon-${props.index}`}
+          />
         }
       >
-        <>
-          <SVGWrapper
-            id={`watch-icon-${props.index}`}
-            icon={TrashBinIcon}
-            stroke="white"
-            class={watchlist_styles["fav-icon-position"]}
-            height="24"
-          />
-        </>
+        <TrashBinIcon
+          id={`watch-icon-${props.index}`}
+          stroke="white"
+          height="24"
+        />
       </Show>
     </div>
   );

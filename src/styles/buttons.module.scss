@@ -8,7 +8,9 @@
   &:focus,
   &:active {
     outline: none;
-    transform: scale(0.95);
+  }
+  &:hover {
+    cursor: pointer;
   }
 }
 .primary {
@@ -22,7 +24,7 @@
     background-color: #059862;
   }
 }
-.secondrary {
+.secondary {
   color: var(--button-red);
   border: 1px solid var(--button-red);
   background: transparent;
@@ -73,12 +75,13 @@
 }
 
 .reset{
-  border: 1px solid #000;
+  border: 1px solid color: var(--color-black);
+  display: block;
   color: var(--color-black);
-  background: var(--trade-block-background);
   padding: 3px;
   font-size: 10px;
   font-weight:300;
+  margin-top: 0.2rem;
 }
 
 .disabled {

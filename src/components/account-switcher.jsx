@@ -1,21 +1,23 @@
 import { createEffect, createSignal, For, Show } from "solid-js";
 import classNames from "classnames";
 import {
+  currencies_config,
+  icons,
   login_information,
   setLoginInformation,
   setLocalValues,
   balance_of_all_accounts,
+  logout,
 } from "Stores/base-store";
 import { is_light_theme } from "Stores";
 import { currency_config } from "Constants/currency";
 import { Portal } from "solid-js/web";
-import { authorize } from "Utils/socket-base";
+import { authorize, sendRequest } from "Utils/socket-base";
 import { setshowAccountSwitcher } from "Stores/ui-store";
 import Loader from "./loader";
 import styles from "../styles/account-switcher.module.scss";
-import { logout } from "Stores/base-store";
 import Button from "./button";
-import { sendRequest } from "Utils/socket-base";
+import { addComma } from "Utils/format-value";
 
 const getCurrencyDisplayCode = (currency = "") => {
   if (currency !== "eUSDT" && currency !== "tUSDT") {
@@ -38,6 +40,10 @@ const AccountSwitcher = () => {
       setDemoAccounts(accounts.filter((acc) => acc.is_virtual === 1));
       setRealAccounts(accounts.filter((acc) => acc.is_virtual === 0));
     }
+
+    if (balance_of_all_accounts()[demo_accounts()[0].loginid].balance == 10000)
+      setHasResetBalance(false);
+    else setHasResetBalance(true);
   });
 
   const doSwitch = async (loginid) => {
@@ -78,7 +84,6 @@ const AccountSwitcher = () => {
     if (account.is_virtual === 1) {
       if (topup() != 0) {
         setTopup(0);
-        setHasResetBalance(false);
         newbalance = 10000;
         account.balance = newbalance;
       }
@@ -95,8 +100,26 @@ const AccountSwitcher = () => {
               [styles["selected"]]:
                 acc.loginid === login_information.active_loginid,
             })}
-            onClick={() => doSwitch(acc.loginid)}
+            onClick={(event) => {
+              event.stopPropagation();
+              doSwitch(acc.loginid);
+            }}
           >
+            <div>
+              <For each={icons}>
+                {({ name, SvgComponent }) => {
+                  const currency_icon = acc.is_virtual
+                    ? "virtual"
+                    : acc?.currency;
+
+                  return (
+                    name === currency_icon.toLowerCase() && (
+                      <SvgComponent height="24" width="24" />
+                    )
+                  );
+                }}
+              </For>
+            </div>
             <div class={styles["account_info"]}>
               <div>{getCurrencyDisplayCode(acc.currency)}</div>
               <div>{acc.loginid}</div>
@@ -105,10 +128,15 @@ const AccountSwitcher = () => {
               {acc.is_virtual == 1 ? (
                 <div>
                   <span>
-                    {balance_of_all_accounts()[`${acc.loginid}`]?.balance}{" "}
-                    {balance_of_all_accounts()[`${acc.loginid}`]?.currency}
+                    {addComma(
+                      balance_of_all_accounts()[acc.loginid]?.balance,
+                      currencies_config()[
+                        balance_of_all_accounts()[acc.loginid]?.currency
+                      ]?.fractional_digits
+                    )}{" "}
+                    {balance_of_all_accounts()[acc.loginid]?.currency}
                   </span>
-                  {!has_reset_balance() && (
+                  {has_reset_balance() && (
                     <Button category="reset" onClick={resetBalance}>
                       {" "}
                       Reset Balance
@@ -117,8 +145,13 @@ const AccountSwitcher = () => {
                 </div>
               ) : (
                 <span>
-                  {balance_of_all_accounts()[`${acc.loginid}`]?.balance}{" "}
-                  {balance_of_all_accounts()[`${acc.loginid}`]?.currency}
+                  {addComma(
+                    balance_of_all_accounts()[acc.loginid]?.balance,
+                    currencies_config()[
+                      balance_of_all_accounts()[acc.loginid]?.currency
+                    ]?.fractional_digits
+                  )}{" "}
+                  {balance_of_all_accounts()[acc.loginid]?.currency}
                 </span>
               )}
             </div>

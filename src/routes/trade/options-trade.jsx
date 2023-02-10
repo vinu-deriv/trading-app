@@ -1,16 +1,16 @@
 import {
   buyContract,
-  error_message,
+  banner_message,
   is_stake,
   selectedTradeType,
-  setErrorMessage,
+  setBannerMessage,
   setIsStake,
   setSymbol,
   symbol,
   trade_types,
   setTradeTypes,
 } from "../../stores";
-import { createEffect, createSignal, For } from "solid-js";
+import { createEffect, createSignal, For, batch } from "solid-js";
 import { useNavigate } from "solid-app-router";
 
 import { Show } from "solid-js";
@@ -26,7 +26,7 @@ const [slider_value, setSliderValue] = createSignal(1);
 const [duration_unit, setDurationUnit] = createSignal("");
 const [duration_value, setDurationValue] = createSignal(0);
 const [allow_equal, setAllowEqual] = createSignal(false);
-const [amount, setAmountValue] = createSignal(0);
+const [amount, setAmountValue] = createSignal(10);
 const [hide_equal, setHideEqual] = createSignal(false);
 
 let duration = { min: 0, max: 0 };
@@ -179,7 +179,10 @@ const OptionsTrade = (props) => {
   createEffect(() => {
     if (props.durations_list.length) {
       const duration_unit = props.durations_list[0].value;
-      setDurationMinMax(duration_unit);
+      batch(() => {
+        setDurationMinMax(duration_unit);
+        setDurationValue(duration.min);
+      });
     }
   });
 
@@ -196,7 +199,7 @@ const OptionsTrade = (props) => {
     setProposalBuy({ id: "", ask_price: "", payout: "" });
     setProposalSell({ id: "", ask_price: "", payout: "" });
     setProposalErrorMessage(null);
-    setErrorMessage(null);
+    setBannerMessage(null);
 
     getProposal(
       duration_unit(),
@@ -230,7 +233,7 @@ const OptionsTrade = (props) => {
   const handleBuyContractClicked = async (id) => {
     await buyContract(id, amount(), token);
 
-    if (!error_message()) navigate("/reports", { replace: true });
+    if (!banner_message()) navigate("/reports", { replace: true });
   };
 
   const handleAllowEqualChange = () => {
@@ -399,8 +402,8 @@ const OptionsTrade = (props) => {
             {displayValidationMessage()}
           </span>
         </Show>
-        <Show when={error_message()}>
-          <span class={styles["error-message"]}>{error_message()}</span>
+        <Show when={banner_message()}>
+          <span class={styles["error-message"]}>{banner_message()}</span>
         </Show>
       </div>
     </Show>
