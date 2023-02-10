@@ -156,9 +156,7 @@ const Trade = () => {
                       setSelectedContractType(`${event.target.value}`);
                     }}
                   >
-                    <option selected="true" disabled="disabled">
-                      Select Trade Types
-                    </option>
+                    <option disabled="disabled">Select Trade Types</option>
                     <For each={Object.keys(contract_config())}>
                       {(trade) =>
                         !getContractTypesConfig()[`${trade}`]
