@@ -41,7 +41,10 @@ const NavBar = () => {
   };
 
   return (
-    <section class={isDesktop() ? styles.topnav_desktop : styles.topnav_mobile}>
+    <section
+      id="app_navbar"
+      class={isDesktop() ? styles.topnav_desktop : styles.topnav_mobile}
+    >
       {isMobile() && (
         <>
           <input
@@ -66,15 +69,15 @@ const NavBar = () => {
             </a>
           </li>
         )}
-{
-  isMobile() && checked()&&(
-    <li>
-    <a href="/" class={styles.logo}>
-      <img src={Logo} class={styles.logo} />
-    </a>
-  </li>
-  )
-}
+        {
+          isMobile() && checked() && (
+            <li>
+              <a href="/" class={styles.logo}>
+                <img src={Logo} class={styles.logo} />
+              </a>
+            </li>
+          )
+        }
         <li
           onClick={() => {
             navigate("/trade", { replace: true });
@@ -98,27 +101,27 @@ const NavBar = () => {
       </ul>
 
       <div class={styles.theme}>
-          <ThemeToggle />
-      {login_information.is_logged_in ? (
-        <Button
-          category="secondary"
-          onClick={() => setshowAccountSwitcher(true)}
-        >
-          <div class={styles.account_wrapper}>
-            <AccountHeader />
-          </div>
-        </Button>
-      ) : (
-        !login_information.is_logging_in && (
-          <div
-            onClick={() =>
-              (window.location.href = loginUrl({ language: "en" }))
-            }
+        <ThemeToggle />
+        {login_information.is_logged_in ? (
+          <Button
+            category="secondary"
+            onClick={() => setshowAccountSwitcher(true)}
           >
-            <b>Log In</b>
-          </div>
-        )
-      )}
+            <div class={styles.account_wrapper}>
+              <AccountHeader />
+            </div>
+          </Button>
+        ) : (
+          !login_information.is_logging_in && (
+            <div
+              onClick={() =>
+                (window.location.href = loginUrl({ language: "en" }))
+              }
+            >
+              <b>Log In</b>
+            </div>
+          )
+        )}
       </div>
     </section>
   );
@@ -141,7 +144,7 @@ const ThemeToggle = () => {
         checked={is_light_theme()}
         onChange={toggleThemeHandler}
       />
-{is_light_theme()?<img src='https://i.ibb.co/7JfqXxB/sunny.png' class={styles.themeLogo}/>:<img src='https://i.ibb.co/FxzBYR9/night.png' class={styles.themeLogo}/>}
+      {is_light_theme() ? <img src='https://i.ibb.co/7JfqXxB/sunny.png' class={styles.themeLogo} /> : <img src='https://i.ibb.co/FxzBYR9/night.png' class={styles.themeLogo} />}
     </label>
 
 

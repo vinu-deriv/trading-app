@@ -9,6 +9,9 @@
   &:active {
     outline: none;
   }
+  &:hover {
+    cursor: pointer;
+  }
 }
 .primary {
   background-color: var(--button-green);
