@@ -28,8 +28,10 @@ const [duration_value, setDurationValue] = createSignal(0);
 const [allow_equal, setAllowEqual] = createSignal(false);
 const [amount, setAmountValue] = createSignal(10);
 const [hide_equal, setHideEqual] = createSignal(false);
+const [barrier_value, setBarrierValue] = createSignal("");
 
 let duration = { min: 0, max: 0 };
+let barrier = "";
 let unsubscribe_buy;
 let unsubscribe_sell;
 
@@ -56,6 +58,7 @@ const getProposal = async (
   is_stake,
   slider_value,
   duration_value,
+  barrier_value,
   currency
 ) => {
   await forgetProposal();
@@ -72,17 +75,19 @@ const getProposal = async (
           duration: duration_unit === "t" ? slider_value : duration_value,
           duration_unit: duration_unit,
           symbol: symbol,
+          barrier: barrier_value ? barrier_value : undefined,
           subscribe: 1,
         },
         (response) => {
           if (response.proposal) {
-            const { id, ask_price, payout } = response.proposal;
+            const { id, ask_price, payout, barrier } = response.proposal;
 
             if (id)
               setProposalBuy({
                 id,
                 ask_price,
                 payout,
+                barrier,
                 subscriptionId: response.subscription.id,
               });
           }
@@ -102,17 +107,21 @@ const getProposal = async (
           duration: duration_unit === "t" ? slider_value : duration_value,
           duration_unit: duration_unit,
           symbol: symbol,
+          barrier: barrier_value ? barrier_value : undefined,
           subscribe: 1,
         },
         (response) => {
           if (response.proposal) {
-            const { id, ask_price, payout } = response.proposal;
+            const { id, ask_price, payout, barrier, barrier_count } =
+              response.proposal;
 
             if (id)
               setProposalSell({
                 id,
                 ask_price,
                 payout,
+                barrier,
+                barrier_count,
                 subscriptionId: response.subscription.id,
               });
           }
@@ -182,6 +191,7 @@ const OptionsTrade = (props) => {
       batch(() => {
         setDurationMinMax(duration_unit);
         setDurationValue(duration.min);
+        setBarrierConfigValue(duration_unit);
       });
     }
   });
@@ -208,6 +218,7 @@ const OptionsTrade = (props) => {
       is_stake(),
       slider_value(),
       duration_value(),
+      barrier_value(),
       currency
     );
   });
@@ -228,6 +239,18 @@ const OptionsTrade = (props) => {
 
     duration.min = convertDurationLimit(duration.min, duration_unit);
     duration.max = convertDurationLimit(duration.max, duration_unit);
+  };
+
+  const setBarrierConfigValue = (duration_unit) => {
+    barrier = ContractType.getBarriers(
+      props.selected_contract_type,
+      duration_unit === "d"
+        ? "daily"
+        : duration_unit === "t"
+        ? "tick"
+        : "intraday"
+    ).barrier_1;
+    setBarrierValue(barrier);
   };
 
   const handleBuyContractClicked = async (id) => {
@@ -252,6 +275,7 @@ const OptionsTrade = (props) => {
         is_stake(),
         slider_value(),
         duration_value(),
+        barrier_value(),
         currency
       );
     }
@@ -259,13 +283,18 @@ const OptionsTrade = (props) => {
 
   const handleDurationChange = (event) => {
     setDurationMinMax(event.target.value);
+    setBarrierConfigValue(event.target.value);
+  };
+
+  const handleBarrierChange = (event) => {
+    setBarrierValue(event.target.value);
   };
 
   const displayValidationMessage = () => {
     const is_duration_valid =
       duration_value() >= duration.min && duration_value() <= duration.max;
     if (!is_duration_valid) {
-      return `Should be between ${duration.min} and ${duration.max}`;
+      return `Duration should be between ${duration.min} and ${duration.max}`;
     }
     return proposal_error_message();
   };
@@ -324,6 +353,28 @@ const OptionsTrade = (props) => {
               <option>10</option>
             </datalist>
             <p>{slider_value()}</p>
+          </div>
+        </Show>
+        <Show when={props.selected_contract_type === "high_low"}>
+          <div class={styles["amount"]}>
+            <div>Barriers</div>
+            <input
+              class={styles["amount__input"]}
+              value={barrier_value()}
+              onInput={(event) => handleBarrierChange(event)}
+              required
+            />
+          </div>
+        </Show>
+        <Show when={props.selected_contract_type === "touch"}>
+          <div class={styles["amount"]}>
+            <div>Barriers</div>
+            <input
+              class={styles["amount__input"]}
+              value={barrier_value()}
+              onInput={(event) => handleBarrierChange(event)}
+              required
+            />
           </div>
         </Show>
         <div class={`${classNames(styles["button"], styles["stake-payout"])}`}>
