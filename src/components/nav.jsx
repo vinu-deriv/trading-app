@@ -146,7 +146,7 @@ const ThemeToggle = () => {
         checked={is_light_theme()}
         onChange={toggleThemeHandler}
       />
-      {is_light_theme() ? <SunIcon height="50" width="30" />: <MoonIcon height="40" width="30" />}
+      {is_light_theme() ? <SunIcon height="30" width="30" />: <MoonIcon height="35" width="30" />}
     </label>
 
 
