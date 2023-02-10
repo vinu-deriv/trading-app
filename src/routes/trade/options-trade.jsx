@@ -10,7 +10,7 @@ import {
   trade_types,
   setTradeTypes,
 } from "../../stores";
-import { createEffect, createSignal, For, batch } from "solid-js";
+import { createEffect, createSignal, onCleanup, batch } from "solid-js";
 import { useNavigate } from "solid-app-router";
 
 import { Show } from "solid-js";
@@ -21,6 +21,7 @@ import { ContractType } from "Utils/contract-type";
 import { subscribe } from "Utils/socket-base";
 import { convertDurationLimit } from "Utils/format-value";
 import { RISE_FALL_TITLE } from "Constants/trade-config";
+import { DropdownComponent } from "Components";
 
 const [slider_value, setSliderValue] = createSignal(1);
 const [duration_unit, setDurationUnit] = createSignal("");
@@ -28,6 +29,8 @@ const [duration_value, setDurationValue] = createSignal(0);
 const [allow_equal, setAllowEqual] = createSignal(false);
 const [amount, setAmountValue] = createSignal(10);
 const [hide_equal, setHideEqual] = createSignal(false);
+const [duration_text, setDurationText] = createSignal("");
+const [form_validation, setFormValidation] = createSignal({});
 
 let duration = { min: 0, max: 0 };
 let unsubscribe_buy;
@@ -47,7 +50,7 @@ const [proposal_sell, setProposalSell] = createStore({
   subscriptionId: "",
 });
 
-const [proposal_error_message, setProposalErrorMessage] = createSignal();
+const [proposal_error_message, setProposalErrorMessage] = createSignal(null);
 
 const getProposal = async (
   duration_unit,
@@ -78,17 +81,24 @@ const getProposal = async (
           if (response.proposal) {
             const { id, ask_price, payout } = response.proposal;
 
-            if (id)
+            if (id) {
+              setProposalErrorMessage((error) => ({
+                ...error,
+                amount_message: "",
+              }));
               setProposalBuy({
                 id,
                 ask_price,
                 payout,
                 subscriptionId: response.subscription.id,
               });
+            }
           }
-
-          if (!proposal_error_message() && response.error)
-            setProposalErrorMessage(response.error.message);
+          if (!proposal_error_message()?.amount_message && response.error)
+            setProposalErrorMessage((error) => ({
+              ...error,
+              amount_message: response.error.message,
+            }));
         }
       );
 
@@ -108,61 +118,59 @@ const getProposal = async (
           if (response.proposal) {
             const { id, ask_price, payout } = response.proposal;
 
-            if (id)
+            if (id) {
+              setProposalErrorMessage((error) => ({
+                ...error,
+                amount_message: "",
+              }));
               setProposalSell({
                 id,
                 ask_price,
                 payout,
                 subscriptionId: response.subscription.id,
               });
+            }
           }
-
-          if (!proposal_error_message() && response.error)
-            setProposalErrorMessage(response.error.message);
+          if (!proposal_error_message()?.amount_message && response.error)
+            setProposalErrorMessage((error) => ({
+              ...error,
+              amount_message: response.error.message,
+            }));
         }
       );
     }
   }
 };
 
-const buySellButtonWrapper = (proposal) => (
-  <Show
-    when={is_stake()}
-    fallback={
+const buySellButtonWrapper = (proposal, currency) => {
+  const proposal_value = (
+    ((proposal.payout - proposal.ask_price || 0) * 100) /
+    (proposal.ask_price || 1)
+  ).toFixed(2);
+
+  return (
+    <Show
+      when={is_stake()}
+      fallback={
+        <span class={styles["buy-sell__stake-payout"]}>
+          Stake:{" "}
+          <span class={styles["buy-sell__stake-payout--strong"]}>
+            {` ${proposal.ask_price || 0} ${currency}`}
+          </span>
+          <span>{` (${proposal_value})%`}</span>
+        </span>
+      }
+    >
       <span class={styles["buy-sell__stake-payout"]}>
-        Stake:{" "}
+        Payout:{" "}
         <span class={styles["buy-sell__stake-payout--strong"]}>
-          {" "}
-          {proposal.ask_price ? proposal.ask_price : 0}
+          {` ${proposal.payout || 0} ${currency}`}
         </span>
-        <span>
-          {"  "}(
-          {(
-            ((proposal.payout - proposal.ask_price || 0) * 100) /
-            (proposal.ask_price || 1)
-          ).toFixed(2)}
-          )
-        </span>
+        <span>{` (${proposal_value})%`}</span>
       </span>
-    }
-  >
-    <span class={styles["buy-sell__stake-payout"]}>
-      Payout:{" "}
-      <span class={styles["buy-sell__stake-payout--strong"]}>
-        {" "}
-        {proposal.payout ? proposal.payout : 0}
-      </span>
-      <span>
-        {"  "}(
-        {(
-          ((proposal.payout - proposal.ask_price || 0) * 100) /
-          (proposal.ask_price || 1)
-        ).toFixed(2)}
-        )
-      </span>
-    </span>
-  </Show>
-);
+    </Show>
+  );
+};
 
 const forgetProposal = async () => {
   if (unsubscribe_buy) unsubscribe_buy.unsubscribe();
@@ -182,6 +190,11 @@ const OptionsTrade = (props) => {
       batch(() => {
         setDurationMinMax(duration_unit);
         setDurationValue(duration.min);
+        setDurationText(props.durations_list[0].text);
+        setProposalErrorMessage((response) => ({
+          ...response,
+          duration_message: `Should be between ${duration.min} and ${duration.max}`,
+        }));
       });
     }
   });
@@ -198,7 +211,6 @@ const OptionsTrade = (props) => {
     setSymbol(selectedTradeType().symbol);
     setProposalBuy({ id: "", ask_price: "", payout: "" });
     setProposalSell({ id: "", ask_price: "", payout: "" });
-    setProposalErrorMessage(null);
     setBannerMessage(null);
 
     getProposal(
@@ -257,75 +269,111 @@ const OptionsTrade = (props) => {
     }
   };
 
-  const handleDurationChange = (event) => {
-    setDurationMinMax(event.target.value);
+  const handleDurationChange = (selected_item) => {
+    setDurationMinMax(selected_item?.value);
+    setDurationText(selected_item?.text);
+    setProposalErrorMessage((response) => ({
+      ...response,
+      duration_message: `Should be between ${duration.min} and ${duration.max}`,
+    }));
   };
 
   const displayValidationMessage = () => {
     const is_duration_valid =
       duration_value() >= duration.min && duration_value() <= duration.max;
-    if (!is_duration_valid) {
-      return `Should be between ${duration.min} and ${duration.max}`;
-    }
-    return proposal_error_message();
+    return !is_duration_valid;
   };
+
+  onCleanup(() => {
+    setDurationText("");
+    setDurationUnit("");
+    setDurationValue(0);
+    setSliderValue(1);
+    setAmountValue(0);
+    setFormValidation({});
+  });
 
   return (
     <Show when={symbol() && trade_types.trade_types.length}>
       <div class={styles["trading-layout"]}>
-        <select
-          class={styles["duration-dropdown"]}
-          onChange={(event) => handleDurationChange(event)}
-          value={props.durations_list[0]?.value}
-        >
-          <option selected="true" disabled="disabled">
-            Select Duration
-          </option>
-          <For each={props.durations_list}>
-            {(duration) => (
-              <option value={duration.value}>{duration.text}</option>
-            )}
-          </For>
-        </select>
-        <Show
-          when={duration_unit() === "t"}
-          fallback={
-            <input
-              class={styles["duration__input"]}
-              type="number"
-              onInput={(e) => setDurationValue(Number(e.target.value))}
-              value={duration_value()}
-            />
-          }
-        >
-          <div class={styles["slider"]}>
-            <label for="fader">Tick </label>
-            <input
-              type="range"
-              min="1"
-              max="10"
-              value={slider_value()}
-              id="fader"
-              name="fader"
-              step="1"
-              list="ticks"
-              onChange={(event) => setSliderValue(Number(event.target.value))}
-            />
-            <datalist id="ticks">
-              <option>1</option>
-              <option>2</option>
-              <option>3</option>
-              <option>4</option>
-              <option>5</option>
-              <option>6</option>
-              <option>7</option>
-              <option>8</option>
-              <option>9</option>
-              <option>10</option>
-            </datalist>
-            <p>{slider_value()}</p>
-          </div>
-        </Show>
+        <DropdownComponent
+          placeholder="Select Duration"
+          list_items={props.durations_list}
+          onSelect={handleDurationChange}
+          value={duration_text()}
+          el_id="duration-input"
+        />
+        <div class={styles["wrapper"]}>
+          <Show
+            when={duration_unit() === "t"}
+            fallback={
+              <input
+                class={styles["duration__input"]}
+                type="number"
+                onFocus={(e) => {
+                  displayValidationMessage();
+                  !form_validation().duration_touched &&
+                    setFormValidation((fields) => ({
+                      ...fields,
+                      duration_touched: true,
+                    }));
+                }}
+                onInput={(e) => {
+                  setDurationValue(Number(e.target.value));
+                }}
+                value={duration_value()}
+              />
+            }
+          >
+            <div class={styles["slider"]}>
+              <label for="fader">Tick </label>
+              <input
+                type="range"
+                min="1"
+                max="10"
+                value={slider_value()}
+                id="fader"
+                name="fader"
+                step="1"
+                list="ticks"
+                onFocus={(event) => {
+                  displayValidationMessage();
+                  !form_validation().duration_touched &&
+                    setFormValidation((fields) => ({
+                      ...fields,
+                      duration_touched: true,
+                    }));
+                  setSliderValue(Number(event.target.value));
+                }}
+                onChange={(event) => {
+                  setSliderValue(Number(event.target.value));
+                }}
+              />
+              <datalist id="ticks">
+                <option>1</option>
+                <option>2</option>
+                <option>3</option>
+                <option>4</option>
+                <option>5</option>
+                <option>6</option>
+                <option>7</option>
+                <option>8</option>
+                <option>9</option>
+                <option>10</option>
+              </datalist>
+              <p>{slider_value()}</p>
+            </div>
+          </Show>
+          <span
+            class={
+              form_validation().duration_touched && displayValidationMessage()
+                ? styles["error-proposal"]
+                : styles["no-error"]
+            }
+          >
+            {proposal_error_message()?.duration_message}
+          </span>
+        </div>
         <div class={`${classNames(styles["button"], styles["stake-payout"])}`}>
           <button
             class={`${classNames(
@@ -346,15 +394,35 @@ const OptionsTrade = (props) => {
             Payout
           </button>
         </div>
-
-        <div class={styles["amount"]}>
-          <input
-            class={styles["amount__input"]}
-            type="number"
-            value={amount()}
-            onInput={(e) => setAmountValue(Number(e.target.value))}
-          />
-          <p>{currency}</p>
+        <div class={styles["wrapper"]}>
+          <div class={styles["amount"]}>
+            <input
+              class={styles["amount__input"]}
+              type="number"
+              value={amount()}
+              onFocus={(e) => {
+                !form_validation().amount_touched &&
+                  setFormValidation({
+                    ...form_validation(),
+                    amount_touched: true,
+                  });
+              }}
+              onInput={(e) => {
+                setAmountValue(Number(e.target.value));
+              }}
+            />
+            <p>{currency}</p>
+          </div>
+          <Show
+            when={
+              form_validation()?.amount_touched &&
+              proposal_error_message()?.amount_message
+            }
+          >
+            <span class={styles["error-proposal"]}>
+              {proposal_error_message()?.amount_message}
+            </span>
+          </Show>
         </div>
         <Show when={hide_equal()}>
           <div class={styles["allow-equals"]}>
@@ -369,7 +437,7 @@ const OptionsTrade = (props) => {
         </Show>
         <div class={`${classNames(styles["button"], styles["buy-sell"])}`}>
           <div class={styles["buy-sell__buy-wrapper"]}>
-            {buySellButtonWrapper(proposal_buy)}
+            {buySellButtonWrapper(proposal_buy, currency)}
             <button
               class={`${classNames(
                 styles["buy-sell__buy"],
@@ -384,7 +452,7 @@ const OptionsTrade = (props) => {
             </button>
           </div>
           <div class={styles["buy-sell__sell-wrapper"]}>
-            {buySellButtonWrapper(proposal_sell)}
+            {buySellButtonWrapper(proposal_sell, currency)}
             <button
               class={`${classNames(
                 styles["buy-sell__sell"],
@@ -397,11 +465,6 @@ const OptionsTrade = (props) => {
             </button>
           </div>
         </div>
-        <Show when={proposal_error_message()}>
-          <span class={styles["error-message"]}>
-            {displayValidationMessage()}
-          </span>
-        </Show>
         <Show when={banner_message()}>
           <span class={styles["error-message"]}>{banner_message()}</span>
         </Show>
