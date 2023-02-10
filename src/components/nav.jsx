@@ -1,20 +1,22 @@
-import { Show, createEffect, createSignal, onMount, For } from "solid-js";
+import { Show, createSignal, onMount ,createEffect,For} from "solid-js";
 import {
   balance_of_all_accounts,
+  login_information,
   currencies_config,
   icons,
-  login_information,
   logout,
 } from "Stores/base-store";
 import { isDesktop, isMobile } from "Utils/responsive";
 import { is_light_theme, setIsLightTheme } from "../stores";
 import { Button } from "../components";
-import Logo from "../../src/assets/logo2.png";
 import classNames from "classnames";
+import Logo from "../../src/assets/logo2.png";
 import { loginUrl } from "Constants/deriv-urls";
 import { setshowAccountSwitcher } from "Stores/ui-store";
 import styles from "../styles/navbar.module.scss";
 import { useNavigate } from "solid-app-router";
+import DarkThemeIcon from "Assets/svg/action/dark-theme.svg";
+import LightThemeIcon from "Assets/svg/action/light-theme.svg";
 import { addComma } from "Utils/format-value";
 
 const NavBar = () => {
@@ -91,9 +93,7 @@ const NavBar = () => {
           <label class={styles.menu_button_container} for={styles.menu_toggle}>
             <div class={styles.menu_button} />
           </label>
-          <a href="/" class={styles.logo}>
-            <img src={Logo} class={styles.logo} />
-          </a>
+
         </>
       )}
       <ul class={styles.menu}>
@@ -104,6 +104,23 @@ const NavBar = () => {
             </a>
           </li>
         )}
+        {
+          isMobile() && checked() && (
+            <li>
+              <a href="/" class={styles.logo}>
+                <img src={Logo} class={styles.logo} />
+              </a>
+            </li>
+          )
+        }
+        <li
+          onClick={() => {
+            navigate("/trade", { replace: true });
+            setChecked(false);
+          }}
+        >
+          Trade
+        </li>
         {login_information.is_logged_in && (
           <li
             onClick={() => {
@@ -114,36 +131,36 @@ const NavBar = () => {
             Report
           </li>
         )}
-        <li>
-          Theme &nbsp;
-          <ThemeToggle />
-        </li>
+
         {login_information.is_logged_in && <li onClick={logout}> Sign Out</li>}
       </ul>
-      {login_information.is_logged_in ? (
-        <Button
-          category="secondary"
-          onClick={() => setshowAccountSwitcher(true)}
-        >
-          <div class={styles.account_wrapper}>
-            <AccountHeader />
-          </div>
-        </Button>
-      ) : (
-        !login_information.is_logging_in && (
-          <div
-            onClick={() =>
-              (window.location.href = loginUrl({ language: "en" }))
-            }
+
+      <div class={styles.theme}>
+        <ThemeToggle />
+        {login_information.is_logged_in ? (
+          <Button
+            category="secondary"
+            onClick={() => setshowAccountSwitcher(true)}
           >
-            <b>Log In</b>
-          </div>
-        )
-      )}
+            <div class={styles.account_wrapper}>
+              <AccountHeader />
+            </div>
+          </Button>
+        ) : (
+          !login_information.is_logging_in && (
+            <div
+              onClick={() =>
+                (window.location.href = loginUrl({ language: "en" }))
+              }
+            >
+              <b>Log In</b>
+            </div>
+          )
+        )}
+      </div>
     </section>
   );
 };
-
 const toggleThemeHandler = (event) => {
   setIsLightTheme(event.target.checked);
   localStorage.setItem("dark_theme", event.target.checked);
@@ -162,8 +179,10 @@ const ThemeToggle = () => {
         checked={is_light_theme()}
         onChange={toggleThemeHandler}
       />
-      <span class={classNames(styles["slider"], styles["round"])} />
+      {is_light_theme() ? <LightThemeIcon size={40}/>: <DarkThemeIcon  />}
     </label>
+
+
   );
 };
 
