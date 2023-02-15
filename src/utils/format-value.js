@@ -132,5 +132,6 @@ export const checkWhenMarketOpens = async (days_offset, target_symbol) => {
         return remaining_time_to_open;
       }
     }
+    return checkWhenMarketOpens(days_offset + 1, target_symbol);
   }
 };
