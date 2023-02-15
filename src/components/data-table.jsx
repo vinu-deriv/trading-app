@@ -33,7 +33,9 @@ const DataTable = (props) => {
             {(cell_value, index) => (
               <tr
                 draggable="true"
-                onTouchStart={() => setActiveIndex(index())}
+                onTouchStart={() =>
+                  setActiveIndex(`${index()}-${cell_value.tick}`)
+                }
                 ref={(el) => detectTouch(el)}
               >
                 <td>
@@ -41,7 +43,7 @@ const DataTable = (props) => {
                     class={classNames(styles["data-layout"], {
                       [styles["slider--active"]]:
                         swipe_direction() === "LEFT" &&
-                        index() === active_index(),
+                        `${index()}-${cell_value.tick}` === active_index(),
                     })}
                     onClick={() => props.onRowClick(cell_value)}
                   >
