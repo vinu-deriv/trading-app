@@ -185,9 +185,9 @@ const MarketList = () => {
       >
         <Tabs
           onTabItemClick={(tab_ref) => {
+            setMarketTicks({});
             setActiveTab(tab_ref.index);
             fetchSelectedMarket(tab_ref);
-            setMarketTicks({});
           }}
           active_index={active_tab()}
           default_selected={default_tab.ref}
