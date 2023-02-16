@@ -197,8 +197,8 @@ const MarketList = () => {
               <Tab label={tabs.title} id={tabs.ref}>
                 <Show when={tabs.ref === FAVOURITES && !market_data().length}>
                   <p class={styles["add-favourites-message"]}>
-                    To add to <strong>Favourites</strong>, swipe left at the asset you like and
-                    hit the star.
+                    To add to <strong>Favourites</strong>, swipe left at the
+                    asset you like and hit the star.
                   </p>
                 </Show>
                 <Show when={market_data().length}>
