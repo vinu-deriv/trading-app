@@ -1,5 +1,14 @@
 import classNames from "classnames";
+import { useNavigate } from "solid-app-router";
 import { Show, onCleanup } from "solid-js";
+import {
+  action,
+  action_url,
+  button_text,
+  setAction,
+  setActionUrl,
+  setButtonText,
+} from "Stores/trade-store";
 import { Button } from ".";
 import { banner_category } from "../constants/banner-category";
 import { setBannerMessage } from "../stores";
@@ -11,10 +20,21 @@ const OverlayWrapper = ({ condition, wrapper, children }) =>
 
 const BannerComponent = (props) => {
   const nav_height = document.getElementById("app_navbar")?.offsetHeight;
+  const navigate = useNavigate();
 
   onCleanup(() => {
     setBannerMessage(null);
+    setActionUrl("");
+    setAction("");
+    setButtonText("Ok");
   });
+
+  const onClickConfirm = (action) => {
+    if (action === "redirect") {
+      navigate(action_url(), { replace: true });
+    }
+    setBannerMessage(null);
+  };
   return (
     <Show when={props.message}>
       <OverlayWrapper
@@ -42,18 +62,15 @@ const BannerComponent = (props) => {
                 category="secondary"
                 onClick={() => setBannerMessage(null)}
               >
-                x
+                X
               </Button>
             </div>
           </Show>
           <p class={styles["popup__text"]}>{props.message}</p>
-          <Show when={props.onClickConfirm}>
+          <Show when={action()}>
             <div class={styles["popup__div_confirm"]}>
-              <Button
-                category="flat"
-                onClick={() => props.handleClick() ?? setBannerMessage(null)}
-              >
-                {props.confirmation || "ok"}
+              <Button category="flat" onClick={() => onClickConfirm(action())}>
+                {button_text()}
               </Button>
             </div>
           </Show>

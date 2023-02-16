@@ -9,7 +9,11 @@ import {
 } from "./stores";
 import { configureEndpoint, getAppId, getSocketUrl } from "./utils/config";
 import { endpoint, init, login_information } from "Stores/base-store";
-import { selected_markets, setSelectedMarkets } from "Stores/trade-store";
+import {
+  selected_markets,
+  setBannerMessage,
+  setSelectedMarkets,
+} from "Stores/trade-store";
 import { loginUrl } from "Constants/deriv-urls";
 import { AccountSwitcher } from "./components";
 import BannerComponent from "./components/banner-component";
@@ -22,6 +26,7 @@ import monitorNetwork from "Utils/network-status";
 import { onMount } from "solid-js";
 import styles from "./App.module.scss";
 import { banner_category } from "./constants/banner-category";
+import { ERROR_MESSAGE } from "Constants/error-codes";
 
 const Endpoint = lazy(() => import("Routes/endpoint"));
 const MarketList = lazy(() => import("Routes/market-list"));
@@ -35,22 +40,27 @@ function App() {
   const pathname = location.pathname;
 
   onMount(async () => {
-    configureEndpoint(getAppId(), getSocketUrl());
-    await fetchActiveSymbols();
-    const map_market = mapMarket(activeSymbols());
-    const getFavs = JSON.parse(localStorage.getItem("favourites"));
-    if (getFavs?.length) {
-      getFavs.forEach((marketSymbol) =>
-        setSelectedMarkets([...selected_markets(), map_market[marketSymbol]])
-      );
+    try {
+      configureEndpoint(getAppId(), getSocketUrl());
+      await fetchActiveSymbols();
+      const map_market = mapMarket(activeSymbols());
+      const getFavs = JSON.parse(localStorage.getItem("favourites"));
+      if (getFavs?.length) {
+        getFavs.forEach((marketSymbol) =>
+          setSelectedMarkets([...selected_markets(), map_market[marketSymbol]])
+        );
+      }
+    } catch (error) {
+      setBannerMessage(error?.error?.message ?? ERROR_MESSAGE.general_error);
     }
   });
 
   createEffect(() => {
-    init().then(() => {
+    init().then(async () => {
       if (pathname.match(/(trade|reports)/) && !login_information.is_logged_in)
         window.location.href = loginUrl({ language: "en" });
-      fetchActiveSymbols().then(() => {
+      try {
+        await fetchActiveSymbols();
         const map_market = mapMarket(activeSymbols());
         const get_favs = getFavourites();
         if (get_favs?.length) {
@@ -61,7 +71,9 @@ function App() {
             ])
           );
         }
-      });
+      } catch (error) {
+        setBannerMessage(error?.error?.message ?? ERROR_MESSAGE.general_error);
+      }
     });
   });
 

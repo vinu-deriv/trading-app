@@ -2,6 +2,7 @@ import { sendRequest, subscribe } from "../utils/socket-base";
 
 import { createSignal } from "solid-js";
 import { createStore } from "solid-js/store";
+import { ERROR_CODE, ERROR_MESSAGE } from "Constants/error-codes";
 
 const [activeSymbols, setActiveSymbols] = createSignal([]);
 const [selectedTradeType, setSelectedTradeType] = createSignal({});
@@ -21,6 +22,9 @@ const [statements, setStatements] = createSignal([]);
 const [is_loading, setIsLoading] = createSignal(false);
 const [market_ticks, setMarketTicks] = createSignal({});
 const [selected_markets, setSelectedMarkets] = createSignal([]);
+const [action_url, setActionUrl] = createSignal("");
+const [action, setAction] = createSignal("");
+const [button_text, setButtonText] = createSignal("Ok");
 
 const fetchActiveSymbols = async () => {
   try {
@@ -29,13 +33,19 @@ const fetchActiveSymbols = async () => {
       product_type: "basic",
     });
     setActiveSymbols(response.active_symbols);
-  } catch (err) {
-    // eslint-disable-next-line no-console
-    console.log("error:", err);
+  } catch (error) {
+    if (error?.error?.code === ERROR_CODE.invalid_app_id) {
+      setBannerMessage(ERROR_MESSAGE.endpoint_redirect);
+      setActionUrl("/endpoint");
+      setAction("redirect");
+      setButtonText("Set AppId");
+    } else {
+      setBannerMessage(error?.error?.message ?? ERROR_MESSAGE.general_error);
+    }
   }
 };
 
-const buyContract = async (id, amount, token) => {
+const buyContract = async (id, amount) => {
   try {
     const response = await sendRequest({
       buy: id,
@@ -100,4 +110,10 @@ export {
   getTradeTimings,
   selected_markets,
   setSelectedMarkets,
+  action_url,
+  setActionUrl,
+  setAction,
+  action,
+  button_text,
+  setButtonText,
 };

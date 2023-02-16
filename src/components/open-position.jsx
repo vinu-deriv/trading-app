@@ -3,6 +3,7 @@ import { forgetAll, wait } from "../utils/socket-base";
 import {
   open_contract_ids,
   open_contract_info,
+  setBannerMessage,
   setOpenContractId,
   setOpenContractInfo,
 } from "../stores";
@@ -14,6 +15,7 @@ import styles from "Styles/open-position.module.scss";
 import { subscribe } from "Utils/socket-base";
 import throttle from "lodash.throttle";
 import { timePeriod } from "../utils/format-value";
+import { ERROR_MESSAGE } from "Constants/error-codes";
 
 const formatActivePositionData = (proposal_open_contract) => ({
   type: proposal_open_contract.underlying,
@@ -63,10 +65,14 @@ const getOpenContractsInfo = () => {
 
 const OpenPosition = () => {
   onMount(async () => {
-    const active_account = JSON.parse(login_information?.active_account);
-    if (active_account) {
-      await wait("authorize");
-      getOpenContractsInfo();
+    try {
+      const active_account = JSON.parse(login_information?.active_account);
+      if (active_account) {
+        await wait("authorize");
+        getOpenContractsInfo();
+      }
+    } catch (error) {
+      setBannerMessage(error?.error?.message ?? ERROR_MESSAGE.general_error);
     }
   });
 

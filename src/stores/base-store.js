@@ -5,9 +5,9 @@ import {
   pingWebsocket,
 } from "Utils/socket-base";
 import { createSignal, lazy } from "solid-js";
-/* eslint-disable no-console */
 import { createStore } from "solid-js/store";
 import { setBannerMessage } from "./trade-store";
+import { ERROR_MESSAGE } from "Constants/error-codes";
 
 export const [login_information, setLoginInformation] = createStore();
 export const [endpoint, setEndpoint] = createSignal({
@@ -30,34 +30,36 @@ export const icons = Object.entries(modules).map(([key, value]) => {
   };
 });
 
-const getBalanceOfAllAccounts = (token) => {
-  authorize(token)
-    .then(() => {
-      subscribe({ balance: 1, account: "all" }, (value) => {
-        if (value.balance.accounts) {
-          setBalanceOfAllAccounts(value.balance.accounts);
-        } else {
-          setBalanceOfAllAccounts({
-            ...balance_of_all_accounts(),
-            [value.balance.loginid]: {
-              ...balance_of_all_accounts()[value.balance.loginid],
-              balance: value.balance.balance,
-            },
-          });
-        }
-      });
-    })
-    .catch((err) => {
-      setBannerMessage(err.message);
+const getBalanceOfAllAccounts = async (token) => {
+  await authorize(token);
+  try {
+    subscribe({ balance: 1, account: "all" }, (value) => {
+      if (value.balance.accounts) {
+        setBalanceOfAllAccounts(value.balance.accounts);
+      } else {
+        setBalanceOfAllAccounts({
+          ...balance_of_all_accounts(),
+          [value.balance.loginid]: {
+            ...balance_of_all_accounts()[value.balance.loginid],
+            balance: value.balance.balance,
+          },
+        });
+      }
     });
+  } catch (error) {
+    setBannerMessage(error?.error?.message ?? ERROR_MESSAGE.general_error);
+  }
 };
 
-const getWebsiteStatus = () => {
-  sendRequest({ website_status: 1 }).then((response) => {
+const getWebsiteStatus = async () => {
+  try {
+    const response = await sendRequest({ website_status: 1 });
     if (!response.error) {
       setCurrenciesConfig(response.website_status?.currencies_config);
     }
-  });
+  } catch (error) {
+    setBannerMessage(error?.error?.message ?? ERROR_MESSAGE.general_error);
+  }
 };
 
 export const init = () => {
@@ -166,8 +168,9 @@ export const setLocalValues = () => {
   localStorage.setItem("active_account", login_information.active_account);
 };
 
-export const logout = () => {
-  sendRequest({ logout: 1 }).then(() => {
+export const logout = async () => {
+  try {
+    await sendRequest({ logout: 1 });
     setLoginInformation({
       accounts: "",
       active_loginid: "",
@@ -177,5 +180,7 @@ export const logout = () => {
     localStorage.removeItem("userId");
     setLocalValues();
     window.location.href = "/";
-  });
+  } catch (error) {
+    setBannerMessage(error?.error?.message ?? ERROR_MESSAGE.general_error);
+  }
 };

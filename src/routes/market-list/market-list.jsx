@@ -20,6 +20,7 @@ import {
   activeSymbols,
   fetchMarketTick,
   market_ticks,
+  setBannerMessage,
   setMarketTicks,
   setSelectedTradeType,
 } from "Stores";
@@ -29,7 +30,7 @@ import {
   checkWhenMarketOpens,
 } from "Utils/format-value";
 import { forgetAll, wait } from "Utils/socket-base";
-import { ERROR_CODE } from "Constants/error-codes";
+import { ERROR_CODE, ERROR_MESSAGE } from "Constants/error-codes";
 import StarIcon from "Assets/svg/action/star.svg";
 import TrashBinIcon from "Assets/svg/action/trash.svg";
 import { getFavourites } from "Utils/map-markets";
@@ -129,16 +130,20 @@ const MarketList = () => {
   };
 
   const getMarketData = async (symbol_list) => {
-    if (Object.keys(market_ticks()).length) {
-      await forgetAll("ticks");
-      await wait("forget_all");
-    }
+    try {
+      if (Object.keys(market_ticks()).length) {
+        await forgetAll("ticks");
+        await wait("forget_all");
+      }
 
-    setMarketData(generateDataSet());
-    symbol_list.forEach(
-      async (symbol) =>
-        await fetchMarketTick(symbol, throttle(marketDataHandler, 500))
-    );
+      setMarketData(generateDataSet());
+      symbol_list.forEach(
+        async (symbol) =>
+          await fetchMarketTick(symbol, throttle(marketDataHandler, 500))
+      );
+    } catch (error) {
+      setBannerMessage(error?.error?.message ?? ERROR_MESSAGE.general_error);
+    }
   };
 
   const getAvailableMarkets = (market_type) =>
