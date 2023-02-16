@@ -5,6 +5,7 @@ import classNames from "classnames";
 import { market_ticks } from "../stores";
 import shared from "../styles/shared.module.scss";
 import styles from "../styles/watchlist.module.scss";
+import { CountDownTimer } from "Components";
 
 const DisplayTickValue = (props) => {
   const [difference, setDifference] = createSignal({ value: 0 });
@@ -19,7 +20,7 @@ const DisplayTickValue = (props) => {
         market_ticks()[props.data];
       if (is_closed) {
         setDifference({
-          value: `Open in ${opens_at.days}D:${opens_at.hours}h`,
+          value: opens_at,
           status: "same",
         });
       } else if (isNaN(previous) && isNaN(current)) {
@@ -41,6 +42,9 @@ const DisplayTickValue = (props) => {
       fallback={<Loader class={shared["spinner"]} type="1" size="1.5rem" />}
     >
       <Switch>
+        <Match when={market_ticks()[props.data]["opens_at"] !== null}>
+          <CountDownTimer opens_at={difference()["value"]} />
+        </Match>
         <Match when={market_ticks()[props.data]["is_closed"] === true}>
           <span class={shared["market-closed"]}>
             <b>{difference()["value"]}</b>

@@ -23,11 +23,7 @@ import {
   setMarketTicks,
   setSelectedTradeType,
 } from "Stores";
-import {
-  generateTickData,
-  calculateTimeLeft,
-  checkWhenMarketOpens,
-} from "Utils/format-value";
+import { generateTickData, checkWhenMarketOpens } from "Utils/format-value";
 import { forgetAll, wait } from "Utils/socket-base";
 import { ERROR_CODE } from "Constants/error-codes";
 import StarIcon from "Assets/svg/action/star.svg";
@@ -55,14 +51,12 @@ const MarketList = () => {
   const [available_markets, setAvailableMarkets] = createSignal([]);
   const [market_data, setMarketData] = createSignal(null);
   const [active_tab, setActiveTab] = createSignal(0);
-  const [is_market_closed, setIsMarketClosed] = createSignal();
   const [watchlist, setWatchlist] = createSignal([]);
 
   const navigate = useNavigate();
 
   onMount(() => {
     setActiveTab(0);
-    setIsMarketClosed(false);
     setWatchlist(getFavourites());
     getWatchList();
   });
@@ -113,17 +107,14 @@ const MarketList = () => {
     } else {
       const { echo_req, error } = response;
       if (error.code === ERROR_CODE.market_closed) {
-        if (!is_market_closed()) {
-          setIsMarketClosed(true);
-          const time_left = await checkWhenMarketOpens(0, echo_req.ticks);
-          setMarketTicks({
-            ...market_ticks(),
-            [echo_req.ticks]: generateTickData({
-              is_closed: true,
-              opens_at: calculateTimeLeft(time_left),
-            }),
-          });
-        }
+        const time_left = await checkWhenMarketOpens(0, echo_req.ticks);
+        setMarketTicks({
+          ...market_ticks(),
+          [echo_req.ticks]: generateTickData({
+            is_closed: true,
+            opens_at: time_left,
+          }),
+        });
       }
     }
   };
@@ -145,7 +136,6 @@ const MarketList = () => {
     setAvailableMarkets(all_markets()[market_type]);
 
   const fetchSelectedMarket = (tab_ref) => {
-    setIsMarketClosed(false);
     const { id } = tab_ref;
     if (id === FAVOURITES) {
       getWatchList();
