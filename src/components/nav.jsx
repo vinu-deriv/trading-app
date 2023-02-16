@@ -9,7 +9,7 @@ import {
 import { isDesktop, isMobile } from "Utils/responsive";
 import { is_light_theme, setIsLightTheme } from "../stores";
 import { Button } from "../components";
-import Logo from "../../src/assets/logo2.png";
+import AppIcon from "Assets/svg/app-logo/dtrader.svg";
 import classNames from "classnames";
 import { loginUrl } from "Constants/deriv-urls";
 import { setshowAccountSwitcher } from "Stores/ui-store";
@@ -92,7 +92,7 @@ const NavBar = () => {
             <div class={styles.menu_button} />
           </label>
           <a href="/" class={styles.logo}>
-            <img src={Logo} class={styles.logo} />
+            <AppIcon/>
           </a>
         </>
       )}
@@ -100,7 +100,7 @@ const NavBar = () => {
         {isDesktop() && (
           <li>
             <a href="/" class={styles.logo}>
-              <img src={Logo} class={styles.logo} />
+            <AppIcon/>
             </a>
           </li>
         )}
