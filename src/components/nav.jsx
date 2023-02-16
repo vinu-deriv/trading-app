@@ -92,7 +92,7 @@ const NavBar = () => {
             <div class={styles.menu_button} />
           </label>
           <a href="/" class={styles.logo}>
-            <AppIcon/>
+            <AppIcon />
           </a>
         </>
       )}
@@ -100,7 +100,7 @@ const NavBar = () => {
         {isDesktop() && (
           <li>
             <a href="/" class={styles.logo}>
-            <AppIcon/>
+              <AppIcon />
             </a>
           </li>
         )}
