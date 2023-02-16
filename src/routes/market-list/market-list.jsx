@@ -165,11 +165,10 @@ const MarketList = () => {
   };
 
   const updateWatchlist = (row_data) => {
-    const active_user = localStorage.getItem("userId") ?? "guest";
     const new_list = watchlist().includes(row_data.tick)
       ? watchlist().filter((sym) => sym !== row_data.tick)
       : [...watchlist(), row_data.tick];
-    localStorage.setItem(`${active_user}-favourites`, JSON.stringify(new_list));
+    localStorage.setItem("favourites", JSON.stringify(new_list));
     setWatchlist(new_list);
     if (active_tab() === 0) {
       getWatchList();
