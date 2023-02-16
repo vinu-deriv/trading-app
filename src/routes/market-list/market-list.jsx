@@ -31,7 +31,6 @@ import {
 import { forgetAll, wait } from "Utils/socket-base";
 import { ERROR_CODE } from "Constants/error-codes";
 import StarIcon from "Assets/svg/action/star.svg";
-import TrashBinIcon from "Assets/svg/action/trash.svg";
 import { getFavourites } from "Utils/map-markets";
 import { segregateMarkets } from "Utils/map-markets";
 import shared from "Styles/shared.module.scss";
@@ -229,10 +228,7 @@ const MarketListAction = (props) => {
     <div
       id="action"
       onClick={() => props.onAction()}
-      class={classNames(styles["action-cell"], {
-        [styles.add]: !props.data.includes(props.selected),
-        [styles.remove]: props.data.includes(props.selected),
-      })}
+      class={classNames(styles["action-cell"], [styles.add])}
     >
       <Show
         when={props.data.find((mkt) => mkt === props.selected)}
@@ -244,9 +240,10 @@ const MarketListAction = (props) => {
           />
         }
       >
-        <TrashBinIcon
+        <StarIcon
           id={`watch-icon-${props.index}`}
           stroke="white"
+          fill="white"
           height="24"
         />
       </Show>
