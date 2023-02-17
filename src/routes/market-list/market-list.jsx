@@ -195,7 +195,13 @@ const MarketList = () => {
           <For each={setTabList(all_markets())}>
             {(tabs) => (
               <Tab label={tabs.title} id={tabs.ref}>
-                <Show when={market_data()}>
+                <Show when={tabs.ref === FAVOURITES && !market_data().length}>
+                  <p class={styles["add-favourites-message"]}>
+                    To add to <strong>Favourites</strong>, swipe left at the
+                    asset you like and hit the star.
+                  </p>
+                </Show>
+                <Show when={market_data().length}>
                   <DataTable
                     headers={header_config}
                     data={market_data()}
