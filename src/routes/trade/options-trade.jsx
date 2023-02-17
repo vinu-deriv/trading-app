@@ -128,8 +128,7 @@ const getProposal = async (
         },
         (response) => {
           if (response.proposal) {
-            const { id, ask_price, payout, barrier, barrier_count } =
-              response.proposal;
+            const { id, ask_price, payout, barrier } = response.proposal;
 
             if (id) {
               setProposalErrorMessage((error) => ({
