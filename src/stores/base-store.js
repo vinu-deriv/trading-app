@@ -176,8 +176,8 @@ export const logout = async () => {
     active_loginid: "",
     is_logged_in: false,
     active_account: "",
-    });
+  });
 
-    setLocalValues();
-    window.location.href = "/";
+  setLocalValues();
+  window.location.href = "/";
 };
