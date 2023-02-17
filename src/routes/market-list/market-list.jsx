@@ -38,6 +38,7 @@ import shared from "Styles/shared.module.scss";
 import styles from "Styles/accordion.module.scss";
 import throttle from "lodash.throttle";
 import { useNavigate } from "solid-app-router";
+import { setSwipeDirection } from "Stores/ui-store";
 
 const MarketList = () => {
   const header_config = [
@@ -165,11 +166,10 @@ const MarketList = () => {
   };
 
   const updateWatchlist = (row_data) => {
-    const active_user = localStorage.getItem("userId") ?? "guest";
     const new_list = watchlist().includes(row_data.tick)
       ? watchlist().filter((sym) => sym !== row_data.tick)
       : [...watchlist(), row_data.tick];
-    localStorage.setItem(`${active_user}-favourites`, JSON.stringify(new_list));
+    localStorage.setItem("favourites", JSON.stringify(new_list));
     setWatchlist(new_list);
     if (active_tab() === 0) {
       getWatchList();
@@ -228,7 +228,10 @@ const MarketListAction = (props) => {
   return (
     <div
       id="action"
-      onClick={() => props.onAction()}
+      onClick={() => {
+        setSwipeDirection("RIGHT");
+        props.onAction();
+      }}
       class={classNames(styles["action-cell"], {
         [styles.add]: !props.data.includes(props.selected),
         [styles.remove]: props.data.includes(props.selected),
