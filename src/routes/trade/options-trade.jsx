@@ -89,6 +89,7 @@ const getProposal = async (
               setProposalErrorMessage((error) => ({
                 ...error,
                 amount_message: "",
+                barrier_message: "",
               }));
               setProposalBuy({
                 id,
@@ -99,7 +100,12 @@ const getProposal = async (
               });
             }
           }
-          if (!proposal_error_message()?.amount_message && response.error)
+          if (!proposal_error_message()?.barrier_message && response.error)
+            setProposalErrorMessage((error) => ({
+              ...error,
+              barrier_message: response.error.message,
+            }));
+          else if (!proposal_error_message()?.amount_message && response.error)
             setProposalErrorMessage((error) => ({
               ...error,
               amount_message: response.error.message,
@@ -135,7 +141,6 @@ const getProposal = async (
                 ask_price,
                 payout,
                 barrier,
-                barrier_count,
                 subscriptionId: response.subscription.id,
               });
             }
