@@ -13,6 +13,7 @@ import DropdownComponent from "./dropdown-component";
 import DropdownList from "./dropdown-list";
 import InputComponent from "./input-component";
 import Slider from "./tick-slider";
+import SkeletonLoader from "./skeleton-loader";
 
 export {
   NavBar,
@@ -31,4 +32,5 @@ export {
   DropdownList,
   InputComponent,
   Slider,
+  SkeletonLoader,
 };
