@@ -8,7 +8,7 @@ import {
 } from "Stores/base-store";
 import { isDesktop, isMobile } from "Utils/responsive";
 import { is_light_theme, setIsLightTheme } from "../stores";
-import { Button } from "../components";
+import { Button, SkeletonLoader } from "../components";
 import Logo from "../../src/assets/logo2.png";
 import classNames from "classnames";
 import { loginUrl } from "Constants/deriv-urls";
@@ -51,7 +51,7 @@ const NavBar = () => {
           balance_of_all_accounts() &&
           current_acc_data()
         }
-        fallback={<></>}
+        fallback={<SkeletonLoader />}
       >
         <div class={styles.account_wrapper}>
           <For each={account_currency_icon()}>

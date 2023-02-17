@@ -12,7 +12,7 @@ const SkeletonLoader = () => {
       <div class={Styles.skeleton_loader__body}>
         <span
           class={Styles.skeleton_box}
-          style={{ width: "100%", height: "40px" }}
+          style={{ width: "100px", height: "40px" }}
         />
       </div>
     </div>
