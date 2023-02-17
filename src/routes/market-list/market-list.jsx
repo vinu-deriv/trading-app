@@ -38,6 +38,7 @@ import shared from "Styles/shared.module.scss";
 import styles from "Styles/accordion.module.scss";
 import throttle from "lodash.throttle";
 import { useNavigate } from "solid-app-router";
+import { setSwipeDirection } from "Stores/ui-store";
 
 const MarketList = () => {
   const header_config = [
@@ -228,7 +229,10 @@ const MarketListAction = (props) => {
   return (
     <div
       id="action"
-      onClick={() => props.onAction()}
+      onClick={() => {
+        setSwipeDirection("RIGHT");
+        props.onAction();
+      }}
       class={classNames(styles["action-cell"], {
         [styles.add]: !props.data.includes(props.selected),
         [styles.remove]: props.data.includes(props.selected),
