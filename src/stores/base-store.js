@@ -99,10 +99,7 @@ export const init = () => {
             logout();
           }
           if (!response?.error) {
-            const { account_list, loginid, balance, user_id } =
-              response.authorize;
-
-            localStorage.setItem("userId", user_id);
+            const { account_list, loginid, balance } = response.authorize;
 
             let i = 1;
             while (obj_params[`acct${i}`]) {
@@ -174,7 +171,7 @@ export const logout = () => {
       is_logged_in: false,
       active_account: "",
     });
-    localStorage.removeItem("userId");
+
     setLocalValues();
     window.location.href = "/";
   });
