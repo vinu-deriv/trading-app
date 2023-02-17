@@ -14,7 +14,7 @@ import { currency_config } from "Constants/currency";
 import { Portal } from "solid-js/web";
 import { authorize, sendRequest } from "Utils/socket-base";
 import { setshowAccountSwitcher } from "Stores/ui-store";
-import Loader from "./loader";
+import { SkeletonLoader } from "Components";
 import styles from "../styles/account-switcher.module.scss";
 import Button from "./button";
 import { addComma } from "Utils/format-value";
@@ -185,7 +185,7 @@ const AccountSwitcher = () => {
             <div class={styles["separator"]} />
           </div>
 
-          <Show when={is_balance_avbl()} fallback={<Loader />}>
+          <Show when={is_balance_avbl()} fallback={<SkeletonLoader />}>
             <>
               {demo_accounts()?.length && (
                 <AccountList title="Demo Account" accounts={demo_accounts()} />
