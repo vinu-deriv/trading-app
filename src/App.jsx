@@ -27,7 +27,7 @@ import { onMount } from "solid-js";
 import styles from "./App.module.scss";
 import { banner_category } from "./constants/banner-category";
 import { ERROR_CODE, ERROR_MESSAGE } from "Constants/error-codes";
-import { setAction, setButtonText } from "Stores/ui-store";
+import { setActionButtonValues } from "Stores/ui-store";
 
 const Endpoint = lazy(() => import("Routes/endpoint"));
 const MarketList = lazy(() => import("Routes/market-list"));
@@ -46,12 +46,9 @@ function App() {
       await fetchActiveSymbols();
     } catch (error) {
       if (error?.error?.code === ERROR_CODE.invalid_app_id) {
-        const onClickHandler = () => () => {
-          navigate("/endpoint", { replace: true });
-        };
+        const onClickHandler = () => navigate("/endpoint", { replace: true });
         setBannerMessage(ERROR_MESSAGE.endpoint_redirect);
-        setAction(onClickHandler);
-        setButtonText("Set AppId");
+        setActionButtonValues({ text: "Set AppId", action: onClickHandler });
       } else {
         setBannerMessage(error?.error?.message ?? ERROR_MESSAGE.general_error);
       }

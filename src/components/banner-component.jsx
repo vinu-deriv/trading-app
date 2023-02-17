@@ -1,6 +1,6 @@
 import classNames from "classnames";
 import { Show, onCleanup } from "solid-js";
-import { action, button_text, setAction, setButtonText } from "Stores/ui-store";
+import { action_button_values, setActionButtonValues } from "Stores/ui-store";
 import { Button } from ".";
 import { banner_category } from "../constants/banner-category";
 import { setBannerMessage } from "../stores";
@@ -15,12 +15,11 @@ const BannerComponent = (props) => {
 
   onCleanup(() => {
     setBannerMessage(null);
-    setAction(null);
-    setButtonText("Ok");
+    setActionButtonValues({});
   });
 
   const onClickConfirm = () => {
-    action()();
+    action_button_values?.action();
     setBannerMessage(null);
   };
   return (
@@ -50,10 +49,10 @@ const BannerComponent = (props) => {
             </div>
           </Show>
           <p class={styles["popup__text"]}>{props.message}</p>
-          <Show when={action()}>
+          <Show when={action_button_values?.text}>
             <div class={styles["popup__div_confirm"]}>
               <Button category="flat" onClick={onClickConfirm}>
-                {button_text()}
+                {action_button_values?.text}
               </Button>
             </div>
           </Show>
