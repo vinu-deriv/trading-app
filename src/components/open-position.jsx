@@ -65,8 +65,8 @@ const getOpenContractsInfo = () => {
 
 const OpenPosition = () => {
   onMount(async () => {
+    const active_account = JSON.parse(login_information?.active_account);
     try {
-      const active_account = JSON.parse(login_information?.active_account);
       if (active_account) {
         await wait("authorize");
         getOpenContractsInfo();

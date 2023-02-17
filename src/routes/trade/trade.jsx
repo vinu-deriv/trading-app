@@ -48,20 +48,18 @@ const Trade = () => {
   const getConfig = async () => {
     try {
       await ContractType.buildContractTypesConfig(selectedTradeType()?.symbol);
-      const contract_config = ContractType.getFullContractTypes();
-      setContractConfig(contract_config);
-      if (Object.keys(contract_config).length) {
-        setSelectedContractType(Object.keys(contract_config)[0]);
-        setTradeTypes(contract_config[Object.keys(contract_config)[0]]);
-        setDurationsList(
-          ContractType.getDurationUnitsList(
-            `${selected_contract_type()}`,
-            "spot"
-          ).duration_units_list
-        );
-      }
     } catch (error) {
       setBannerMessage(error?.error?.message ?? ERROR_MESSAGE.general_error);
+    }
+    const contract_config = ContractType.getFullContractTypes();
+    setContractConfig(contract_config);
+    if (Object.keys(contract_config).length) {
+      setSelectedContractType(Object.keys(contract_config)[0]);
+      setTradeTypes(contract_config[Object.keys(contract_config)[0]]);
+      setDurationsList(
+        ContractType.getDurationUnitsList(`${selected_contract_type()}`, "spot")
+          .duration_units_list
+      );
     }
   };
 

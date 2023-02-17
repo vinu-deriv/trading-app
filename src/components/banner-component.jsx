@@ -1,14 +1,6 @@
 import classNames from "classnames";
-import { useNavigate } from "solid-app-router";
 import { Show, onCleanup } from "solid-js";
-import {
-  action,
-  action_url,
-  button_text,
-  setAction,
-  setActionUrl,
-  setButtonText,
-} from "Stores/trade-store";
+import { action, button_text, setAction, setButtonText } from "Stores/ui-store";
 import { Button } from ".";
 import { banner_category } from "../constants/banner-category";
 import { setBannerMessage } from "../stores";
@@ -20,19 +12,15 @@ const OverlayWrapper = ({ condition, wrapper, children }) =>
 
 const BannerComponent = (props) => {
   const nav_height = document.getElementById("app_navbar")?.offsetHeight;
-  const navigate = useNavigate();
 
   onCleanup(() => {
     setBannerMessage(null);
-    setActionUrl("");
-    setAction("");
+    setAction(null);
     setButtonText("Ok");
   });
 
-  const onClickConfirm = (action) => {
-    if (action === "redirect") {
-      navigate(action_url(), { replace: true });
-    }
+  const onClickConfirm = () => {
+    action()();
     setBannerMessage(null);
   };
   return (
@@ -40,12 +28,7 @@ const BannerComponent = (props) => {
       <OverlayWrapper
         condition={isDesktop()}
         wrapper={(children) => (
-          <div
-            class={styles["popup__div"]}
-            onClick={() => setBannerMessage(null)}
-          >
-            {children}
-          </div>
+          <div class={styles["popup__div"]}>{children}</div>
         )}
       >
         <div
@@ -69,7 +52,7 @@ const BannerComponent = (props) => {
           <p class={styles["popup__text"]}>{props.message}</p>
           <Show when={action()}>
             <div class={styles["popup__div_confirm"]}>
-              <Button category="flat" onClick={() => onClickConfirm(action())}>
+              <Button category="flat" onClick={onClickConfirm}>
                 {button_text()}
               </Button>
             </div>

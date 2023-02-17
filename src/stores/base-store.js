@@ -31,8 +31,8 @@ export const icons = Object.entries(modules).map(([key, value]) => {
 });
 
 const getBalanceOfAllAccounts = async (token) => {
-  await authorize(token);
   try {
+    await authorize(token);
     subscribe({ balance: 1, account: "all" }, (value) => {
       if (value.balance.accounts) {
         setBalanceOfAllAccounts(value.balance.accounts);
@@ -171,16 +171,16 @@ export const setLocalValues = () => {
 export const logout = async () => {
   try {
     await sendRequest({ logout: 1 });
-    setLoginInformation({
-      accounts: "",
-      active_loginid: "",
-      is_logged_in: false,
-      active_account: "",
-    });
-    localStorage.removeItem("userId");
-    setLocalValues();
-    window.location.href = "/";
   } catch (error) {
     setBannerMessage(error?.error?.message ?? ERROR_MESSAGE.general_error);
   }
+  setLoginInformation({
+    accounts: "",
+    active_loginid: "",
+    is_logged_in: false,
+    active_account: "",
+  });
+  localStorage.removeItem("userId");
+  setLocalValues();
+  window.location.href = "/";
 };

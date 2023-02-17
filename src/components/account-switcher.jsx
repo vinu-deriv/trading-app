@@ -76,23 +76,22 @@ const AccountSwitcher = () => {
   const resetBalance = async (event) => {
     event.stopPropagation();
     let newbalance;
+    const account = await JSON.parse(login_information.active_account);
     try {
-      const account = await JSON.parse(login_information.active_account);
-      sendRequest({
+      const response = await sendRequest({
         topup_virtual: 1,
-      }).then((response) => {
-        const { amount } = response.topup_virtual;
-        setTopup(amount);
       });
-      if (account.is_virtual === 1) {
-        if (topup() != 0) {
-          setTopup(0);
-          newbalance = 10000;
-          account.balance = newbalance;
-        }
-      }
+      const { amount } = response.topup_virtual;
+      setTopup(amount);
     } catch (error) {
       setBannerMessage(error?.error?.message ?? ERROR_MESSAGE.general_error);
+    }
+    if (account.is_virtual === 1) {
+      if (topup() != 0) {
+        setTopup(0);
+        newbalance = 10000;
+        account.balance = newbalance;
+      }
     }
   };
 
