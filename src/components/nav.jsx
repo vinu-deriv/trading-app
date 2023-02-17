@@ -8,7 +8,6 @@ import {
 } from "Stores/base-store";
 import { isDesktop, isMobile } from "Utils/responsive";
 import { is_light_theme, setIsLightTheme } from "../stores";
-import { Button } from "../components";
 import AppIcon from "Assets/svg/app-logo/dtrader.svg";
 import classNames from "classnames";
 import { loginUrl } from "Constants/deriv-urls";
@@ -121,14 +120,14 @@ const NavBar = () => {
         {login_information.is_logged_in && <li onClick={logout}> Sign Out</li>}
       </ul>
       {login_information.is_logged_in ? (
-        <Button
-          category="secondary"
+        <div
+          class={styles.account_header}
           onClick={() => setshowAccountSwitcher(true)}
         >
           <div class={styles.account_wrapper}>
             <AccountHeader />
           </div>
-        </Button>
+        </div>
       ) : (
         !login_information.is_logging_in && (
           <div
