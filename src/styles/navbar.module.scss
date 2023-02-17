@@ -301,3 +301,8 @@ input:checked + .slider:before {
 .slider.round:before {
   border-radius: 50%;
 }
+
+.account_header {
+  font-weight: bold;
+  color: var(--text-main);
+}
