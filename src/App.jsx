@@ -40,13 +40,14 @@ function App() {
   const location = useLocation();
   const navigate = useNavigate();
   const pathname = location.pathname;
+  
+  const onClickHandler = () => navigate("/endpoint", { replace: true });
 
   const fetchActiveSymbolsHandler = async () => {
     try {
       await fetchActiveSymbols();
     } catch (error) {
       if (error?.error?.code === ERROR_CODE.invalid_app_id) {
-        const onClickHandler = () => navigate("/endpoint", { replace: true });
         setBannerMessage(ERROR_MESSAGE.endpoint_redirect);
         setActionButtonValues({ text: "Set AppId", action: onClickHandler });
       } else {
