@@ -1,5 +1,6 @@
 import classNames from "classnames";
 import { Show, onCleanup } from "solid-js";
+import { action_button_values, setActionButtonValues } from "Stores/ui-store";
 import { Button } from ".";
 import { banner_category } from "../constants/banner-category";
 import { setBannerMessage } from "../stores";
@@ -14,18 +15,19 @@ const BannerComponent = (props) => {
 
   onCleanup(() => {
     setBannerMessage(null);
+    setActionButtonValues({});
   });
+
+  const onClickConfirm = () => {
+    action_button_values?.action();
+    setBannerMessage(null);
+  };
   return (
     <Show when={props.message}>
       <OverlayWrapper
         condition={isDesktop()}
         wrapper={(children) => (
-          <div
-            class={styles["popup__div"]}
-            onClick={() => setBannerMessage(null)}
-          >
-            {children}
-          </div>
+          <div class={styles["popup__div"]}>{children}</div>
         )}
       >
         <div
@@ -42,18 +44,15 @@ const BannerComponent = (props) => {
                 category="secondary"
                 onClick={() => setBannerMessage(null)}
               >
-                x
+                X
               </Button>
             </div>
           </Show>
           <p class={styles["popup__text"]}>{props.message}</p>
-          <Show when={props.onClickConfirm}>
+          <Show when={action_button_values?.text}>
             <div class={styles["popup__div_confirm"]}>
-              <Button
-                category="flat"
-                onClick={() => props.handleClick() ?? setBannerMessage(null)}
-              >
-                {props.confirmation || "ok"}
+              <Button category="flat" onClick={onClickConfirm}>
+                {action_button_values?.text}
               </Button>
             </div>
           </Show>

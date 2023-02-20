@@ -9,7 +9,7 @@ import {
   balance_of_all_accounts,
   logout,
 } from "Stores/base-store";
-import { is_light_theme } from "Stores";
+import { is_light_theme, setBannerMessage } from "Stores";
 import { currency_config } from "Constants/currency";
 import { Portal } from "solid-js/web";
 import { authorize, sendRequest } from "Utils/socket-base";
@@ -18,6 +18,7 @@ import Loader from "./loader";
 import styles from "../styles/account-switcher.module.scss";
 import Button from "./button";
 import { addComma } from "Utils/format-value";
+import { ERROR_MESSAGE } from "Constants/error-codes";
 
 const getCurrencyDisplayCode = (currency = "") => {
   if (currency !== "eUSDT" && currency !== "tUSDT") {
@@ -76,12 +77,15 @@ const AccountSwitcher = () => {
     event.stopPropagation();
     let newbalance;
     const account = await JSON.parse(login_information.active_account);
-    sendRequest({
-      topup_virtual: 1,
-    }).then((response) => {
+    try {
+      const response = await sendRequest({
+        topup_virtual: 1,
+      });
       const { amount } = response.topup_virtual;
       setTopup(amount);
-    });
+    } catch (error) {
+      setBannerMessage(error?.error?.message ?? ERROR_MESSAGE.general_error);
+    }
     if (account.is_virtual === 1) {
       if (topup() != 0) {
         setTopup(0);

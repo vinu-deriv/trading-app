@@ -8,7 +8,7 @@ import {
   createSignal,
   onMount,
 } from "solid-js";
-import { ERROR_CODE } from "Constants/error-codes";
+import { ERROR_CODE, ERROR_MESSAGE } from "Constants/error-codes";
 import { Loader } from "Components";
 import {
   is_loading,
@@ -28,7 +28,11 @@ import { login_information } from "Stores/base-store";
 import shared from "Styles/shared.module.scss";
 import styles from "./trade.module.scss";
 import { forgetAll, wait } from "Utils/socket-base";
-import { market_ticks, setMarketTicks } from "Stores/trade-store";
+import {
+  market_ticks,
+  setBannerMessage,
+  setMarketTicks,
+} from "Stores/trade-store";
 import {
   generateTickData,
   checkWhenMarketOpens,
@@ -42,7 +46,11 @@ const Trade = () => {
   const [is_market_closed, setIsMarketClosed] = createSignal();
 
   const getConfig = async () => {
-    await ContractType.buildContractTypesConfig(selectedTradeType()?.symbol);
+    try {
+      await ContractType.buildContractTypesConfig(selectedTradeType()?.symbol);
+    } catch (error) {
+      setBannerMessage(error?.error?.message ?? ERROR_MESSAGE.general_error);
+    }
     const contract_config = ContractType.getFullContractTypes();
     setContractConfig(contract_config);
     if (Object.keys(contract_config).length) {
