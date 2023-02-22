@@ -16,6 +16,8 @@ import { setshowAccountSwitcher } from "Stores/ui-store";
 import styles from "../styles/navbar.module.scss";
 import { useNavigate } from "solid-app-router";
 import { addComma } from "Utils/format-value";
+import DarkThemeIcon from "Assets/svg/action/dark-theme.svg";
+import LightThemeIcon from "Assets/svg/action/light-theme.svg";
 
 const NavBar = () => {
   const navigate = useNavigate();
@@ -91,9 +93,6 @@ const NavBar = () => {
           <label class={styles.menu_button_container} for={styles.menu_toggle}>
             <div class={styles.menu_button} />
           </label>
-          <a href="/" class={styles.logo}>
-            <AppIcon />
-          </a>
         </>
       )}
       <ul class={styles.menu}>
@@ -103,6 +102,13 @@ const NavBar = () => {
               <AppIcon />
             </a>
           </li>
+        )}
+        {isMobile()&&checked()&&(
+          <li>
+           <a href="/" class={styles.logo}>
+           <AppIcon />
+         </a>
+         </li>
         )}
         {login_information.is_logged_in && (
           <li
@@ -114,12 +120,10 @@ const NavBar = () => {
             Report
           </li>
         )}
-        <li>
-          Theme &nbsp;
-          <ThemeToggle />
-        </li>
         {login_information.is_logged_in && <li onClick={logout}> Sign Out</li>}
       </ul>
+      <div class={styles.theme}>
+      <ThemeToggle />
       {login_information.is_logged_in ? (
         <div
           class={styles.account_header}
@@ -140,6 +144,7 @@ const NavBar = () => {
           </div>
         )
       )}
+      </div>
     </section>
   );
 };
@@ -162,9 +167,9 @@ const ThemeToggle = () => {
         checked={is_light_theme()}
         onChange={toggleThemeHandler}
       />
-      <span class={classNames(styles["slider"], styles["round"])} />
+      {is_light_theme() ? <LightThemeIcon size={40}/>: <DarkThemeIcon  />}
     </label>
-  );
+  )
 };
 
 export default NavBar;
