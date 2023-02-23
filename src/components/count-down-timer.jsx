@@ -28,23 +28,23 @@ const CountDownTimer = (props) => {
 
   const displayRemainingTime = () => {
     let duration = "";
-    let count = 0;
+    let duration_part_count = 0;
     if (timer()?.asSeconds() !== undefined) {
       if (timer().asDays() >= 1) {
         duration += `${timer().days()}D`;
-        count += 1;
+        duration_part_count += 1;
       }
       if (timer().asHours() >= 1) {
         duration += ` ${timer().hours()}h`;
-        count += 1;
+        duration_part_count += 1;
       }
-      if (timer().asMinutes() && count !== 2) {
+      if (timer().asMinutes() && duration_part_count !== 2) {
         duration += ` ${timer().minutes()}m`;
-        count += 1;
+        duration_part_count += 1;
       }
-      if (count !== 2) {
+      if (duration_part_count !== 2) {
         duration += ` ${timer().seconds()}s`;
-        count += 1;
+        duration_part_count += 1;
       }
     }
     return duration;
