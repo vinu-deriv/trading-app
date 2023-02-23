@@ -82,25 +82,6 @@ const NavBar = () => {
     >
       <div>
         {isMobile() && (
-          // <>
-          // {/* <div class={styles.logo}> */}
-          //   <input
-          //     id={styles.menu_toggle}
-          //     type="checkbox"
-          //     checked={checked()}
-          //     onClick={() => {
-          //       setChecked(!checked());
-          //     }}
-          //   />
-          //   {true && ( <label class={styles.menu_button_container} for={styles.menu_toggle}>
-          //     <div class={styles.menu_button} />
-          //   </label>) }
-
-          //   {/* <a href="/" class={styles.logo}>
-          //    <AppIcon />
-          //  </a> */}
-          // {/* </div> */}
-          // </>
           <>
             <input
               id={styles.menu_toggle}
@@ -159,7 +140,7 @@ const NavBar = () => {
                 (window.location.href = loginUrl({ language: "en" }))
               }
             >
-              <b>Log In</b>
+              <b class={styles.loginText}>Log In</b>
             </div>
           )
         )}

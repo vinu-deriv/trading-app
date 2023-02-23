@@ -12,7 +12,9 @@
   height: 100px;
 }
 
-
+.loginText{
+  color: var(--text-main);
+}
 .topnav_mobile {
   display: grid;
   grid-template-columns: 30px 1fr auto;
