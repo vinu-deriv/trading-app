@@ -10,4 +10,5 @@ export const ERROR_MESSAGE = {
   endpoint_redirect:
     "Your AppId is invalid. Please click on SetAppId button to redirect to endpoint",
   general_error: "Something is not right",
+  login_error: "Please login to place a trade",
 };

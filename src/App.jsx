@@ -40,7 +40,7 @@ function App() {
   const location = useLocation();
   const navigate = useNavigate();
   const pathname = location.pathname;
-  
+
   const onClickHandler = () => navigate("/endpoint", { replace: true });
 
   const fetchActiveSymbolsHandler = async () => {
