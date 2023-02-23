@@ -282,6 +282,34 @@
   }
 }
 
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #28292c;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
+  border-radius: 50%;
+  border: 1px solid yellow;
+
+  &:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 1px;
+    background-color: #28292c;
+    border-radius: 50%;
+    box-shadow: inset 11px 0px 0px 0px #d8dbe0;
+    -webkit-transition: 0.4s;
+    transition: 0.4s;
+  }
+}
+
 input:checked + .slider {
   background-color: #d8dbe0;
 }
@@ -300,9 +328,4 @@ input:checked + .slider:before {
 
 .slider.round:before {
   border-radius: 50%;
-}
-
-.account_header {
-  font-weight: bold;
-  color: var(--text-main);
 }
