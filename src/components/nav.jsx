@@ -8,8 +8,8 @@ import {
 } from "Stores/base-store";
 import { isDesktop, isMobile } from "Utils/responsive";
 import { is_light_theme, setIsLightTheme } from "../stores";
-import { Button } from "../components";
-import Logo from "../../src/assets/logo2.png";
+import { SkeletonLoader } from "../components";
+import AppIcon from "Assets/svg/app-logo/dtrader.svg";
 import classNames from "classnames";
 import { loginUrl } from "Constants/deriv-urls";
 import { setshowAccountSwitcher } from "Stores/ui-store";
@@ -51,7 +51,7 @@ const NavBar = () => {
           balance_of_all_accounts() &&
           current_acc_data()
         }
-        fallback={<></>}
+        fallback={<SkeletonLoader />}
       >
         <div class={styles.account_wrapper}>
           <For each={account_currency_icon()}>
@@ -92,7 +92,7 @@ const NavBar = () => {
             <div class={styles.menu_button} />
           </label>
           <a href="/" class={styles.logo}>
-            <img src={Logo} class={styles.logo} />
+            <AppIcon />
           </a>
         </>
       )}
@@ -100,7 +100,7 @@ const NavBar = () => {
         {isDesktop() && (
           <li>
             <a href="/" class={styles.logo}>
-              <img src={Logo} class={styles.logo} />
+              <AppIcon />
             </a>
           </li>
         )}
@@ -121,14 +121,14 @@ const NavBar = () => {
         {login_information.is_logged_in && <li onClick={logout}> Sign Out</li>}
       </ul>
       {login_information.is_logged_in ? (
-        <Button
-          category="secondary"
+        <div
+          class={styles.account_header}
           onClick={() => setshowAccountSwitcher(true)}
         >
           <div class={styles.account_wrapper}>
             <AccountHeader />
           </div>
-        </Button>
+        </div>
       ) : (
         !login_information.is_logging_in && (
           <div

@@ -7,8 +7,7 @@ export const mapMarket = (active_symbols) => {
   }, {});
 };
 export const getFavourites = () => {
-  const active_user = localStorage.getItem("userId") ?? "guest";
-  return JSON.parse(localStorage.getItem(`${active_user}-favourites`)) ?? [];
+  return JSON.parse(localStorage.getItem("favourites")) ?? [];
 };
 
 export const segregateMarkets = (active_symbols) =>

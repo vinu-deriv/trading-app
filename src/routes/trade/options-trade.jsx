@@ -22,6 +22,7 @@ import { subscribe } from "Utils/socket-base";
 import { convertDurationLimit } from "Utils/format-value";
 import { RISE_FALL_TITLE } from "Constants/trade-config";
 import { DropdownComponent } from "Components";
+import { ERROR_MESSAGE } from "Constants/error-codes";
 
 const [slider_value, setSliderValue] = createSignal(1);
 const [duration_unit, setDurationUnit] = createSignal("");
@@ -243,7 +244,11 @@ const OptionsTrade = (props) => {
   };
 
   const handleBuyContractClicked = async (id) => {
-    await buyContract(id, amount(), token);
+    try {
+      await buyContract(id, amount(), token);
+    } catch (error) {
+      setBannerMessage(error?.error?.message ?? ERROR_MESSAGE.general_error);
+    }
 
     if (!banner_message()) navigate("/reports", { replace: true });
   };

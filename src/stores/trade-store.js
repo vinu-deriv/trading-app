@@ -23,19 +23,14 @@ const [market_ticks, setMarketTicks] = createSignal({});
 const [selected_markets, setSelectedMarkets] = createSignal([]);
 
 const fetchActiveSymbols = async () => {
-  try {
-    const response = await sendRequest({
-      active_symbols: "brief",
-      product_type: "basic",
-    });
-    setActiveSymbols(response.active_symbols);
-  } catch (err) {
-    // eslint-disable-next-line no-console
-    console.log("error:", err);
-  }
+  const response = await sendRequest({
+    active_symbols: "brief",
+    product_type: "basic",
+  });
+  setActiveSymbols(response.active_symbols);
 };
 
-const buyContract = async (id, amount, token) => {
+const buyContract = async (id, amount) => {
   try {
     const response = await sendRequest({
       buy: id,

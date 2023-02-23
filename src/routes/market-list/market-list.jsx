@@ -20,20 +20,21 @@ import {
   activeSymbols,
   fetchMarketTick,
   market_ticks,
+  setBannerMessage,
   setMarketTicks,
   setSelectedTradeType,
 } from "Stores";
 import { generateTickData, checkWhenMarketOpens } from "Utils/format-value";
 import { forgetAll, wait } from "Utils/socket-base";
-import { ERROR_CODE } from "Constants/error-codes";
+import { ERROR_CODE, ERROR_MESSAGE } from "Constants/error-codes";
 import StarIcon from "Assets/svg/action/star.svg";
-import TrashBinIcon from "Assets/svg/action/trash.svg";
 import { getFavourites } from "Utils/map-markets";
 import { segregateMarkets } from "Utils/map-markets";
 import shared from "Styles/shared.module.scss";
 import styles from "Styles/accordion.module.scss";
 import throttle from "lodash.throttle";
 import { useNavigate } from "solid-app-router";
+import { setSwipeDirection } from "Stores/ui-store";
 
 const MarketList = () => {
   const header_config = [
@@ -120,16 +121,20 @@ const MarketList = () => {
   };
 
   const getMarketData = async (symbol_list) => {
-    if (Object.keys(market_ticks()).length) {
-      await forgetAll("ticks");
-      await wait("forget_all");
-    }
+    try {
+      if (Object.keys(market_ticks()).length) {
+        await forgetAll("ticks");
+        await wait("forget_all");
+      }
 
-    setMarketData(generateDataSet());
-    symbol_list.forEach(
-      async (symbol) =>
-        await fetchMarketTick(symbol, throttle(marketDataHandler, 500))
-    );
+      setMarketData(generateDataSet());
+      symbol_list.forEach(
+        async (symbol) =>
+          await fetchMarketTick(symbol, throttle(marketDataHandler, 500))
+      );
+    } catch (error) {
+      setBannerMessage(error?.error?.message ?? ERROR_MESSAGE.general_error);
+    }
   };
 
   const getAvailableMarkets = (market_type) =>
@@ -155,11 +160,10 @@ const MarketList = () => {
   };
 
   const updateWatchlist = (row_data) => {
-    const active_user = localStorage.getItem("userId") ?? "guest";
     const new_list = watchlist().includes(row_data.tick)
       ? watchlist().filter((sym) => sym !== row_data.tick)
       : [...watchlist(), row_data.tick];
-    localStorage.setItem(`${active_user}-favourites`, JSON.stringify(new_list));
+    localStorage.setItem("favourites", JSON.stringify(new_list));
     setWatchlist(new_list);
     if (active_tab() === 0) {
       getWatchList();
@@ -185,7 +189,13 @@ const MarketList = () => {
           <For each={setTabList(all_markets())}>
             {(tabs) => (
               <Tab label={tabs.title} id={tabs.ref}>
-                <Show when={market_data()}>
+                <Show when={tabs.ref === FAVOURITES && !market_data().length}>
+                  <p class={styles["add-favourites-message"]}>
+                    To add to <strong>Favourites</strong>, swipe left at the
+                    asset you like and hit the star.
+                  </p>
+                </Show>
+                <Show when={market_data().length}>
                   <DataTable
                     headers={header_config}
                     data={market_data()}
@@ -218,11 +228,11 @@ const MarketListAction = (props) => {
   return (
     <div
       id="action"
-      onClick={() => props.onAction()}
-      class={classNames(styles["action-cell"], {
-        [styles.add]: !props.data.includes(props.selected),
-        [styles.remove]: props.data.includes(props.selected),
-      })}
+      onClick={() => {
+        setSwipeDirection("RIGHT");
+        props.onAction();
+      }}
+      class={classNames(styles["action-cell"], [styles.add])}
     >
       <Show
         when={props.data.find((mkt) => mkt === props.selected)}
@@ -234,9 +244,10 @@ const MarketListAction = (props) => {
           />
         }
       >
-        <TrashBinIcon
+        <StarIcon
           id={`watch-icon-${props.index}`}
           stroke="white"
+          fill="white"
           height="24"
         />
       </Show>
