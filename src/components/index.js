@@ -13,6 +13,7 @@ import DropdownComponent from "./dropdown-component";
 import DropdownList from "./dropdown-list";
 import InputComponent from "./input-component";
 import Slider from "./tick-slider";
+import CountDownTimer from "./count-down-timer";
 import SkeletonLoader from "./skeleton-loader";
 
 export {
@@ -32,5 +33,6 @@ export {
   DropdownList,
   InputComponent,
   Slider,
+  CountDownTimer,
   SkeletonLoader,
 };
