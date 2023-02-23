@@ -252,8 +252,18 @@
   border: 1px solid var(--button-green);
   border-radius: 5px;
   grid-template-columns: repeat(2, 1fr);
-  background-color:#0bd490;
   align-items: center;
+  &--increase {
+    border: 1px solid var(--button-green);
+  }
+
+  &--decrease {
+    border: 1px solid var(--button-red);
+  }
+
+}
+.tick-text{
+  color: var(--text-main);
 }
 
 .market {
