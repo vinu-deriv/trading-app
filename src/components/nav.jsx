@@ -81,7 +81,7 @@ const NavBar = () => {
       class={isDesktop() ? styles.topnav_desktop : styles.topnav_mobile}
     >
       <div>
-        {isMobile() && (
+        {isMobile() && login_information.is_logged_in  &&(
           <>
             <input
               id={styles.menu_toggle}
