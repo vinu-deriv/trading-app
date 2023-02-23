@@ -29,6 +29,7 @@
     -webkit-appearance: none;
     height: 10px;
     cursor: ew-resize;
+    border-radius: 4px;
     background: #434343;
     box-shadow: -80px 0 0 80px #9a905d;
   }
@@ -36,7 +37,7 @@
   .slider2 {
     overflow: hidden;
     -webkit-appearance: none;
-    background-color: #9a905d;
+    background-color: #bfbeb9;
     margin: unset !important;
     width: 50%;
   }
@@ -52,6 +53,7 @@
     width: 10px;
     -webkit-appearance: none;
     height: 10px;
+    border-radius: 4px;
     cursor: ew-resize;
     background: #434343;
     box-shadow: -80px 0 0 80px var(--button-green);
@@ -98,12 +100,15 @@
 
 .output_high {
   padding-left: 5px;
-  font-weight: bold;
+ font-weight: normal;
+ font-size: small;
 }
 .output_low {
   padding-right: "5px";
-  font-weight: bold;
+  font-weight: normal;
+  font-size: small;
 }
 .output_mid {
-  font-weight: bold;
+  font-weight: normal;
+  font-size: small;
 }
