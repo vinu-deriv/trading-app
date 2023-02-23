@@ -129,7 +129,7 @@ const Trade = () => {
       selectedTradeType()?.symbol,
       throttle(marketDataHandler, 500)
     );
-    await fetchMarketValues(selectedTradeType()?.symbol, throttle(getOHLC, 50))
+    await fetchMarketValues(selectedTradeType()?.symbol, throttle(getOHLC, 500))
   });
 
   createEffect(() => {
