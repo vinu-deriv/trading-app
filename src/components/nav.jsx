@@ -80,70 +80,89 @@ const NavBar = () => {
       id="app_navbar"
       class={isDesktop() ? styles.topnav_desktop : styles.topnav_mobile}
     >
-      {isMobile() && (
-        <>
-          <input
-            id={styles.menu_toggle}
-            type="checkbox"
-            checked={checked()}
-            onClick={() => {
-              setChecked(!checked());
-            }}
-          />
-          <label class={styles.menu_button_container} for={styles.menu_toggle}>
-            <div class={styles.menu_button} />
-          </label>
-        </>
-      )}
-      <ul class={styles.menu}>
-        {isDesktop() && (
-          <li>
-            <a href="/" class={styles.logo}>
-              <AppIcon />
-            </a>
-          </li>
+      <div>
+        {isMobile() && (
+          // <>
+          // {/* <div class={styles.logo}> */}
+          //   <input
+          //     id={styles.menu_toggle}
+          //     type="checkbox"
+          //     checked={checked()}
+          //     onClick={() => {
+          //       setChecked(!checked());
+          //     }}
+          //   />
+          //   {true && ( <label class={styles.menu_button_container} for={styles.menu_toggle}>
+          //     <div class={styles.menu_button} />
+          //   </label>) }
+
+          //   {/* <a href="/" class={styles.logo}>
+          //    <AppIcon />
+          //  </a> */}
+          // {/* </div> */}
+          // </>
+          <>
+            <input
+              id={styles.menu_toggle}
+              type="checkbox"
+              checked={checked()}
+              onClick={() => {
+                setChecked(!checked());
+              }}
+            />
+            <label class={styles.menu_button_container} for={styles.menu_toggle}>
+              <div class={styles.menu_button} />
+            </label>
+          </>
         )}
-        {isMobile()&&checked()&&(
-          <li>
-           <a href="/" class={styles.logo}>
-           <AppIcon />
-         </a>
-         </li>
-        )}
-        {login_information.is_logged_in && (
-          <li
-            onClick={() => {
-              navigate("/reports", { replace: true });
-              setChecked(false);
-            }}
-          >
-            Report
-          </li>
-        )}
-        {login_information.is_logged_in && <li onClick={logout}> Sign Out</li>}
-      </ul>
-      <div class={styles.theme}>
-      <ThemeToggle />
-      {login_information.is_logged_in ? (
-        <div
-          class={styles.account_header}
-          onClick={() => setshowAccountSwitcher(true)}
-        >
-          <div class={styles.account_wrapper}>
-            <AccountHeader />
-          </div>
+        <ul class={styles.menu}>
+          {isDesktop() && (
+            <li>
+              <a href="/" class={styles.logo}>
+                <AppIcon />
+              </a>
+            </li>
+          )}
+          {login_information.is_logged_in && (
+            <li
+              onClick={() => {
+                navigate("/reports", { replace: true });
+                setChecked(false);
+              }}
+            >
+              Report
+            </li>
+          )}
+          {login_information.is_logged_in && <li onClick={logout}> Sign Out</li>}
+        </ul>
+      </div>
+      <div>
+       { isMobile()&&(<a href="/" class={styles.logo}>
+          <AppIcon />
+         </a>)}
         </div>
-      ) : (
-        !login_information.is_logging_in && (
+      <div class={styles.theme}>
+        <ThemeToggle />
+        {login_information.is_logged_in ? (
           <div
-            onClick={() =>
-              (window.location.href = loginUrl({ language: "en" }))
-            }
+            class={styles.account_header}
+            onClick={() => setshowAccountSwitcher(true)}
           >
-            <b>Log In</b>
+            <div class={styles.account_wrapper}>
+              <AccountHeader />
+            </div>
           </div>
-        )
-      )}
+        ) : (
+          !login_information.is_logging_in && (
+            <div
+              onClick={() =>
+                (window.location.href = loginUrl({ language: "en" }))
+              }
+            >
+              <b>Log In</b>
+            </div>
+          )
+        )}
       </div>
     </section>
   );
@@ -167,7 +186,7 @@ const ThemeToggle = () => {
         checked={is_light_theme()}
         onChange={toggleThemeHandler}
       />
-      {is_light_theme() ? <LightThemeIcon size={40}/>: <DarkThemeIcon  />}
+      {is_light_theme() ? <LightThemeIcon size={40} /> : <DarkThemeIcon />}
     </label>
   )
 };
