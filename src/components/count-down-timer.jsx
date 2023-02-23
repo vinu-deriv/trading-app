@@ -38,22 +38,14 @@ const CountDownTimer = (props) => {
         duration += ` ${timer().hours()}h`;
         count += 1;
       }
-      if (timer().asMinutes()) {
-        if (count !== 2) {
-          duration += ` ${timer().minutes()}m`;
-          count += 1;
-        } else {
-          return duration;
-        }
+      if (timer().asMinutes() && count !== 2) {
+        duration += ` ${timer().minutes()}m`;
+        count += 1;
       }
-      if (timer().asSeconds()) {
-        if (count !== 2) {
-          duration += ` ${timer().seconds()}s`;
-          count += 1;
-        }
-        return duration;
+      if (count !== 2) {
+        duration += ` ${timer().seconds()}s`;
+        count += 1;
       }
-      return duration;
     }
     return duration;
   };
