@@ -140,5 +140,5 @@ export const checkWhenMarketOpens = async (days_offset, target_symbol) => {
 export const getCurrentTick = (contract_info) => {
   const tick_stream = unique(contract_info.tick_stream, "epoch");
   const current_tick = tick_stream.length - 1;
-  return !current_tick || current_tick < 0 ? 0 : current_tick;
+  return current_tick <= 0 ? 0 : current_tick;
 };
