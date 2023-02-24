@@ -181,11 +181,11 @@ const Trade = () => {
               <DisplayTick symbol={selectedTradeType()?.symbol} statusValue={getStatus} />
             </section>
             <div class={styles["trading-layout-slider"]}>
-              {is_market_closed() ? (<Slider day_low={day_low()} day_high={day_high()} step_value={step_value()} ticks={market_ticks()[selectedTradeType()?.symbol]?.current} />) : (
+              {is_market_closed() ?(
                 <p class={styles["error-message"]}>
                   This market is presently closed. Try out the derived indices which are always open"
                 </p>
-              )}
+              ) :(<Slider day_low={day_low()} day_high={day_high()} step_value={step_value()} ticks={market_ticks()[selectedTradeType()?.symbol]?.current} />) }
             </div>
             <Switch fallback={"Loading trade types"}>
               <Match when={JSON.stringify(contract_config()) === "{}"}>
