@@ -1,5 +1,6 @@
 import moment from "moment";
 import { getTradeTimings } from "Stores/trade-store";
+import { unique } from "./object";
 
 export const addComma = (num, decimal_points = 2) => {
   let number = String(num || 0).replace(/,/g, "");
@@ -134,4 +135,10 @@ export const checkWhenMarketOpens = async (days_offset, target_symbol) => {
     }
     return checkWhenMarketOpens(days_offset + 1, target_symbol);
   }
+};
+
+export const getCurrentTick = (contract_info) => {
+  const tick_stream = unique(contract_info.tick_stream, "epoch");
+  const current_tick = tick_stream.length - 1;
+  return current_tick <= 0 ? 0 : current_tick;
 };

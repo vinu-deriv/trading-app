@@ -68,7 +68,6 @@ const MarketList = () => {
 
   onCleanup(() => {
     forgetAll("ticks");
-    setMarketTicks({});
   });
 
   const generateDataSet = () => {
@@ -179,9 +178,8 @@ const MarketList = () => {
       >
         <Tabs
           onTabItemClick={(tab_ref) => {
-            setMarketTicks({});
-            setActiveTab(tab_ref.index);
             fetchSelectedMarket(tab_ref);
+            setActiveTab(tab_ref.index);
           }}
           active_index={active_tab()}
           default_selected={default_tab.ref}
