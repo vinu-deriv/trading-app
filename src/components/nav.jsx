@@ -16,6 +16,8 @@ import { setshowAccountSwitcher } from "Stores/ui-store";
 import styles from "../styles/navbar.module.scss";
 import { useNavigate } from "solid-app-router";
 import { addComma } from "Utils/format-value";
+import DarkThemeIcon from "Assets/svg/action/dark-theme.svg";
+import LightThemeIcon from "Assets/svg/action/light-theme.svg";
 
 const NavBar = () => {
   const navigate = useNavigate();
@@ -75,9 +77,10 @@ const NavBar = () => {
 
   return (
     <section
-      id="app_navbar"
-      class={isDesktop() ? styles.topnav_desktop : styles.topnav_mobile}
-    >
+    id="app_navbar"
+    class={isDesktop() ? styles.topnav_desktop : styles.topnav_mobile}
+  >
+    <div>
       {isMobile() && (
         <>
           <input
@@ -88,12 +91,9 @@ const NavBar = () => {
               setChecked(!checked());
             }}
           />
-          <label class={styles.menu_button_container} for={styles.menu_toggle}>
+         { login_information.is_logged_in  &&(<label class={styles.menu_button_container} for={styles.menu_toggle}>
             <div class={styles.menu_button} />
-          </label>
-          <a href="/" class={styles.logo}>
-            <AppIcon />
-          </a>
+          </label>)}
         </>
       )}
       <ul class={styles.menu}>
@@ -114,12 +114,16 @@ const NavBar = () => {
             Report
           </li>
         )}
-        <li>
-          Theme &nbsp;
-          <ThemeToggle />
-        </li>
         {login_information.is_logged_in && <li onClick={logout}> Sign Out</li>}
       </ul>
+    </div>
+    <div>
+     { isMobile()&&(<a href="/" class={styles.logo}>
+        <AppIcon />
+       </a>)}
+      </div>
+    <div class={styles.theme}>
+      <ThemeToggle />
       {login_information.is_logged_in ? (
         <div
           class={styles.account_header}
@@ -136,11 +140,12 @@ const NavBar = () => {
               (window.location.href = loginUrl({ language: "en" }))
             }
           >
-            <b>Log In</b>
+            <b class={styles.loginText}>Log In</b>
           </div>
         )
       )}
-    </section>
+    </div>
+  </section>
   );
 };
 
@@ -162,9 +167,9 @@ const ThemeToggle = () => {
         checked={is_light_theme()}
         onChange={toggleThemeHandler}
       />
-      <span class={classNames(styles["slider"], styles["round"])} />
+      {is_light_theme() ? <LightThemeIcon size={40} /> : <DarkThemeIcon />}
     </label>
-  );
+  )
 };
 
 export default NavBar;
