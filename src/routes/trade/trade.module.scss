@@ -8,6 +8,15 @@
   margin: 10px auto;
   padding: 10px;
 }
+.trading-layout-slider {
+  color: var(--text-main);
+  display: flex;
+  flex-direction: column;
+  background-color: var(--trade-parameter-background);
+  width: 100%;
+  margin: 10px auto;
+  padding: 10px;
+}
 
 @mixin dropdown-mixin {
   color: var(--text-main);
@@ -54,7 +63,7 @@
     padding: 15px;
     width: 100%;
     border: none;
-    
+
       &:nth-child(1) {
         border-radius: 4px 0px 0px 4px;
       }
@@ -234,7 +243,7 @@
 }
 
 .container {
-  display: grid;
+  display: flex;
   padding: 0.5rem;
   box-sizing: border-box;
   margin-bottom: 1rem;
@@ -242,6 +251,18 @@
   border: 1px solid var(--button-green);
   border-radius: 5px;
   grid-template-columns: repeat(2, 1fr);
+  align-items: center;
+  &--increase {
+    border: 1px solid var(--button-green);
+  }
+
+  &--decrease {
+    border: 1px solid var(--button-red);
+  }
+
+}
+.tick-text{
+  color: var(--text-main);
 }
 
 .market {
