@@ -175,8 +175,6 @@ const Trade = () => {
               class={classNames(
                 styles.container,
                 styles[`container--${status()}`]
-                // dashboardStyles["market-value"],
-                // dashboardStyles[`market-value--${status()}`]
               )}
 
             >
