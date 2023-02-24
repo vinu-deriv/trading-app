@@ -167,7 +167,7 @@ const Trade = () => {
             }
           >
             <Show when={selectedTradeType()?.display_name}>
-              <h4>
+              <h4  class={styles["tick-text"]}>
                 <b>{selectedTradeType()?.display_name}</b>
               </h4>
             </Show>
@@ -193,6 +193,9 @@ const Trade = () => {
               </Match>
               <Match when={contract_config()}>
                 <div class={styles["select-trade"]}>
+                <h4>
+                <b>Select Trade Type:</b>
+              </h4>
                   <select
                     class={styles["trade-type-dropdown"]}
                     onChange={(event) => {
