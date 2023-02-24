@@ -77,75 +77,75 @@ const NavBar = () => {
 
   return (
     <section
-      id="app_navbar"
-      class={isDesktop() ? styles.topnav_desktop : styles.topnav_mobile}
-    >
-      <div>
-        {isMobile() && login_information.is_logged_in  &&(
-          <>
-            <input
-              id={styles.menu_toggle}
-              type="checkbox"
-              checked={checked()}
-              onClick={() => {
-                setChecked(!checked());
-              }}
-            />
-            <label class={styles.menu_button_container} for={styles.menu_toggle}>
-              <div class={styles.menu_button} />
-            </label>
-          </>
+    id="app_navbar"
+    class={isDesktop() ? styles.topnav_desktop : styles.topnav_mobile}
+  >
+    <div>
+      {isMobile() && (
+        <>
+          <input
+            id={styles.menu_toggle}
+            type="checkbox"
+            checked={checked()}
+            onClick={() => {
+              setChecked(!checked());
+            }}
+          />
+         { login_information.is_logged_in  &&(<label class={styles.menu_button_container} for={styles.menu_toggle}>
+            <div class={styles.menu_button} />
+          </label>)}
+        </>
+      )}
+      <ul class={styles.menu}>
+        {isDesktop() && (
+          <li>
+            <a href="/" class={styles.logo}>
+              <AppIcon />
+            </a>
+          </li>
         )}
-        <ul class={styles.menu}>
-          {isDesktop() && (
-            <li>
-              <a href="/" class={styles.logo}>
-                <AppIcon />
-              </a>
-            </li>
-          )}
-          {login_information.is_logged_in && (
-            <li
-              onClick={() => {
-                navigate("/reports", { replace: true });
-                setChecked(false);
-              }}
-            >
-              Report
-            </li>
-          )}
-          {login_information.is_logged_in && <li onClick={logout}> Sign Out</li>}
-        </ul>
-      </div>
-      <div>
-       { isMobile()&&(<a href="/" class={styles.logo}>
-          <AppIcon />
-         </a>)}
-        </div>
-      <div class={styles.theme}>
-        <ThemeToggle />
-        {login_information.is_logged_in ? (
-          <div
-            class={styles.account_header}
-            onClick={() => setshowAccountSwitcher(true)}
+        {login_information.is_logged_in && (
+          <li
+            onClick={() => {
+              navigate("/reports", { replace: true });
+              setChecked(false);
+            }}
           >
-            <div class={styles.account_wrapper}>
-              <AccountHeader />
-            </div>
-          </div>
-        ) : (
-          !login_information.is_logging_in && (
-            <div
-              onClick={() =>
-                (window.location.href = loginUrl({ language: "en" }))
-              }
-            >
-              <b class={styles.loginText}>Log In</b>
-            </div>
-          )
+            Report
+          </li>
         )}
+        {login_information.is_logged_in && <li onClick={logout}> Sign Out</li>}
+      </ul>
+    </div>
+    <div>
+     { isMobile()&&(<a href="/" class={styles.logo}>
+        <AppIcon />
+       </a>)}
       </div>
-    </section>
+    <div class={styles.theme}>
+      <ThemeToggle />
+      {login_information.is_logged_in ? (
+        <div
+          class={styles.account_header}
+          onClick={() => setshowAccountSwitcher(true)}
+        >
+          <div class={styles.account_wrapper}>
+            <AccountHeader />
+          </div>
+        </div>
+      ) : (
+        !login_information.is_logging_in && (
+          <div
+            onClick={() =>
+              (window.location.href = loginUrl({ language: "en" }))
+            }
+          >
+            <b class={styles.loginText}>Log In</b>
+          </div>
+        )
+      )}
+    </div>
+  </section>
   );
 };
 
