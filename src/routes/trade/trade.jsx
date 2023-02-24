@@ -93,9 +93,6 @@ const Trade = () => {
       setStepValue(ohlc.pip_size);
     }
   };
-  const getStatus = (event) => {
-    setStatus(event)
-  }
 
   const marketDataHandler = async (response) => {
     if (!response.error) {
@@ -178,7 +175,7 @@ const Trade = () => {
               )}
 
             >
-              <DisplayTick symbol={selectedTradeType()?.symbol} statusValue={getStatus} />
+              <DisplayTick symbol={selectedTradeType()?.symbol} setStatusValue={setStatus} />
             </section>
             <div class={styles["trading-layout-slider"]}>
               {is_market_closed() ?(
@@ -247,10 +244,10 @@ const DisplayTick = (props) => {
     const rateChange =
       current && previous ? ((current - previous) / previous) * 100 : 0;
     if (current < previous) {
-      props.statusValue("decrease")
+      props.setStatusValue("decrease")
       status = "decrease";
     } else if (current > previous) {
-      props.statusValue("increase")
+      props.setStatusValue("increase")
       status = "increase";
     }
     return { value: rateChange ?? 0, status };
