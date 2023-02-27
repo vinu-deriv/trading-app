@@ -75,9 +75,9 @@
 }
 
 .reset{
-  display: block;
-  border: 2px solid var(--color-grey-5);
-  color: var(--color-black);
+  border: 1px solid var(--text-main);
+  background-color: var(--trade-block-background);;
+  color: var(--text-main);
   padding: 3px;
   font-size: 10px;
   font-weight:300;

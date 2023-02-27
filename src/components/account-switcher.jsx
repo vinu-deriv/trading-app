@@ -73,8 +73,7 @@ const AccountSwitcher = () => {
       });
     }
   };
-  const resetBalance = async (event) => {
-    event.stopPropagation();
+  const resetBalance = async () => {
     let newbalance;
     const account = await JSON.parse(login_information.active_account);
     try {
