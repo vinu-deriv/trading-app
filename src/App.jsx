@@ -1,5 +1,5 @@
-import { Route, Routes, useLocation, useNavigate } from "solid-app-router";
-import { Show, createEffect, lazy } from "solid-js";
+import { Route, Routes, useLocation } from "solid-app-router";
+import { Show, createEffect, lazy, ErrorBoundary } from "solid-js";
 import {
   activeSymbols,
   banner_message,
@@ -9,13 +9,9 @@ import {
 } from "./stores";
 import { configureEndpoint, getAppId, getSocketUrl } from "./utils/config";
 import { endpoint, init, login_information } from "Stores/base-store";
-import {
-  selected_markets,
-  setBannerMessage,
-  setSelectedMarkets,
-} from "Stores/trade-store";
+import { selected_markets, setSelectedMarkets } from "Stores/trade-store";
 import { loginUrl } from "Constants/deriv-urls";
-import { AccountSwitcher } from "./components";
+import { AccountSwitcher, ErrorBoundaryComponent } from "./components";
 import BannerComponent from "./components/banner-component";
 import NavBar from "./components/nav";
 import { Portal } from "solid-js/web";
@@ -26,8 +22,6 @@ import monitorNetwork from "Utils/network-status";
 import { onMount } from "solid-js";
 import styles from "./App.module.scss";
 import { banner_category } from "./constants/banner-category";
-import { ERROR_CODE, ERROR_MESSAGE } from "Constants/error-codes";
-import { setActionButtonValues } from "Stores/ui-store";
 
 const Endpoint = lazy(() => import("Routes/endpoint"));
 const MarketList = lazy(() => import("Routes/market-list"));
@@ -38,22 +32,10 @@ function App() {
   const { network_status } = monitorNetwork();
   const isSandbox = () => /dev$/.test(endpoint().server_url);
   const location = useLocation();
-  const navigate = useNavigate();
   const pathname = location.pathname;
 
-  const onClickHandler = () => navigate("/endpoint", { replace: true });
-
   const fetchActiveSymbolsHandler = async () => {
-    try {
-      await fetchActiveSymbols();
-    } catch (error) {
-      if (error?.error?.code === ERROR_CODE.invalid_app_id) {
-        setBannerMessage(ERROR_MESSAGE.endpoint_redirect);
-        setActionButtonValues({ text: "Set AppId", action: onClickHandler });
-      } else {
-        setBannerMessage(error?.error?.message ?? ERROR_MESSAGE.general_error);
-      }
-    }
+    await fetchActiveSymbols();
   };
 
   onMount(async () => {
@@ -98,27 +80,29 @@ function App() {
         />
       </Show>
       <NavBar />
-      <section
-        class={classNames(styles.content, {
-          [styles["is-acc-switcher-open"]]: showAccountSwitcher(),
-        })}
-      >
-        <Portal>
-          {network_status.is_disconnected && (
-            <div class={styles.banner}>
-              <div class={styles.caret} />
-              <div class={styles.disconnected}>You seem to be offline.</div>
-            </div>
-          )}
-        </Portal>
-        {showAccountSwitcher() && <AccountSwitcher />}
-        <Routes>
-          <Route element={<Endpoint />} path="/endpoint" />
-          <Route path="/" element={<MarketList />} />
-          <Route path="/trade" element={<Trade />} />
-          <Route path="/reports" element={<Reports />} />
-        </Routes>
-      </section>
+      <ErrorBoundary fallback={<ErrorBoundaryComponent />}>
+        <section
+          class={classNames(styles.content, {
+            [styles["is-acc-switcher-open"]]: showAccountSwitcher(),
+          })}
+        >
+          <Portal>
+            {network_status.is_disconnected && (
+              <div class={styles.banner}>
+                <div class={styles.caret} />
+                <div class={styles.disconnected}>You seem to be offline.</div>
+              </div>
+            )}
+          </Portal>
+          {showAccountSwitcher() && <AccountSwitcher />}
+          <Routes>
+            <Route element={<Endpoint />} path="/endpoint" />
+            <Route path="/" element={<MarketList />} />
+            <Route path="/trade" element={<Trade />} />
+            <Route path="/reports" element={<Reports />} />
+          </Routes>
+        </section>
+      </ErrorBoundary>
       <footer>
         <Show when={isSandbox()} fallback={<div>Connected to Prod</div>}>
           <div>

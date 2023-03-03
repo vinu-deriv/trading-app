@@ -35,6 +35,7 @@ import styles from "Styles/accordion.module.scss";
 import throttle from "lodash.throttle";
 import { useNavigate } from "solid-app-router";
 import { setSwipeDirection } from "Stores/ui-store";
+import { errorCatcher } from "Utils/error-handler";
 
 const MarketList = () => {
   const header_config = [
@@ -93,29 +94,34 @@ const MarketList = () => {
   ];
 
   const marketDataHandler = async (response) => {
-    if (!response.error) {
-      const { quote, symbol } = response.tick;
-      const prev_value = market_ticks()[symbol]?.current ?? 0;
-      const current_value = quote;
-      setMarketTicks({
-        ...market_ticks(),
-        [symbol]: generateTickData({
-          previous: prev_value,
-          current: current_value,
-        }),
-      });
-    } else {
-      const { echo_req, error } = response;
-      if (error.code === ERROR_CODE.market_closed) {
-        const time_left = await checkWhenMarketOpens(0, echo_req.ticks);
+    try {
+      if (!response.error) {
+        const { quote, symbol } = response.tick;
+        const prev_value = market_ticks()[symbol]?.current ?? 0;
+        const current_value = quote;
         setMarketTicks({
           ...market_ticks(),
-          [echo_req.ticks]: generateTickData({
-            is_closed: true,
-            opens_at: time_left,
+          [symbol]: generateTickData({
+            previous: prev_value,
+            current: current_value,
           }),
         });
+      } else {
+        const { echo_req, error } = response;
+        if (error.code === ERROR_CODE.market_closed) {
+          const time_left = await checkWhenMarketOpens(0, echo_req.ticks);
+          setMarketTicks({
+            ...market_ticks(),
+            [echo_req.ticks]: generateTickData({
+              is_closed: true,
+              opens_at: time_left,
+            }),
+          });
+        }
+        throw new Error(error);
       }
+    } catch (error) {
+      errorCatcher(response);
     }
   };
 
@@ -151,7 +157,7 @@ const MarketList = () => {
   };
 
   const getWatchList = () => {
-    const selected_markets = activeSymbols().filter((markets) =>
+    const selected_markets = activeSymbols()?.filter((markets) =>
       watchlist().includes(markets.symbol)
     );
     setAvailableMarkets(selected_markets);
@@ -187,7 +193,7 @@ const MarketList = () => {
           <For each={setTabList(all_markets())}>
             {(tabs) => (
               <Tab label={tabs.title} id={tabs.ref}>
-                <Show when={tabs.ref === FAVOURITES && !market_data().length}>
+                <Show when={tabs.ref === FAVOURITES && !market_data()?.length}>
                   <p class={styles["add-favourites-message"]}>
                     To add to <strong>Favourites</strong>, swipe left at the
                     asset you like and hit the star.

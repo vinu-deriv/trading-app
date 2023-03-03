@@ -2,6 +2,7 @@ import { getAppId, getSocketUrl } from "Utils/config.js";
 
 import DerivAPIBasic from "@deriv/deriv-api/dist/DerivAPIBasic";
 import { login_information } from "../stores/base-store";
+import { errorCatcher } from "./error-handler";
 
 const createConnection = () =>
   new WebSocket(
@@ -11,12 +12,25 @@ const createConnection = () =>
 let connection = createConnection();
 let derivApi = new DerivAPIBasic({ connection });
 
-const authorize = (authorizeToken) => derivApi.authorize(authorizeToken);
+const authorize = (authorizeToken) =>
+  derivApi
+    .authorize(authorizeToken)
+    .then((response) => response)
+    .catch(errorCatcher);
 
-const subscribe = (request, cb) =>
-  derivApi.subscribe(request).subscribe(cb, cb);
+const subscribe = async (request, cb) => {
+  try {
+    return derivApi.subscribe(request).subscribe(cb, cb);
+  } catch (error) {
+    errorCatcher(error);
+  }
+};
 
-const sendRequest = (request) => derivApi.send(request);
+const sendRequest = (request) =>
+  derivApi
+    .send(request)
+    .then((response) => response)
+    .catch(errorCatcher);
 
 let ping_timer = null;
 
@@ -52,7 +66,11 @@ const excludeAuthorize = (type) =>
 const wait = (...responses) =>
   derivApi.expectResponse(...responses.filter(excludeAuthorize));
 
-const forgetAll = (request_type) => derivApi.forgetAll(request_type);
+const forgetAll = (request_type) =>
+  derivApi
+    .forgetAll(request_type)
+    .then((response) => response)
+    .catch(errorCatcher);
 
 export {
   authorize,
