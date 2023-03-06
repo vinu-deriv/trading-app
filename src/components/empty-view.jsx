@@ -1,4 +1,4 @@
-import styles from "../styles/empty-view.module.scss";
+import styles from "Styles/empty-view.module.scss";
 
 const EmptyView = () => {
   return (

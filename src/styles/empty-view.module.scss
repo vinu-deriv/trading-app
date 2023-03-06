@@ -9,6 +9,7 @@
     height: 100%; 
     overflow: auto; 
     position: fixed;
-    z-index: 2;
-    background-color: #fff;
+    z-index: 9999;
+    background-color: var(--section-background-1);
+    color: var(--text-main);
 }

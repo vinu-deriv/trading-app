@@ -95,55 +95,53 @@ function App() {
   });
 
   return (
-    <>
-      <div
-        class={classNames(styles.App, {
-          "theme-light": is_light_theme(),
-          "theme-dark": !is_light_theme(),
+    <div
+      class={classNames(styles.App, {
+        "theme-light": is_light_theme(),
+        "theme-dark": !is_light_theme(),
+      })}
+    >
+      <Show when={banner_message()}>
+        <BannerComponent
+          message={banner_message()}
+          category={banner_category.ERROR}
+          showCloseButton
+        />
+      </Show>
+      <NavBar />
+      <section
+        class={classNames(styles.content, {
+          [styles["is-acc-switcher-open"]]: showAccountSwitcher(),
         })}
       >
-        <Show when={banner_message()}>
-          <BannerComponent
-            message={banner_message()}
-            category={banner_category.ERROR}
-            showCloseButton
-          />
-        </Show>
-        <NavBar />
-        <section
-          class={classNames(styles.content, {
-            [styles["is-acc-switcher-open"]]: showAccountSwitcher(),
-          })}
-        >
-          <Portal>
-            {network_status.is_disconnected && (
-              <div class={styles.banner}>
-                <div class={styles.caret} />
-                <div class={styles.disconnected}>You seem to be offline.</div>
-              </div>
-            )}
-          </Portal>
-          {showAccountSwitcher() && <AccountSwitcher />}
-          <Routes>
-            <Route element={<Endpoint />} path="/endpoint" />
-            <Route path="/" element={<MarketList />} />
-            <Route path="/trade" element={<Trade />} />
-            <Route path="/reports" element={<Reports />} />
-          </Routes>
-        </section>
-        <footer>
-          <Show when={isSandbox()} fallback={<div>Connected to Prod</div>}>
-            <div>
-              The server <a href="/endpoint">endpoint</a> is: &nbsp;
-              <span>{endpoint().server_url}</span>
+        <Portal>
+          {network_status.is_disconnected && (
+            <div class={styles.banner}>
+              <div class={styles.caret} />
+              <div class={styles.disconnected}>You seem to be offline.</div>
             </div>
-          </Show>
-        </footer>
-      </div>
+          )}
+        </Portal>
+        {showAccountSwitcher() && <AccountSwitcher />}
+        <Routes>
+          <Route element={<Endpoint />} path="/endpoint" />
+          <Route path="/" element={<MarketList />} />
+          <Route path="/trade" element={<Trade />} />
+          <Route path="/reports" element={<Reports />} />
+        </Routes>
+      </section>
+      <footer>
+        <Show when={isSandbox()} fallback={<div>Connected to Prod</div>}>
+          <div>
+            The server <a href="/endpoint">endpoint</a> is: &nbsp;
+            <span>{endpoint().server_url}</span>
+          </div>
+        </Show>
+      </footer>
       <Show when={!isViewSupported()}>
         <EmptyView />
       </Show>
-    </>
+    </div>
   );
 }
 
