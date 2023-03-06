@@ -1,5 +1,5 @@
 import { Route, Routes, useLocation, useNavigate } from "solid-app-router";
-import { Show, createEffect, lazy } from "solid-js";
+import { Show, createEffect, lazy, createSignal, onCleanup } from "solid-js";
 import {
   activeSymbols,
   banner_message,
@@ -15,7 +15,7 @@ import {
   setSelectedMarkets,
 } from "Stores/trade-store";
 import { loginUrl } from "Constants/deriv-urls";
-import { AccountSwitcher } from "./components";
+import { AccountSwitcher, EmptyView } from "./components";
 import BannerComponent from "./components/banner-component";
 import NavBar from "./components/nav";
 import { Portal } from "solid-js/web";
@@ -40,6 +40,11 @@ function App() {
   const location = useLocation();
   const navigate = useNavigate();
   const pathname = location.pathname;
+  const [isViewSupported, setIsViewSupported] = createSignal(true);
+
+  const handleWindowResize = () => {
+    setIsViewSupported(window.innerWidth < 767);
+  };
 
   const onClickHandler = () => navigate("/endpoint", { replace: true });
 
@@ -57,6 +62,8 @@ function App() {
   };
 
   onMount(async () => {
+    handleWindowResize();
+    window.addEventListener("resize", handleWindowResize);
     configureEndpoint(getAppId(), getSocketUrl());
     await fetchActiveSymbolsHandler();
     const map_market = mapMarket(activeSymbols());
@@ -83,51 +90,60 @@ function App() {
     });
   });
 
+  onCleanup(() => {
+    window.removeEventListener("resize", handleWindowResize);
+  });
+
   return (
-    <div
-      class={classNames(styles.App, {
-        "theme-light": is_light_theme(),
-        "theme-dark": !is_light_theme(),
-      })}
-    >
-      <Show when={banner_message()}>
-        <BannerComponent
-          message={banner_message()}
-          category={banner_category.ERROR}
-          showCloseButton
-        />
-      </Show>
-      <NavBar />
-      <section
-        class={classNames(styles.content, {
-          [styles["is-acc-switcher-open"]]: showAccountSwitcher(),
+    <>
+      <div
+        class={classNames(styles.App, {
+          "theme-light": is_light_theme(),
+          "theme-dark": !is_light_theme(),
         })}
       >
-        <Portal>
-          {network_status.is_disconnected && (
-            <div class={styles.banner}>
-              <div class={styles.caret} />
-              <div class={styles.disconnected}>You seem to be offline.</div>
-            </div>
-          )}
-        </Portal>
-        {showAccountSwitcher() && <AccountSwitcher />}
-        <Routes>
-          <Route element={<Endpoint />} path="/endpoint" />
-          <Route path="/" element={<MarketList />} />
-          <Route path="/trade" element={<Trade />} />
-          <Route path="/reports" element={<Reports />} />
-        </Routes>
-      </section>
-      <footer>
-        <Show when={isSandbox()} fallback={<div>Connected to Prod</div>}>
-          <div>
-            The server <a href="/endpoint">endpoint</a> is: &nbsp;
-            <span>{endpoint().server_url}</span>
-          </div>
+        <Show when={banner_message()}>
+          <BannerComponent
+            message={banner_message()}
+            category={banner_category.ERROR}
+            showCloseButton
+          />
         </Show>
-      </footer>
-    </div>
+        <NavBar />
+        <section
+          class={classNames(styles.content, {
+            [styles["is-acc-switcher-open"]]: showAccountSwitcher(),
+          })}
+        >
+          <Portal>
+            {network_status.is_disconnected && (
+              <div class={styles.banner}>
+                <div class={styles.caret} />
+                <div class={styles.disconnected}>You seem to be offline.</div>
+              </div>
+            )}
+          </Portal>
+          {showAccountSwitcher() && <AccountSwitcher />}
+          <Routes>
+            <Route element={<Endpoint />} path="/endpoint" />
+            <Route path="/" element={<MarketList />} />
+            <Route path="/trade" element={<Trade />} />
+            <Route path="/reports" element={<Reports />} />
+          </Routes>
+        </section>
+        <footer>
+          <Show when={isSandbox()} fallback={<div>Connected to Prod</div>}>
+            <div>
+              The server <a href="/endpoint">endpoint</a> is: &nbsp;
+              <span>{endpoint().server_url}</span>
+            </div>
+          </Show>
+        </footer>
+      </div>
+      <Show when={!isViewSupported()}>
+        <EmptyView />
+      </Show>
+    </>
   );
 }
 
