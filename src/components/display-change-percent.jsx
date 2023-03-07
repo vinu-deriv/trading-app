@@ -27,6 +27,8 @@ const DisplayChangePercent = (props) => {
         setDifference({ value: rate_change, status: "decrease" });
       } else if (current > previous) {
         setDifference({ value: rate_change, status: "increase" });
+      } else {
+        setDifference({ value: rate_change, status: "same" });
       }
     }
   });
