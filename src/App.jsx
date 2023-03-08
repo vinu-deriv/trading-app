@@ -1,5 +1,5 @@
 import { Route, Routes, useLocation, useNavigate } from "solid-app-router";
-import { Show, createEffect, lazy } from "solid-js";
+import { Show, createEffect, lazy, createSignal, onCleanup } from "solid-js";
 import {
   activeSymbols,
   banner_message,
@@ -15,7 +15,7 @@ import {
   setSelectedMarkets,
 } from "Stores/trade-store";
 import { loginUrl } from "Constants/deriv-urls";
-import { AccountSwitcher } from "./components";
+import { AccountSwitcher, EmptyView } from "./components";
 import BannerComponent from "./components/banner-component";
 import NavBar from "./components/nav";
 import { Portal } from "solid-js/web";
@@ -40,6 +40,11 @@ function App() {
   const location = useLocation();
   const navigate = useNavigate();
   const pathname = location.pathname;
+  const [isViewSupported, setIsViewSupported] = createSignal(true);
+
+  const handleWindowResize = () => {
+    setIsViewSupported(window.innerWidth < 767);
+  };
 
   const onClickHandler = () => navigate("/endpoint", { replace: true });
 
@@ -57,6 +62,8 @@ function App() {
   };
 
   onMount(async () => {
+    handleWindowResize();
+    window.addEventListener("resize", handleWindowResize);
     configureEndpoint(getAppId(), getSocketUrl());
     await fetchActiveSymbolsHandler();
     const map_market = mapMarket(activeSymbols());
@@ -81,6 +88,10 @@ function App() {
         );
       }
     });
+  });
+
+  onCleanup(() => {
+    window.removeEventListener("resize", handleWindowResize);
   });
 
   return (
@@ -127,6 +138,9 @@ function App() {
           </div>
         </Show>
       </footer>
+      <Show when={!isViewSupported()}>
+        <EmptyView />
+      </Show>
     </div>
   );
 }
