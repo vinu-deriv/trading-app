@@ -10,7 +10,7 @@
   align-items: center;
   justify-content: center;
 
-  &__container{
+  &__container {
     background-color: var(--section-background-1);
     opacity: 1;
     padding: 0.2rem;
@@ -23,71 +23,70 @@
     position: relative;
     height: 65%;
     margin: 1rem;
-    
-    &:hover{
-        box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+
+    &:hover {
+      box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+    }
+    .dc-modal-header {
+      text-align: center;
+      color: var(--text-main);
+      display: flex;
+      position: relative;
+      align-items: center;
+      justify-content: center;
+    }
+    .account_list {
+      position: relative;
+      padding: 0.3rem 1rem;
+      list-style-type: none;
+      transition: 0.2s;
+      color: var(--text-main);
+
+      .selected {
+        background-color: var(--card-highlight);
+        .account_info {
+          div:first-child {
+            font-weight: bold;
+          }
+        }
+
+        .account_balance {
+          font-weight: bold;
+        }
       }
-    .dc-modal-header{
-        text-align: center;
-        color:var(--text-main);
+      .account {
+        font-size: var(--text-size-s);
+        padding: 0.5rem;
         display: flex;
-        position: relative;
         align-items: center;
-        justify-content: center;
-    }
-    .account_list{
-            position: relative;
-            padding: 0.3rem 1rem;
-            list-style-type: none;
-            transition: 0.2s;
-            color:var(--text-main);
-            
-            .selected{
-              background-color: var(--card-highlight);
-              .account_info{
-                div:first-child {
-                  font-weight: bold;
-                }
-              }
+        flex-direction: row;
+        border-radius: 4px;
+        margin-bottom: 0.2rem;
+        cursor: pointer;
 
-              .account_balance{
-                font-weight: bold;
-              }
-            }
-            .account{
-                font-size: var(--text-size-s);
-                padding: 0.5rem;
-                display: flex;
-                align-items: center;
-                flex-direction: row;
-                border-radius: 4px;
-                margin-bottom: 0.2rem;
-                cursor: pointer;
-                
-                .account_info{
-                  display: flex;
-                  flex-direction: column;
-                }
-                .account_balance{
-                  margin-left: auto;
-                  text-align: right;
-                }
+        .account_info {
+          display: flex;
+          flex-direction: column;
+        }
+        .account_balance {
+          margin-left: auto;
+          text-align: right;
+        }
 
-                &:hover {
-                   background-color: var(--card-highlight);
-                }
-          
-                svg {
-                  margin-right: 5px;
-                }
-            }
+        &:hover {
+          background-color: var(--card-highlight);
+        }
 
+        svg {
+          margin-right: 5px;
+        }
+      }
     }
-    .separator{
-        border-top: 2px solid var(--border-1);
+    .separator {
+      border-top: 2px solid var(--border-1);
     }
-    .separator-light{
-        border-top: 0.5px solid grey;
+    .separator-light {
+      border-top: 0.5px solid grey;
     }
     .close {
       position: absolute;
@@ -102,7 +101,8 @@
     .close:hover {
       opacity: 1;
     }
-    .close:before, .close:after {
+    .close:before,
+    .close:after {
       position: absolute;
       content: " ";
       height: 0.1rem;
