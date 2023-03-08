@@ -118,7 +118,6 @@ const MarketList = () => {
             }),
           });
         }
-        throw new Error(error);
       }
     } catch (error) {
       errorCatcher(response);

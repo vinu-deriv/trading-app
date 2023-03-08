@@ -18,13 +18,8 @@ const authorize = (authorizeToken) =>
     .then((response) => response)
     .catch(errorCatcher);
 
-const subscribe = async (request, cb) => {
-  try {
-    return derivApi.subscribe(request).subscribe(cb, cb);
-  } catch (error) {
-    errorCatcher(error);
-  }
-};
+const subscribe = (request, cb) =>
+  derivApi.subscribe(request).subscribe(cb, cb);
 
 const sendRequest = (request) =>
   derivApi
