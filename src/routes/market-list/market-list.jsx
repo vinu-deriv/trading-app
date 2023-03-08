@@ -95,9 +95,6 @@ const MarketList = () => {
   ];
 
   const marketDataHandler = async (response) => {
-    // if (response.tick.symbol === "cryBTCUSD") {
-    // console.log("cryBTCUSD: ", market_ticks()["cryBTCUSD"]);
-    // }
     if (!response.error) {
       const { quote, symbol } = response.tick;
       const prev_value = market_ticks()[symbol]?.current ?? 0;
@@ -126,11 +123,6 @@ const MarketList = () => {
 
   const getMarketData = async (symbol_list) => {
     try {
-      // if (Object.keys(market_ticks()).length) {
-      //   await forgetAll("ticks");
-      //   await wait("forget_all");
-      // }
-
       setMarketData(generateDataSet());
       const new_set = symbol_list.filter(
         (symbol) => !already_subscribed().includes(symbol)
@@ -156,7 +148,6 @@ const MarketList = () => {
       getWatchList();
     } else {
       getAvailableMarkets(id);
-      // console.log("available_markets: ", available_markets());
       const symbol_list = fetchAvailableMarketSymbols(id);
       getMarketData(symbol_list);
     }

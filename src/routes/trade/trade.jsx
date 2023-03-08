@@ -82,10 +82,6 @@ const Trade = () => {
       getOHLC
     );
   };
-  onCleanup(() => {
-    // forgetAll("ticks");
-    // setMarketTicks({});
-  });
 
   const getOHLC = (resp) => {
     const { msg_type, ohlc } = resp;
