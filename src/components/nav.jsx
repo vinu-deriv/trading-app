@@ -1,4 +1,4 @@
-import { Show, createEffect, createSignal, onMount, For } from "solid-js";
+import { For, Show, createEffect, createSignal, onMount } from "solid-js";
 import {
   balance_of_all_accounts,
   currencies_config,
@@ -8,15 +8,16 @@ import {
 } from "Stores/base-store";
 import { isDesktop, isMobile } from "Utils/responsive";
 import { is_light_theme, setIsLightTheme } from "../stores";
-import { SkeletonLoader } from "../components";
+
 import AppIcon from "Assets/svg/app-logo/dtrader.svg";
+import DarkThemeIcon from "Assets/svg/action/dark-theme.svg";
+import LightThemeIcon from "Assets/svg/action/light-theme.svg";
+import { SkeletonLoader } from "../components";
+import { addComma } from "Utils/format-value";
 import { loginUrl } from "Constants/deriv-urls";
 import { setshowAccountSwitcher } from "Stores/ui-store";
 import styles from "../styles/navbar.module.scss";
 import { useNavigate } from "solid-app-router";
-import { addComma } from "Utils/format-value";
-import DarkThemeIcon from "Assets/svg/action/dark-theme.svg";
-import LightThemeIcon from "Assets/svg/action/light-theme.svg";
 
 const NavBar = () => {
   const navigate = useNavigate();

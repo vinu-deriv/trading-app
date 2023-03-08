@@ -12,13 +12,13 @@
   height: 100px;
 }
 
-.loginText{
+.loginText {
   color: var(--text-main);
 }
 .topnav_mobile {
   display: grid;
-  grid-template-columns: auto 1fr auto;;
-  gap:0.8rem;
+  grid-template-columns: auto 1fr auto;
+  gap: 0.8rem;
   align-items: center;
   justify-content: space-between;
   background: var(--section-background-1);
@@ -186,8 +186,8 @@
   border-bottom: 1px solid var(--border-1);
 
   .account_wrapper svg {
-      vertical-align: middle;
-      margin-left: 0.5rem;
+    vertical-align: middle;
+    margin-left: 0.5rem;
   }
 
   button {
@@ -214,7 +214,6 @@
     &:hover {
       font-weight: bold;
     }
-
   }
 
   .account_info {
@@ -256,7 +255,7 @@
   height: 0;
 }
 
-.theme{
+.theme {
   display: flex;
   justify-content: space-around;
   align-items: center;
