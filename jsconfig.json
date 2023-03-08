@@ -11,8 +11,8 @@
       "Routes/*": ["./routes/*"],
       "Stores/*": ["./stores/*"],
       "Styles/*": ["./styles/*"],
-      "Utils/*": ["./utils/*"],
-    },
+      "Utils/*": ["./utils/*"]
+    }
   },
   "include": ["src"],
   "exclude": ["node_modules"]
