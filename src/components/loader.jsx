@@ -20,7 +20,12 @@ const Loader = (props) => (
       </div>
     </Match>
     <Match when={props.type === "2"}>
-      <div class={classNames(styles["loader-2"], props.class)} />
+      <div class={styles.lds_ellipsis}>
+        <div />
+        <div />
+        <div />
+        <div />
+      </div>
     </Match>
   </Switch>
 );
