@@ -1,5 +1,12 @@
 import { Route, Routes, useLocation } from "solid-app-router";
-import { Show, createEffect, lazy, createSignal, onCleanup, ErrorBoundary } from "solid-js";
+import {
+  Show,
+  createEffect,
+  lazy,
+  createSignal,
+  onCleanup,
+  ErrorBoundary,
+} from "solid-js";
 import {
   activeSymbols,
   banner_message,
@@ -11,7 +18,11 @@ import { configureEndpoint, getAppId, getSocketUrl } from "./utils/config";
 import { endpoint, init, login_information } from "Stores/base-store";
 import { selected_markets, setSelectedMarkets } from "Stores/trade-store";
 import { loginUrl } from "Constants/deriv-urls";
-import { AccountSwitcher, EmptyView, ErrorBoundaryComponent } from "./components";
+import {
+  AccountSwitcher,
+  EmptyView,
+  ErrorBoundaryComponent,
+} from "./components";
 import BannerComponent from "./components/banner-component";
 import NavBar from "./components/nav";
 import { Portal } from "solid-js/web";
