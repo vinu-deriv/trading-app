@@ -1,5 +1,5 @@
 import { Route, Routes, useLocation } from "solid-app-router";
-import { Show, createEffect, lazy, ErrorBoundary } from "solid-js";
+import { Show, createEffect, lazy, createSignal, onCleanup, ErrorBoundary } from "solid-js";
 import {
   activeSymbols,
   banner_message,
@@ -11,7 +11,7 @@ import { configureEndpoint, getAppId, getSocketUrl } from "./utils/config";
 import { endpoint, init, login_information } from "Stores/base-store";
 import { selected_markets, setSelectedMarkets } from "Stores/trade-store";
 import { loginUrl } from "Constants/deriv-urls";
-import { AccountSwitcher, ErrorBoundaryComponent } from "./components";
+import { AccountSwitcher, EmptyView, ErrorBoundaryComponent } from "./components";
 import BannerComponent from "./components/banner-component";
 import NavBar from "./components/nav";
 import { Portal } from "solid-js/web";
@@ -33,12 +33,19 @@ function App() {
   const isSandbox = () => /dev$/.test(endpoint().server_url);
   const location = useLocation();
   const pathname = location.pathname;
+  const [isViewSupported, setIsViewSupported] = createSignal(true);
+
+  const handleWindowResize = () => {
+    setIsViewSupported(window.innerWidth < 767);
+  };
 
   const fetchActiveSymbolsHandler = async () => {
     await fetchActiveSymbols();
   };
 
   onMount(async () => {
+    handleWindowResize();
+    window.addEventListener("resize", handleWindowResize);
     configureEndpoint(getAppId(), getSocketUrl());
     await fetchActiveSymbolsHandler();
     const map_market = mapMarket(activeSymbols());
@@ -63,6 +70,10 @@ function App() {
         );
       }
     });
+  });
+
+  onCleanup(() => {
+    window.removeEventListener("resize", handleWindowResize);
   });
 
   return (
@@ -111,6 +122,9 @@ function App() {
           </div>
         </Show>
       </footer>
+      <Show when={!isViewSupported()}>
+        <EmptyView />
+      </Show>
     </div>
   );
 }

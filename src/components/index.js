@@ -16,6 +16,7 @@ import Slider from "./tick-slider";
 import CountDownTimer from "./count-down-timer";
 import SkeletonLoader from "./skeleton-loader";
 import ErrorBoundaryComponent from "./error-boundary-component";
+import EmptyView from "./empty-view";
 
 export {
   NavBar,
@@ -37,4 +38,5 @@ export {
   CountDownTimer,
   SkeletonLoader,
   ErrorBoundaryComponent,
+  EmptyView,
 };
