@@ -1,11 +1,15 @@
-import classNames from "classnames";
 import { Show, onCleanup } from "solid-js";
-import { action_button_values, setActionButtonValues } from "Stores/ui-store";
+import {
+  action_button_values,
+  is_mobile_view,
+  setActionButtonValues,
+} from "Stores/ui-store";
+
 import { Button } from ".";
 import { banner_category } from "../constants/banner-category";
+import classNames from "classnames";
 import { setBannerMessage } from "../stores";
 import styles from "../styles/banner-component.module.scss";
-import { isDesktop } from "../utils/responsive";
 
 const OverlayWrapper = ({ condition, wrapper, children }) =>
   condition ? wrapper(children) : children;
@@ -25,7 +29,7 @@ const BannerComponent = (props) => {
   return (
     <Show when={props.message}>
       <OverlayWrapper
-        condition={isDesktop()}
+        condition={!is_mobile_view()}
         wrapper={(children) => (
           <div class={styles["popup__div"]}>{children}</div>
         )}
