@@ -1,9 +1,6 @@
-import { setSwipeDirection } from "../stores/ui-store";
+import { setSwipeDirection } from "Stores/ui-store";
 
-export const MAX_MOBILE_WIDTH = 768;
-
-export const isMobile = () => window.innerWidth <= MAX_MOBILE_WIDTH;
-export const isDesktop = () => window.innerWidth > MAX_MOBILE_WIDTH;
+export const MAX_MOBILE_WIDTH = 767;
 
 export const detectTouch = (touchArea) => {
   // Initial mouse X and Y positions are 0

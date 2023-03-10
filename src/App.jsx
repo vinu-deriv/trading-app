@@ -1,33 +1,36 @@
+import { AccountSwitcher, EmptyView } from "Components";
+import { ERROR_CODE, ERROR_MESSAGE } from "Constants/error-codes";
 import { Route, Routes, useLocation, useNavigate } from "solid-app-router";
-import { Show, createEffect, lazy, createSignal, onCleanup } from "solid-js";
+import { Show, createEffect, createSignal, lazy, onCleanup } from "solid-js";
 import {
   activeSymbols,
   banner_message,
   fetchActiveSymbols,
   is_light_theme,
+  setIsMobileView,
   showAccountSwitcher,
-} from "./stores";
-import { configureEndpoint, getAppId, getSocketUrl } from "./utils/config";
+} from "Stores";
+import { configureEndpoint, getAppId, getSocketUrl } from "Utils/config";
 import { endpoint, init, login_information } from "Stores/base-store";
 import {
   selected_markets,
   setBannerMessage,
   setSelectedMarkets,
 } from "Stores/trade-store";
-import { loginUrl } from "Constants/deriv-urls";
-import { AccountSwitcher, EmptyView } from "./components";
+
 import BannerComponent from "./components/banner-component";
+import { MAX_MOBILE_WIDTH } from "Utils/responsive";
 import NavBar from "./components/nav";
 import { Portal } from "solid-js/web";
+import { banner_category } from "./constants/banner-category";
 import classNames from "classnames";
-import { getFavourites } from "./utils/map-markets";
-import { mapMarket } from "./utils/map-markets";
+import { getFavourites } from "Utils/map-markets";
+import { loginUrl } from "Constants/deriv-urls";
+import { mapMarket } from "Utils/map-markets";
 import monitorNetwork from "Utils/network-status";
 import { onMount } from "solid-js";
-import styles from "./App.module.scss";
-import { banner_category } from "./constants/banner-category";
-import { ERROR_CODE, ERROR_MESSAGE } from "Constants/error-codes";
 import { setActionButtonValues } from "Stores/ui-store";
+import styles from "./App.module.scss";
 
 const Endpoint = lazy(() => import("Routes/endpoint"));
 const MarketList = lazy(() => import("Routes/market-list"));
@@ -43,7 +46,8 @@ function App() {
   const [isViewSupported, setIsViewSupported] = createSignal(true);
 
   const handleWindowResize = () => {
-    setIsViewSupported(window.innerWidth < 767);
+    setIsViewSupported(window.innerWidth < MAX_MOBILE_WIDTH);
+    setIsMobileView(isViewSupported());
   };
 
   const onClickHandler = () => navigate("/endpoint", { replace: true });
@@ -64,6 +68,12 @@ function App() {
   onMount(async () => {
     handleWindowResize();
     window.addEventListener("resize", handleWindowResize);
+    // Remove lastpass iframe that prevents users from interacting with app
+    const lastpass_iframe = document.querySelector(
+      '[data-lastpass-iframe="true"]'
+    );
+    if (lastpass_iframe) lastpass_iframe.remove();
+
     configureEndpoint(getAppId(), getSocketUrl());
     await fetchActiveSymbolsHandler();
     const map_market = mapMarket(activeSymbols());
