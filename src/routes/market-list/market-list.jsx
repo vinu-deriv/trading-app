@@ -6,6 +6,7 @@ import {
   Tab,
   Tabs,
 } from "Components";
+import { ERROR_CODE, ERROR_MESSAGE } from "Constants/error-codes";
 import { FAVOURITES, MARKET_TYPES } from "Constants/trade-config";
 import {
   For,
@@ -15,7 +16,6 @@ import {
   onCleanup,
   onMount,
 } from "solid-js";
-import classNames from "classnames";
 import {
   activeSymbols,
   fetchMarketTick,
@@ -24,17 +24,18 @@ import {
   setMarketTicks,
   setSelectedTradeType,
 } from "Stores";
-import { generateTickData, checkWhenMarketOpens } from "Utils/format-value";
-import { forgetAll, wait } from "Utils/socket-base";
-import { ERROR_CODE, ERROR_MESSAGE } from "Constants/error-codes";
+import { checkWhenMarketOpens, generateTickData } from "Utils/format-value";
+
 import StarIcon from "Assets/svg/action/star.svg";
+import classNames from "classnames";
+import { forgetAll } from "Utils/socket-base";
 import { getFavourites } from "Utils/map-markets";
 import { segregateMarkets } from "Utils/map-markets";
+import { setSwipeDirection } from "Stores/ui-store";
 import shared from "Styles/shared.module.scss";
 import styles from "Styles/accordion.module.scss";
 import throttle from "lodash.throttle";
 import { useNavigate } from "solid-app-router";
-import { setSwipeDirection } from "Stores/ui-store";
 import { errorCatcher } from "Utils/error-handler";
 
 const MarketList = () => {
@@ -54,6 +55,7 @@ const MarketList = () => {
   const [market_data, setMarketData] = createSignal(null);
   const [active_tab, setActiveTab] = createSignal(0);
   const [watchlist, setWatchlist] = createSignal([]);
+  const [already_subscribed, setAlreadySubscribed] = createSignal([]);
 
   const navigate = useNavigate();
 
@@ -126,16 +128,17 @@ const MarketList = () => {
 
   const getMarketData = async (symbol_list) => {
     try {
-      if (Object.keys(market_ticks()).length) {
-        await forgetAll("ticks");
-        await wait("forget_all");
-      }
-
       setMarketData(generateDataSet());
-      symbol_list.forEach(
-        async (symbol) =>
-          await fetchMarketTick(symbol, throttle(marketDataHandler, 500))
+      const new_set = symbol_list.filter(
+        (symbol) => !already_subscribed().includes(symbol)
       );
+      if (new_set.length) {
+        setAlreadySubscribed([...already_subscribed(), ...new_set]);
+        new_set.forEach(
+          async (symbol) =>
+            await fetchMarketTick(symbol, throttle(marketDataHandler, 500))
+        );
+      }
     } catch (error) {
       setBannerMessage(error?.error?.message ?? ERROR_MESSAGE.general_error);
     }

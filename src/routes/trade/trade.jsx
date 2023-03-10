@@ -1,44 +1,45 @@
+import { ERROR_CODE, ERROR_MESSAGE } from "Constants/error-codes";
 import {
   For,
   Match,
   Show,
   Switch,
-  onCleanup,
   createEffect,
   createSignal,
+  onCleanup,
   onMount,
 } from "solid-js";
-import { ERROR_CODE, ERROR_MESSAGE } from "Constants/error-codes";
-import { Loader } from "Components";
 import {
+  calculateTimeLeft,
+  checkWhenMarketOpens,
+  generateTickData,
+} from "Utils/format-value";
+import {
+  fetchMarketTick,
   is_loading,
   selectedTradeType,
   setSelectedTradeType,
   setTradeTypes,
-  fetchMarketTick,
 } from "Stores";
+import {
+  market_ticks,
+  setBannerMessage,
+  setMarketTicks,
+} from "Stores/trade-store";
+
 import { ContractType } from "Utils/contract-type";
-import throttle from "lodash.throttle";
-import { Slider } from "Components";
+import { Loader } from "Components";
 import OptionsTrade from "./options-trade";
+import { Slider } from "Components";
 import classNames from "classnames";
 import dashboardStyles from "Styles/watchlist.module.scss";
 import { getContractTypesConfig } from "Constants/trade-config";
 import { login_information } from "Stores/base-store";
 import shared from "Styles/shared.module.scss";
 import styles from "./trade.module.scss";
-import { forgetAll, wait } from "Utils/socket-base";
 import { subscribe } from "Utils/socket-base";
-import {
-  market_ticks,
-  setBannerMessage,
-  setMarketTicks,
-} from "Stores/trade-store";
-import {
-  generateTickData,
-  checkWhenMarketOpens,
-  calculateTimeLeft,
-} from "Utils/format-value";
+import throttle from "lodash.throttle";
+import { wait } from "Utils/socket-base";
 
 const Trade = () => {
   const [durations_list, setDurationsList] = createSignal([]);
@@ -81,10 +82,7 @@ const Trade = () => {
       getOHLC
     );
   };
-  onCleanup(() => {
-    forgetAll("ticks");
-    setMarketTicks({});
-  });
+
   const getOHLC = (resp) => {
     const { msg_type, ohlc } = resp;
     if (msg_type === "ohlc") {

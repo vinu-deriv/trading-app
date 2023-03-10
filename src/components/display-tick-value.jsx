@@ -1,11 +1,11 @@
 import { Match, Show, Switch, createEffect, createSignal } from "solid-js";
 
+import { CountDownTimer } from "Components";
 import Loader from "./loader";
 import classNames from "classnames";
 import { market_ticks } from "../stores";
 import shared from "../styles/shared.module.scss";
 import styles from "../styles/watchlist.module.scss";
-import { CountDownTimer } from "Components";
 
 const DisplayTickValue = (props) => {
   const [difference, setDifference] = createSignal({ value: 0 });
@@ -31,6 +31,8 @@ const DisplayTickValue = (props) => {
           setDifference({ value: rate_change, status: "decrease" });
         } else if (current > previous) {
           setDifference({ value: rate_change, status: "increase" });
+        } else {
+          setDifference({ value: rate_change, status: "same" });
         }
       }
     }

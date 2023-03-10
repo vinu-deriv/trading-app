@@ -6,8 +6,7 @@ import {
   login_information,
   logout,
 } from "Stores/base-store";
-import { isDesktop, isMobile } from "Utils/responsive";
-import { is_light_theme, setIsLightTheme } from "../stores";
+import { is_light_theme, is_mobile_view, setIsLightTheme } from "Stores";
 
 import AppIcon from "Assets/svg/app-logo/dtrader.svg";
 import DarkThemeIcon from "Assets/svg/action/dark-theme.svg";
@@ -16,7 +15,7 @@ import { SkeletonLoader } from "../components";
 import { addComma } from "Utils/format-value";
 import { loginUrl } from "Constants/deriv-urls";
 import { setshowAccountSwitcher } from "Stores/ui-store";
-import styles from "../styles/navbar.module.scss";
+import styles from "Styles/navbar.module.scss";
 import { useNavigate } from "solid-app-router";
 
 const NavBar = () => {
@@ -78,10 +77,10 @@ const NavBar = () => {
   return (
     <section
       id="app_navbar"
-      class={isDesktop() ? styles.topnav_desktop : styles.topnav_mobile}
+      class={!is_mobile_view() ? styles.topnav_desktop : styles.topnav_mobile}
     >
       <div>
-        {isMobile() && (
+        {is_mobile_view() && (
           <>
             <input
               id={styles.menu_toggle}
@@ -102,7 +101,7 @@ const NavBar = () => {
           </>
         )}
         <ul class={styles.menu}>
-          {isDesktop() && (
+          {!is_mobile_view() && (
             <li>
               <a href="/" class={styles.logo}>
                 <AppIcon />
@@ -125,7 +124,7 @@ const NavBar = () => {
         </ul>
       </div>
       <div>
-        {isMobile() && (
+        {is_mobile_view() && (
           <a href="/" class={styles.logo}>
             <AppIcon />
           </a>
