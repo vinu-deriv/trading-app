@@ -68,6 +68,12 @@
 .indicator_container {
   display: flex;
   justify-content: space-between;
+  align-items: center;
+}
+
+.indicator_trend_container {
+  display: flex;
+  align-items: center;
 }
 
 .indicator_text {

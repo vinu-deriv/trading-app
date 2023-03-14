@@ -62,14 +62,14 @@ const Slider = (props) => {
         </div>
       </div>
       <div class={styles.indicator_container}>
-        <div>
+        <div class={styles.indicator_trend_container}>
           <div class={styles.arrow_down} />
           <output class={styles.indicator_text}>{props.day_low}</output>
         </div>
         <output class={styles.indicator_text}>
           {day_mid().toFixed(props.step_value)}
         </output>
-        <div>
+        <div class={styles.indicator_trend_container}>
           <output class={styles.indicator_text}>{props.day_high}</output>
           <div class={styles.arrow_up} />
         </div>
