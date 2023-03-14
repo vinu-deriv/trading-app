@@ -182,7 +182,7 @@ const ExpiryTimer = (props) => {
   const contract_info = () => open_contract_info()[props.contract_id];
 
   const expiry_time = () => {
-    if (contract_info().tick_count) {
+    if (contract_info()?.tick_count) {
       return `${
         contract_info().tick_count - getCurrentTick(contract_info())
       } ticks`;
