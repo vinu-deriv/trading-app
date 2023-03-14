@@ -11,8 +11,10 @@
 .trading-layout-slider {
   color: var(--text-main);
   display: flex;
+  gap: 8px;
   flex-direction: column;
   background-color: var(--trade-parameter-background);
+  border-radius: 4px;
   width: 100%;
   margin: 10px auto;
   padding: 10px;

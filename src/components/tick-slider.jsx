@@ -1,64 +1,80 @@
-import Styles from "../styles/slider.module.scss";
+import styles from "../styles/slider.module.scss";
 import { createEffect, createSignal } from "solid-js";
+import classNames from "classnames";
 
 const Slider = (props) => {
-  const [day_mid, setDayMid] = createSignal("");
-  const [rotate, setRotate] = createSignal("rotate(180deg)");
+  const [day_mid, setDayMid] = createSignal(0);
   const [data, setData] = createSignal({ left: 0, right: 0 });
 
   const getData = () => {
-    const value = props.ticks;
-    if (value < day_mid()) {
-      setData({ left: parseFloat(value), right: 0 });
-      setRotate("rotate(0deg)");
-    } else if (value > day_mid()) {
-      setData({ left: 0, right: parseFloat(value) });
-      setRotate("rotate(180deg)");
+    const tick = props.ticks;
+    let [bearish, bullish] = [0, 0];
+    if (tick < day_mid()) {
+      bearish = ((day_mid() - tick) / (day_mid() - props.day_low)) * 100;
+    } else if (tick > day_mid()) {
+      bullish = ((tick - day_mid()) / (props.day_high - day_mid())) * 100;
     }
+    setData({ left: bearish, right: bullish });
   };
 
   createEffect(() => {
     const mid_value = (props.day_low + props.day_high) / 2;
-    setDayMid(mid_value.toFixed(props.step_value));
+    setDayMid(mid_value);
     getData();
   });
 
   return (
-    <div>
-      <span class={Styles.span}>Daily range</span>
-      <div>
-        <input
-          type="range"
-          id="input-left"
-          class={Styles.slider1}
-          min={props.day_low}
-          max={day_mid()}
-          value={data().left}
-          step={1 / Math.pow(10, props.step_value)}
-          style={{ transform: rotate() }}
-        />
-        <input
-          type="range"
-          id={Styles.range}
-          min={day_mid()}
-          max={props.day_high}
-          class={Styles.slider2}
-          value={data().right}
-          step={1 / Math.pow(10, props.step_value)}
-        />
-        <div class={Styles.indicator}>
-          <div>
-            <div class={Styles.arrow_down} />
-            <output class={Styles.output_low}>{props.day_low}</output>
-          </div>
-          <output class={Styles.output_mid}>{day_mid()}</output>
-          <div>
-            <output class={Styles.output_high}>{props.day_high}</output>
-            <div class={Styles.arrow_up} />
-          </div>
+    <>
+      <span class={styles.title}>Daily Range</span>
+      <div class={styles.progress_container}>
+        <div
+          class={classNames(
+            styles.progress_bar_bg,
+            styles.progress_bar_reversed,
+            styles.progress_bar,
+            styles.progress_bar_curved_border_left
+          )}
+        >
+          <div
+            class={classNames(
+              styles.progress_bar,
+              styles.progress_bar_bearish,
+              styles.progress_bar_curved_border_left
+            )}
+            style={{ width: `${data().left}%` }}
+          />
+        </div>
+        <div
+          class={classNames(
+            styles.progress_bar_bg,
+            styles.progress_bar,
+            styles.progress_bar_curved_border_right
+          )}
+        >
+          <div
+            class={classNames(
+              styles.progress_bar,
+              styles.progress_bar_bullish,
+              styles.progress_bar_curved_border_right
+            )}
+            style={{ width: `${data().right}%` }}
+          />
         </div>
       </div>
-    </div>
+      <div class={styles.indicator_container}>
+        <div>
+          <div class={styles.arrow_down} />
+          <output class={styles.indicator_text}>{props.day_low}</output>
+        </div>
+        <output class={styles.indicator_text}>
+          {day_mid().toFixed(props.step_value)}
+        </output>
+        <div>
+          <output class={styles.indicator_text}>{props.day_high}</output>
+          <div class={styles.arrow_up} />
+        </div>
+      </div>
+    </>
   );
 };
 
