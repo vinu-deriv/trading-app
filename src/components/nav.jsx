@@ -175,7 +175,7 @@ const ThemeToggle = () => {
         checked={is_light_theme()}
         onChange={toggleThemeHandler}
       />
-      {is_light_theme() ? <LightThemeIcon size={40} /> : <DarkThemeIcon />}
+      {is_light_theme() ? <DarkThemeIcon /> : <LightThemeIcon size={40} />}
     </label>
   );
 };
