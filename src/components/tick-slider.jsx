@@ -3,23 +3,23 @@ import { createEffect, createSignal } from "solid-js";
 import classNames from "classnames";
 
 const Slider = (props) => {
-  const [day_mid, setDayMid] = createSignal(0);
+  const [dayMid, setDayMid] = createSignal(0);
   const [data, setData] = createSignal({ left: 0, right: 0 });
 
   const getData = () => {
     const tick = props.ticks;
-    let [bearish, bullish] = [0, 0];
-    if (tick < day_mid()) {
-      bearish = ((day_mid() - tick) / (day_mid() - props.day_low)) * 100;
-    } else if (tick > day_mid()) {
-      bullish = ((tick - day_mid()) / (props.day_high - day_mid())) * 100;
+    let [left, right] = [0, 0];
+    if (tick < dayMid()) {
+      left = ((dayMid() - tick) / (dayMid() - props.day_low)) * 100;
+    } else if (tick > dayMid()) {
+      right = ((tick - dayMid()) / (props.day_high - dayMid())) * 100;
     }
-    setData({ left: bearish, right: bullish });
+    setData({ left, right });
   };
 
   createEffect(() => {
-    const mid_value = (props.day_low + props.day_high) / 2;
-    setDayMid(mid_value);
+    const midValue = (props.day_low + props.day_high) / 2;
+    setDayMid(midValue);
     getData();
   });
 
@@ -29,33 +29,35 @@ const Slider = (props) => {
       <div class={styles.progress_container}>
         <div
           class={classNames(
-            styles.progress_bar_bg,
-            styles.progress_bar_reversed,
             styles.progress_bar,
-            styles.progress_bar_curved_border_left
+            styles.progress_bar_bg,
+            styles.progress_bar_curved_border_left,
+            styles.progress_bar_reversed
           )}
         >
           <div
             class={classNames(
               styles.progress_bar,
-              styles.progress_bar_bearish,
-              styles.progress_bar_curved_border_left
+              styles.progress_bar_left,
+              styles.progress_bar_curved_border_left,
+              data().left <= 0 ? styles.progress_bar_hidden : ""
             )}
             style={{ width: `${data().left}%` }}
           />
         </div>
         <div
           class={classNames(
-            styles.progress_bar_bg,
             styles.progress_bar,
+            styles.progress_bar_bg,
             styles.progress_bar_curved_border_right
           )}
         >
           <div
             class={classNames(
               styles.progress_bar,
-              styles.progress_bar_bullish,
-              styles.progress_bar_curved_border_right
+              styles.progress_bar_right,
+              styles.progress_bar_curved_border_right,
+              data().right <= 0 ? styles.progress_bar_hidden : ""
             )}
             style={{ width: `${data().right}%` }}
           />
@@ -67,7 +69,7 @@ const Slider = (props) => {
           <output class={styles.indicator_text}>{props.day_low}</output>
         </div>
         <output class={styles.indicator_text}>
-          {day_mid().toFixed(props.step_value)}
+          {dayMid().toFixed(props.step_value)}
         </output>
         <div class={styles.indicator_trend_container}>
           <output class={styles.indicator_text}>{props.day_high}</output>

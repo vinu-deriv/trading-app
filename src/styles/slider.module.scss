@@ -35,14 +35,18 @@
   border-radius: 0px 6px 6px 0px;
 }
 
-.progress_bar_bearish {
+.progress_bar_left {
   background: var(--slider-progress-red);
   border-left: 2px solid;
 }
 
-.progress_bar_bullish {
+.progress_bar_right {
   background: var(--slider-progress-green);
   border-right: 2px solid;
+}
+
+.progress_bar_hidden {
+  display: none;
 }
 
 .arrow_down {
