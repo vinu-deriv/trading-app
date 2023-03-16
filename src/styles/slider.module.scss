@@ -8,6 +8,30 @@
   font-weight: bold;
 }
 
+.ticker_container {
+  display: flex;
+  width: 100%;
+}
+
+.ticker_sub_container {
+  display: flex;
+  width: 100%;
+}
+
+.ticker_sub_container_reversed {
+  flex-direction: row-reverse;
+}
+
+.ticker {
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 6px solid;
+  margin: 2px -6px;
+  opacity: 0.6;
+}
+
 .progress_container {
   display: flex;
   width: 100%;

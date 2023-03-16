@@ -1,5 +1,5 @@
 import styles from "../styles/slider.module.scss";
-import { createEffect, createSignal } from "solid-js";
+import { createEffect, createSignal, Show } from "solid-js";
 import classNames from "classnames";
 
 const Slider = (props) => {
@@ -26,39 +26,60 @@ const Slider = (props) => {
   return (
     <>
       <span class={styles.title}>Daily Range</span>
-      <div class={styles.progress_container}>
-        <div
-          class={classNames(
-            styles.progress_bar,
-            styles.progress_bar_bg,
-            styles.progress_bar_curved_border_left,
-            styles.progress_bar_reversed
-          )}
-        >
+      <div>
+        <div class={styles.ticker_container}>
           <div
             class={classNames(
-              styles.progress_bar,
-              styles.progress_bar_left,
-              styles.progress_bar_curved_border_left
+              styles.ticker_sub_container,
+              styles.ticker_sub_container_reversed
             )}
-            style={{ width: `${data().left}%` }}
-          />
+          >
+            <span style={{ width: `${data().left}%` }} />
+            <Show when={data().left > 0 || props.ticks === dayMid()}>
+              <span class={styles.ticker} />
+            </Show>
+          </div>
+          <div class={styles.ticker_sub_container}>
+            <span style={{ width: `${data().right}%` }} />
+            <Show when={data().right > 0}>
+              <span class={styles.ticker} />
+            </Show>
+          </div>
         </div>
-        <div
-          class={classNames(
-            styles.progress_bar,
-            styles.progress_bar_bg,
-            styles.progress_bar_curved_border_right
-          )}
-        >
+        <div class={styles.progress_container}>
           <div
             class={classNames(
               styles.progress_bar,
-              styles.progress_bar_right,
+              styles.progress_bar_bg,
+              styles.progress_bar_curved_border_left,
+              styles.progress_bar_reversed
+            )}
+          >
+            <div
+              class={classNames(
+                styles.progress_bar,
+                styles.progress_bar_left,
+                styles.progress_bar_curved_border_left
+              )}
+              style={{ width: `${data().left}%` }}
+            />
+          </div>
+          <div
+            class={classNames(
+              styles.progress_bar,
+              styles.progress_bar_bg,
               styles.progress_bar_curved_border_right
             )}
-            style={{ width: `${data().right}%` }}
-          />
+          >
+            <div
+              class={classNames(
+                styles.progress_bar,
+                styles.progress_bar_right,
+                styles.progress_bar_curved_border_right
+              )}
+              style={{ width: `${data().right}%` }}
+            />
+          </div>
         </div>
       </div>
       <div class={styles.indicator_container}>
