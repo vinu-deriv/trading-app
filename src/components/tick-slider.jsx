@@ -39,8 +39,7 @@ const Slider = (props) => {
             class={classNames(
               styles.progress_bar,
               styles.progress_bar_left,
-              styles.progress_bar_curved_border_left,
-              data().left <= 0 ? styles.progress_bar_hidden : ""
+              styles.progress_bar_curved_border_left
             )}
             style={{ width: `${data().left}%` }}
           />
@@ -56,8 +55,7 @@ const Slider = (props) => {
             class={classNames(
               styles.progress_bar,
               styles.progress_bar_right,
-              styles.progress_bar_curved_border_right,
-              data().right <= 0 ? styles.progress_bar_hidden : ""
+              styles.progress_bar_curved_border_right
             )}
             style={{ width: `${data().right}%` }}
           />
@@ -66,13 +64,31 @@ const Slider = (props) => {
       <div class={styles.indicator_container}>
         <div class={styles.indicator_trend_container}>
           <div class={styles.arrow_down} />
-          <output class={styles.indicator_text}>{props.day_low}</output>
+          <div
+            class={classNames(
+              styles.indicator_text_container,
+              styles.indicator_text_container_left,
+              styles.indicator_text
+            )}
+          >
+            <output>{props.day_low}</output>
+            <span class={styles.indicator_sub_text}>Low</span>
+          </div>
         </div>
         <output class={styles.indicator_text}>
           {dayMid().toFixed(props.step_value)}
         </output>
         <div class={styles.indicator_trend_container}>
-          <output class={styles.indicator_text}>{props.day_high}</output>
+          <div
+            class={classNames(
+              styles.indicator_text_container,
+              styles.indicator_text_container_right,
+              styles.indicator_text
+            )}
+          >
+            <output>{props.day_high}</output>
+            <span class={styles.indicator_sub_text}>High</span>
+          </div>
           <div class={styles.arrow_up} />
         </div>
       </div>

@@ -37,16 +37,10 @@
 
 .progress_bar_left {
   background: var(--slider-progress-red);
-  border-left: 2px solid;
 }
 
 .progress_bar_right {
   background: var(--slider-progress-green);
-  border-right: 2px solid;
-}
-
-.progress_bar_hidden {
-  display: none;
 }
 
 .arrow_down {
@@ -72,7 +66,7 @@
 .indicator_container {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
 }
 
 .indicator_trend_container {
@@ -80,7 +74,23 @@
   align-items: center;
 }
 
+.indicator_text_container {
+  display: flex;
+  flex-direction: column;
+}
+
+.indicator_text_container_left {
+  align-items: flex-start;
+}
+
+.indicator_text_container_right {
+  align-items: flex-end;
+}
+
 .indicator_text {
   font-size: small;
-  margin: 0px 4px;
+}
+
+.indicator_sub_text {
+  opacity: 0.5;
 }
