@@ -51,8 +51,8 @@ table {
   }
 
   tbody{
-    overflow: scroll;
-    height: calc(100vh - 285px);
+    overflow: auto;
+    height: calc(100vh - 18.4rem);
   }
 
   .data-layout {
