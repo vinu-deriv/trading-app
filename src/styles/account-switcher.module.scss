@@ -21,7 +21,6 @@
     transition: 0.3s;
     overflow: scroll;
     position: relative;
-    height: 65%;
     margin: 1rem;
 
     &:hover {
@@ -116,4 +115,10 @@
       transform: rotate(-45deg);
     }
   }
+}
+
+.redirect-btn{
+      display: flex;
+      justify-content: center;
+      padding: 1rem 0;
 }

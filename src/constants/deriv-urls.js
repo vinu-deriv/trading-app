@@ -14,6 +14,7 @@ const domain_url = supported_domains.includes(domain_url_initial)
 export const deriv_urls = Object.freeze({
   DERIV_HOST_NAME: domain_url,
   DERIV_APP_PRODUCTION: "https://trading-app-sigma.vercel.app",
+  DERIV_APP: "https://app.deriv.com/cashier/deposit", // TODO: Add the actual URL
 });
 
 export const loginUrl = ({ language }) => {

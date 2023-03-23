@@ -1,24 +1,26 @@
-import { createEffect, createSignal, For, Show } from "solid-js";
-import classNames from "classnames";
+import { For, Show, createEffect, createSignal } from "solid-js";
+import { authorize, sendRequest } from "Utils/socket-base";
 import {
+  balance_of_all_accounts,
   currencies_config,
   icons,
   login_information,
-  setLoginInformation,
-  setLocalValues,
-  balance_of_all_accounts,
   logout,
+  setLocalValues,
+  setLoginInformation,
 } from "Stores/base-store";
 import { is_light_theme, setBannerMessage } from "Stores";
-import { currency_config } from "Constants/currency";
-import { Portal } from "solid-js/web";
-import { authorize, sendRequest } from "Utils/socket-base";
-import { setshowAccountSwitcher } from "Stores/ui-store";
-import Loader from "./loader";
-import styles from "../styles/account-switcher.module.scss";
+
 import Button from "./button";
-import { addComma } from "Utils/format-value";
 import { ERROR_MESSAGE } from "Constants/error-codes";
+import Loader from "./loader";
+import { Portal } from "solid-js/web";
+import { addComma } from "Utils/format-value";
+import classNames from "classnames";
+import { currency_config } from "Constants/currency";
+import { deriv_urls } from "Constants/deriv-urls";
+import { setshowAccountSwitcher } from "Stores/ui-store";
+import styles from "../styles/account-switcher.module.scss";
 
 const getCurrencyDisplayCode = (currency = "") => {
   if (currency !== "eUSDT" && currency !== "tUSDT") {
@@ -73,6 +75,7 @@ const AccountSwitcher = () => {
       });
     }
   };
+
   const resetBalance = async (event) => {
     event.stopPropagation();
     let newbalance;
@@ -93,6 +96,15 @@ const AccountSwitcher = () => {
         account.balance = newbalance;
       }
     }
+  };
+
+  const accountTopup = () => {
+    Object.assign(document.createElement("a"), {
+      target: "_blank",
+      rel: "noopener noreferrer",
+      href: deriv_urls.DERIV_APP,
+    }).click();
+    setshowAccountSwitcher(false);
   };
 
   const AccountList = (props) => (
@@ -186,25 +198,28 @@ const AccountSwitcher = () => {
                 setshowAccountSwitcher(false);
               }}
             />
-            <div class={styles["separator"]} />
           </div>
+          <div class={styles["separator"]} />
 
           <Show when={is_balance_avbl()} fallback={<Loader />}>
-            <>
-              {demo_accounts()?.length && (
-                <AccountList title="Demo Account" accounts={demo_accounts()} />
-              )}
-              {real_accounts()?.length && (
-                <AccountList
-                  title={
-                    real_accounts().length === 1
-                      ? "Real Account"
-                      : "Real Accounts"
-                  }
-                  accounts={real_accounts()}
-                />
-              )}
-            </>
+            {demo_accounts()?.length && (
+              <AccountList title="Demo Account" accounts={demo_accounts()} />
+            )}
+            {real_accounts()?.length && (
+              <AccountList
+                title={
+                  real_accounts().length === 1
+                    ? "Real Account"
+                    : "Real Accounts"
+                }
+                accounts={real_accounts()}
+              />
+            )}
+            <div class={styles["redirect-btn"]}>
+              <Button category="flat" onClick={accountTopup}>
+                Topup Your Account
+              </Button>
+            </div>
           </Show>
         </div>
       </div>
