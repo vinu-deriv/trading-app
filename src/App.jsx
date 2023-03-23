@@ -1,12 +1,17 @@
-import { Route, Routes, useLocation } from "solid-app-router";
 import {
+  AccountSwitcher,
+  EmptyView,
+  ErrorBoundaryComponent,
+} from "./components";
+import {
+  ErrorBoundary,
   Show,
   createEffect,
-  lazy,
   createSignal,
+  lazy,
   onCleanup,
-  ErrorBoundary,
 } from "solid-js";
+import { Route, Routes, useLocation } from "solid-app-router";
 import {
   activeSymbols,
   banner_message,
@@ -18,12 +23,7 @@ import {
 import { configureEndpoint, getAppId, getSocketUrl } from "Utils/config";
 import { endpoint, init, login_information } from "Stores/base-store";
 import { selected_markets, setSelectedMarkets } from "Stores/trade-store";
-import { loginUrl } from "Constants/deriv-urls";
-import {
-  AccountSwitcher,
-  EmptyView,
-  ErrorBoundaryComponent,
-} from "./components";
+
 import BannerComponent from "./components/banner-component";
 import { MAX_MOBILE_WIDTH } from "Utils/responsive";
 import NavBar from "./components/nav";
@@ -31,6 +31,7 @@ import { Portal } from "solid-js/web";
 import { banner_category } from "./constants/banner-category";
 import classNames from "classnames";
 import { getFavourites } from "Utils/map-markets";
+import { loginUrl } from "Constants/deriv-urls";
 import { mapMarket } from "Utils/map-markets";
 import monitorNetwork from "Utils/network-status";
 import { onMount } from "solid-js";
@@ -61,9 +62,7 @@ function App() {
     handleWindowResize();
     window.addEventListener("resize", handleWindowResize);
     // Remove lastpass iframe that prevents users from interacting with app
-    const lastpass_iframe = document.querySelector(
-      '[data-lastpass-iframe="true"]'
-    );
+    const lastpass_iframe = document.querySelector("[data-lastpass-root]");
     if (lastpass_iframe) lastpass_iframe.remove();
 
     configureEndpoint(getAppId(), getSocketUrl());
