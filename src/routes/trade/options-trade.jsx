@@ -11,7 +11,7 @@ import {
   setTradeTypes,
 } from "../../stores";
 import { createEffect, createSignal, onCleanup, batch } from "solid-js";
-import { useNavigate } from "solid-app-router";
+import { useNavigate } from "@solidjs/router";
 
 import { Show } from "solid-js";
 import classNames from "classnames";

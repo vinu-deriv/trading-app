@@ -1,4 +1,4 @@
-import { Route, Routes, useLocation } from "solid-app-router";
+import { Route, Routes, useLocation } from "@solidjs/router";
 import {
   Show,
   createEffect,
@@ -34,6 +34,7 @@ import { getFavourites } from "Utils/map-markets";
 import { mapMarket } from "Utils/map-markets";
 import monitorNetwork from "Utils/network-status";
 import { onMount } from "solid-js";
+import { RouteGuard } from "./routes/route-guard.jsx";
 import styles from "./App.module.scss";
 
 const Endpoint = lazy(() => import("Routes/endpoint"));
@@ -61,9 +62,7 @@ function App() {
     handleWindowResize();
     window.addEventListener("resize", handleWindowResize);
     // Remove lastpass iframe that prevents users from interacting with app
-    const lastpass_iframe = document.querySelector(
-      '[data-lastpass-iframe="true"]'
-    );
+    const lastpass_iframe = document.querySelector("[data-lastpass-root]");
     if (lastpass_iframe) lastpass_iframe.remove();
 
     configureEndpoint(getAppId(), getSocketUrl());
@@ -127,10 +126,13 @@ function App() {
           </Portal>
           {showAccountSwitcher() && <AccountSwitcher />}
           <Routes>
-            <Route element={<Endpoint />} path="/endpoint" />
-            <Route path="/" element={<MarketList />} />
-            <Route path="/trade" element={<Trade />} />
-            <Route path="/reports" element={<Reports />} />
+            <Route path="/endpoint" component={Endpoint} />
+            <Route path="/" component={RouteGuard}>
+              <Route path="/home" component={MarketList} />
+              <Route path="/trade" component={Trade} />
+              <Route path="/reports" component={Reports} />
+            </Route>
+            <Route path="*" component={MarketList} />
           </Routes>
         </section>
       </ErrorBoundary>

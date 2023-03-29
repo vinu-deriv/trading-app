@@ -16,7 +16,7 @@ import { addComma } from "Utils/format-value";
 import { loginUrl } from "Constants/deriv-urls";
 import { setshowAccountSwitcher } from "Stores/ui-store";
 import styles from "Styles/navbar.module.scss";
-import { useNavigate } from "solid-app-router";
+import { useNavigate } from "@solidjs/router";
 
 const NavBar = () => {
   const navigate = useNavigate();
