@@ -72,7 +72,7 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: {
-          vendor: ["@deriv/deriv-api", "solid-js"],
+          vendor: ["@deriv/deriv-api", "solid-js", "@solidjs/router"],
           ...renderChunks(dependencies),
         },
       },

@@ -1,4 +1,4 @@
-import { Outlet } from "@solidJS/router";
+import { Outlet } from "@solidjs/router";
 import { loginUrl } from "Constants/deriv-urls";
 import { createEffect } from "solid-js";
 import { login_information } from "Stores/base-store";
