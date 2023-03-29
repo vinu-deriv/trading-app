@@ -50,6 +50,11 @@ table {
     padding: unset;
   }
 
+  tbody{
+    overflow: auto;
+    height: calc(100vh - 18.2rem);
+  }
+
   .data-layout {
     z-index: 1;
     position: relative;
