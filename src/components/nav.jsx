@@ -17,6 +17,7 @@ import { loginUrl } from "Constants/deriv-urls";
 import { setshowAccountSwitcher } from "Stores/ui-store";
 import styles from "Styles/navbar.module.scss";
 import { useNavigate } from "@solidjs/router";
+import { routes } from "Constants/routes";
 
 const NavBar = () => {
   const navigate = useNavigate();
@@ -103,7 +104,7 @@ const NavBar = () => {
         <ul class={styles.menu}>
           {!is_mobile_view() && (
             <li>
-              <a href="/" class={styles.logo}>
+              <a class={styles.logo} onClick={() => navigate(routes.HOME)}>
                 <AppIcon />
               </a>
             </li>
@@ -111,7 +112,7 @@ const NavBar = () => {
           {login_information.is_logged_in && (
             <li
               onClick={() => {
-                navigate("/reports", { replace: true });
+                navigate(routes.REPORTS);
                 setChecked(false);
               }}
             >
@@ -125,7 +126,7 @@ const NavBar = () => {
       </div>
       <div>
         {is_mobile_view() && (
-          <a href="/" class={styles.logo}>
+          <a class={styles.logo} onClick={() => navigate(routes.HOME)}>
             <AppIcon />
           </a>
         )}
