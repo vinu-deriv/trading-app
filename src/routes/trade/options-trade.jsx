@@ -278,7 +278,7 @@ const OptionsTrade = (props) => {
       setBannerMessage(error?.error?.message ?? ERROR_MESSAGE.general_error);
     }
 
-    if (!banner_message()) navigate(routes.TRADE);
+    if (!banner_message()) navigate(routes.REPORTS);
   };
 
   const handleAllowEqualChange = () => {
