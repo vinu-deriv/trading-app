@@ -19,6 +19,8 @@
   gap: 1rem;
   margin: 1rem;
 
+  font-size: var(  --text-size-m);
+
   &:hover {
     box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
   }
@@ -37,13 +39,19 @@
   grid-area: ref;
   @extend .card-alignment;
 }
-
+.currency_open_positions{
+  grid-area: currency;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  text-align: left;
+  @extend .card-alignment;
+}
 .currency {
   grid-area: currency;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  align-items: center;
   text-align: left;
   @extend .card-alignment;
 }

@@ -6,7 +6,7 @@ import {
   setBannerMessage,
   setOpenContractId,
   setOpenContractInfo,
-} from "../stores";
+} from "Stores";
 import Button from "./button";
 import Loader from "./loader";
 import classNames from "classnames";
@@ -157,7 +157,7 @@ const OpenPositionItem = (props) => (
       </div>
       <div>{props.ref_id}</div>
     </div>
-    <div class={styles["currency"]}>
+    <div class={styles["currency_open_positions"]}>
       <div>
         <strong>Currency</strong>
       </div>
@@ -198,7 +198,7 @@ const OpenPositionItem = (props) => (
       {props.sell && (
         <div class={styles["sell"]}>
           <Button
-            category="reset"
+            category="secondary"
             onClick={() =>
               onClickSell(
                 props.contract_id,
@@ -207,8 +207,7 @@ const OpenPositionItem = (props) => (
               )
             }
           >
-            {" "}
-            Sell{" "}
+            Sell
           </Button>
         </div>
       )}
