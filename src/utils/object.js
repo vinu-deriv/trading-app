@@ -34,3 +34,10 @@ export const isEmptyValue = (data) => {
   }
   return is_empty_data;
 };
+
+export const unique = (array, key) =>
+  array.filter(
+    (e, idx) =>
+      array.findIndex((a, i) => (a[key] ? a[key] === e[key] : i === idx)) ===
+      idx
+  );

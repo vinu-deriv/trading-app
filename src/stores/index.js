@@ -1,7 +1,17 @@
 import {
+  action_button_values,
+  is_mobile_view,
+  setActionButtonValues,
+  setIsMobileView,
+  setSwipeDirection,
+  setshowAccountSwitcher,
+  showAccountSwitcher,
+  swipe_direction,
+} from "./ui-store";
+import {
   activeSymbols,
-  buyContract,
   banner_message,
+  buyContract,
   fetchActiveSymbols,
   fetchMarketTick,
   is_loading,
@@ -28,7 +38,6 @@ import {
   trade_types,
 } from "./trade-store";
 import { is_light_theme, setIsLightTheme } from "./client-store";
-import { setshowAccountSwitcher, showAccountSwitcher } from "./ui-store";
 
 export {
   activeSymbols,
@@ -62,4 +71,10 @@ export {
   setIsLoading,
   market_ticks,
   setMarketTicks,
+  swipe_direction,
+  setSwipeDirection,
+  action_button_values,
+  setActionButtonValues,
+  is_mobile_view,
+  setIsMobileView,
 };

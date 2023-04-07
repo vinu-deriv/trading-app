@@ -6,6 +6,7 @@ import {
   Tab,
   Tabs,
 } from "Components";
+import { ERROR_CODE, ERROR_MESSAGE } from "Constants/error-codes";
 import { FAVOURITES, MARKET_TYPES } from "Constants/trade-config";
 import {
   For,
@@ -15,7 +16,6 @@ import {
   onCleanup,
   onMount,
 } from "solid-js";
-import classNames from "classnames";
 import {
   activeSymbols,
   fetchMarketTick,
@@ -24,21 +24,19 @@ import {
   setMarketTicks,
   setSelectedTradeType,
 } from "Stores";
-import {
-  generateTickData,
-  calculateTimeLeft,
-  checkWhenMarketOpens,
-} from "Utils/format-value";
-import { forgetAll, wait } from "Utils/socket-base";
-import { ERROR_CODE, ERROR_MESSAGE } from "Constants/error-codes";
+import { checkWhenMarketOpens, generateTickData } from "Utils/format-value";
+
 import StarIcon from "Assets/svg/action/star.svg";
+import classNames from "classnames";
+import { forgetAll } from "Utils/socket-base";
 import { getFavourites } from "Utils/map-markets";
 import { segregateMarkets } from "Utils/map-markets";
+import { setSwipeDirection } from "Stores/ui-store";
 import shared from "Styles/shared.module.scss";
 import styles from "Styles/accordion.module.scss";
 import throttle from "lodash.throttle";
-import { useNavigate } from "solid-app-router";
-import { setSwipeDirection } from "Stores/ui-store";
+import { useNavigate } from "@solidjs/router";
+import { errorCatcher } from "Utils/error-handler";
 
 const MarketList = () => {
   const header_config = [
@@ -56,14 +54,13 @@ const MarketList = () => {
   const [available_markets, setAvailableMarkets] = createSignal([]);
   const [market_data, setMarketData] = createSignal(null);
   const [active_tab, setActiveTab] = createSignal(0);
-  const [is_market_closed, setIsMarketClosed] = createSignal();
   const [watchlist, setWatchlist] = createSignal([]);
+  const [already_subscribed, setAlreadySubscribed] = createSignal([]);
 
   const navigate = useNavigate();
 
   onMount(() => {
     setActiveTab(0);
-    setIsMarketClosed(false);
     setWatchlist(getFavourites());
     getWatchList();
   });
@@ -74,7 +71,6 @@ const MarketList = () => {
 
   onCleanup(() => {
     forgetAll("ticks");
-    setMarketTicks({});
   });
 
   const generateDataSet = () => {
@@ -100,47 +96,49 @@ const MarketList = () => {
   ];
 
   const marketDataHandler = async (response) => {
-    if (!response.error) {
-      const { quote, symbol } = response.tick;
-      const prev_value = market_ticks()[symbol]?.current ?? 0;
-      const current_value = quote;
-      setMarketTicks({
-        ...market_ticks(),
-        [symbol]: generateTickData({
-          previous: prev_value,
-          current: current_value,
-        }),
-      });
-    } else {
-      const { echo_req, error } = response;
-      if (error.code === ERROR_CODE.market_closed) {
-        if (!is_market_closed()) {
-          setIsMarketClosed(true);
+    try {
+      if (!response.error) {
+        const { quote, symbol } = response.tick;
+        const prev_value = market_ticks()[symbol]?.current ?? 0;
+        const current_value = quote;
+        setMarketTicks({
+          ...market_ticks(),
+          [symbol]: generateTickData({
+            previous: prev_value,
+            current: current_value,
+          }),
+        });
+      } else {
+        const { echo_req, error } = response;
+        if (error.code === ERROR_CODE.market_closed) {
           const time_left = await checkWhenMarketOpens(0, echo_req.ticks);
           setMarketTicks({
             ...market_ticks(),
             [echo_req.ticks]: generateTickData({
               is_closed: true,
-              opens_at: calculateTimeLeft(time_left),
+              opens_at: time_left,
             }),
           });
         }
       }
+    } catch (error) {
+      errorCatcher(response);
     }
   };
 
   const getMarketData = async (symbol_list) => {
     try {
-      if (Object.keys(market_ticks()).length) {
-        await forgetAll("ticks");
-        await wait("forget_all");
-      }
-
       setMarketData(generateDataSet());
-      symbol_list.forEach(
-        async (symbol) =>
-          await fetchMarketTick(symbol, throttle(marketDataHandler, 500))
+      const new_set = symbol_list.filter(
+        (symbol) => !already_subscribed().includes(symbol)
       );
+      if (new_set.length) {
+        setAlreadySubscribed([...already_subscribed(), ...new_set]);
+        new_set.forEach(
+          async (symbol) =>
+            await fetchMarketTick(symbol, throttle(marketDataHandler, 500))
+        );
+      }
     } catch (error) {
       setBannerMessage(error?.error?.message ?? ERROR_MESSAGE.general_error);
     }
@@ -150,7 +148,6 @@ const MarketList = () => {
     setAvailableMarkets(all_markets()[market_type]);
 
   const fetchSelectedMarket = (tab_ref) => {
-    setIsMarketClosed(false);
     const { id } = tab_ref;
     if (id === FAVOURITES) {
       getWatchList();
@@ -162,7 +159,7 @@ const MarketList = () => {
   };
 
   const getWatchList = () => {
-    const selected_markets = activeSymbols().filter((markets) =>
+    const selected_markets = activeSymbols()?.filter((markets) =>
       watchlist().includes(markets.symbol)
     );
     setAvailableMarkets(selected_markets);
@@ -189,9 +186,8 @@ const MarketList = () => {
       >
         <Tabs
           onTabItemClick={(tab_ref) => {
-            setActiveTab(tab_ref.index);
             fetchSelectedMarket(tab_ref);
-            setMarketTicks({});
+            setActiveTab(tab_ref.index);
           }}
           active_index={active_tab()}
           default_selected={default_tab.ref}
@@ -199,7 +195,7 @@ const MarketList = () => {
           <For each={setTabList(all_markets())}>
             {(tabs) => (
               <Tab label={tabs.title} id={tabs.ref}>
-                <Show when={tabs.ref === FAVOURITES && !market_data().length}>
+                <Show when={tabs.ref === FAVOURITES && !market_data()?.length}>
                   <p class={styles["add-favourites-message"]}>
                     To add to <strong>Favourites</strong>, swipe left at the
                     asset you like and hit the star.

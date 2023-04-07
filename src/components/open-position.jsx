@@ -14,7 +14,7 @@ import { login_information } from "Stores/base-store";
 import styles from "Styles/open-position.module.scss";
 import { subscribe } from "Utils/socket-base";
 import throttle from "lodash.throttle";
-import { timePeriod } from "../utils/format-value";
+import { timePeriod, getCurrentTick } from "Utils/format-value";
 import { ERROR_MESSAGE } from "Constants/error-codes";
 
 const formatActivePositionData = (proposal_open_contract) => ({
@@ -29,6 +29,8 @@ const formatActivePositionData = (proposal_open_contract) => ({
   has_expired: proposal_open_contract.is_expired,
   currency: proposal_open_contract.currency,
   valid_sell: proposal_open_contract.is_valid_to_sell,
+  tick_count: proposal_open_contract.tick_count ?? null,
+  tick_stream: proposal_open_contract.tick_stream ?? [],
 });
 
 const filterActivePositions = (contract_info) => {
@@ -216,8 +218,16 @@ const OpenPositionItem = (props) => (
 
 const ExpiryTimer = (props) => {
   const contract_info = () => open_contract_info()[props.contract_id];
-  const expiry_time = () =>
-    timePeriod(contract_info()?.expiry_time_epoc * 1000, Date.now());
+
+  const expiry_time = () => {
+    if (contract_info()?.tick_count) {
+      return `${
+        contract_info().tick_count - getCurrentTick(contract_info())
+      } ticks`;
+    }
+    return timePeriod(contract_info()?.expiry_time_epoc * 1000, Date.now());
+  };
+
   return <div>{expiry_time}</div>;
 };
 

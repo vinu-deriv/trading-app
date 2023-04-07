@@ -27,7 +27,7 @@ const fetchActiveSymbols = async () => {
     active_symbols: "brief",
     product_type: "basic",
   });
-  setActiveSymbols(response.active_symbols);
+  setActiveSymbols(response?.active_symbols);
 };
 
 const buyContract = async (id, amount) => {

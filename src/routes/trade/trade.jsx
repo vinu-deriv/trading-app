@@ -1,49 +1,55 @@
+import { ERROR_CODE, ERROR_MESSAGE } from "Constants/error-codes";
 import {
   For,
   Match,
   Show,
   Switch,
-  onCleanup,
   createEffect,
   createSignal,
+  onCleanup,
   onMount,
 } from "solid-js";
-import { ERROR_CODE, ERROR_MESSAGE } from "Constants/error-codes";
-import { Loader } from "Components";
 import {
+  calculateTimeLeft,
+  checkWhenMarketOpens,
+  generateTickData,
+} from "Utils/format-value";
+import {
+  fetchMarketTick,
   is_loading,
   selectedTradeType,
   setSelectedTradeType,
   setTradeTypes,
-  fetchMarketTick,
 } from "Stores";
-import { ContractType } from "Utils/contract-type";
-import throttle from "lodash.throttle";
+import {
+  market_ticks,
+  setBannerMessage,
+  setMarketTicks,
+} from "Stores/trade-store";
 
+import { ContractType } from "Utils/contract-type";
+import { Loader } from "Components";
 import OptionsTrade from "./options-trade";
+import { Slider } from "Components";
 import classNames from "classnames";
 import dashboardStyles from "Styles/watchlist.module.scss";
 import { getContractTypesConfig } from "Constants/trade-config";
 import { login_information } from "Stores/base-store";
 import shared from "Styles/shared.module.scss";
 import styles from "./trade.module.scss";
-import { forgetAll, wait } from "Utils/socket-base";
-import {
-  market_ticks,
-  setBannerMessage,
-  setMarketTicks,
-} from "Stores/trade-store";
-import {
-  generateTickData,
-  checkWhenMarketOpens,
-  calculateTimeLeft,
-} from "Utils/format-value";
+import { subscribe } from "Utils/socket-base";
+import throttle from "lodash.throttle";
+import { wait } from "Utils/socket-base";
 
 const Trade = () => {
   const [durations_list, setDurationsList] = createSignal([]);
   const [selected_contract_type, setSelectedContractType] = createSignal();
   const [contract_config, setContractConfig] = createSignal();
   const [is_market_closed, setIsMarketClosed] = createSignal();
+  const [day_low, setDayLow] = createSignal("");
+  const [day_high, setDayHigh] = createSignal("");
+  const [step_value, setStepValue] = createSignal(1);
+  const [status, setStatus] = createSignal("");
 
   const getConfig = async () => {
     try {
@@ -62,11 +68,29 @@ const Trade = () => {
       );
     }
   };
+  const fetchMarketValues = async (symbol, getOHLC) => {
+    await subscribe(
+      {
+        ticks_history: symbol,
+        style: "candles",
+        end: "latest",
+        count: 1000,
+        granularity: 86400,
+        adjust_start_time: 1,
+        subscribe: 1,
+      },
+      getOHLC
+    );
+  };
 
-  onCleanup(() => {
-    forgetAll("ticks");
-    setMarketTicks({});
-  });
+  const getOHLC = (resp) => {
+    const { msg_type, ohlc } = resp;
+    if (msg_type === "ohlc") {
+      setDayLow(parseFloat(ohlc.low));
+      setDayHigh(parseFloat(ohlc.high));
+      setStepValue(ohlc.pip_size);
+    }
+  };
 
   const marketDataHandler = async (response) => {
     if (!response.error) {
@@ -104,6 +128,10 @@ const Trade = () => {
       selectedTradeType()?.symbol,
       throttle(marketDataHandler, 500)
     );
+    await fetchMarketValues(
+      selectedTradeType()?.symbol,
+      throttle(getOHLC, 500)
+    );
   });
 
   createEffect(() => {
@@ -136,21 +164,46 @@ const Trade = () => {
               </p>
             }
           >
+            <Show when={selectedTradeType()?.display_name}>
+              <h4 class={styles["tick-text"]}>
+                <b>{selectedTradeType()?.display_name}</b>
+              </h4>
+            </Show>
             <section
               class={classNames(
                 styles.container,
-                dashboardStyles["market-value"]
+                styles[`container--${status()}`]
               )}
             >
-              <strong class={styles["market-text"]}>Market price:</strong>
-              <DisplayTick symbol={selectedTradeType()?.symbol} />
+              <DisplayTick
+                symbol={selectedTradeType()?.symbol}
+                setStatusValue={setStatus}
+              />
             </section>
+            <div class={styles["trading-layout-slider"]}>
+              {is_market_closed() ? (
+                <p class={styles["error-message"]}>
+                  This market is presently closed. Try out the derived indices
+                  which are always open"
+                </p>
+              ) : (
+                <Slider
+                  day_low={day_low()}
+                  day_high={day_high()}
+                  step_value={step_value()}
+                  ticks={market_ticks()[selectedTradeType()?.symbol]?.current}
+                />
+              )}
+            </div>
             <Switch fallback={"Loading trade types"}>
               <Match when={JSON.stringify(contract_config()) === "{}"}>
                 <p> No trade types supported</p>
               </Match>
               <Match when={contract_config()}>
                 <div class={styles["select-trade"]}>
+                  <h4>
+                    <b>Select Trade Type:</b>
+                  </h4>
                   <select
                     class={styles["trade-type-dropdown"]}
                     onChange={(event) => {
@@ -176,11 +229,6 @@ const Trade = () => {
                       }
                     </For>
                   </select>
-                  <Show when={selectedTradeType()?.display_name}>
-                    <p>
-                      Symbol : <b>{selectedTradeType()?.display_name}</b>
-                    </p>
-                  </Show>
                 </div>
                 <OptionsTrade
                   durations_list={durations_list()}
@@ -205,8 +253,10 @@ const DisplayTick = (props) => {
     const rateChange =
       current && previous ? ((current - previous) / previous) * 100 : 0;
     if (current < previous) {
+      props.setStatusValue("decrease");
       status = "decrease";
     } else if (current > previous) {
+      props.setStatusValue("increase");
       status = "increase";
     }
     return { value: rateChange ?? 0, status };
@@ -222,12 +272,7 @@ const DisplayTick = (props) => {
       fallback={<Loader class={shared["loader-position"]} />}
     >
       <div class={styles["market-tick"]}>
-        <span
-          class={classNames(
-            dashboardStyles["badge"],
-            dashboardStyles[`badge--${difference().status}`]
-          )}
-        >
+        <span class={styles["tick-text"]}>
           {market_ticks()[props.symbol].current}
         </span>
         <span
@@ -236,7 +281,7 @@ const DisplayTick = (props) => {
             dashboardStyles[`text--${difference().status}`]
           )}
         >
-          <b>{difference()["value"].toFixed(2)} %</b>
+          <b>({difference()["value"].toFixed(2)})</b>
           <Switch>
             <Match when={difference().status === "increase"}>
               <div class={dashboardStyles["arrow-up"]} />

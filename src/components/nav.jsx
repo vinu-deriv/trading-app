@@ -1,4 +1,4 @@
-import { Show, createEffect, createSignal, onMount, For } from "solid-js";
+import { For, Show, createEffect, createSignal, onMount } from "solid-js";
 import {
   balance_of_all_accounts,
   currencies_config,
@@ -6,16 +6,17 @@ import {
   login_information,
   logout,
 } from "Stores/base-store";
-import { isDesktop, isMobile } from "Utils/responsive";
-import { is_light_theme, setIsLightTheme } from "../stores";
-import { SkeletonLoader } from "../components";
+import { is_light_theme, is_mobile_view, setIsLightTheme } from "Stores";
+
 import AppIcon from "Assets/svg/app-logo/dtrader.svg";
-import classNames from "classnames";
+import DarkThemeIcon from "Assets/svg/action/dark-theme.svg";
+import LightThemeIcon from "Assets/svg/action/light-theme.svg";
+import { SkeletonLoader } from "../components";
+import { addComma } from "Utils/format-value";
 import { loginUrl } from "Constants/deriv-urls";
 import { setshowAccountSwitcher } from "Stores/ui-store";
-import styles from "../styles/navbar.module.scss";
-import { useNavigate } from "solid-app-router";
-import { addComma } from "Utils/format-value";
+import styles from "Styles/navbar.module.scss";
+import { useNavigate } from "@solidjs/router";
 
 const NavBar = () => {
   const navigate = useNavigate();
@@ -76,70 +77,82 @@ const NavBar = () => {
   return (
     <section
       id="app_navbar"
-      class={isDesktop() ? styles.topnav_desktop : styles.topnav_mobile}
+      class={!is_mobile_view() ? styles.topnav_desktop : styles.topnav_mobile}
     >
-      {isMobile() && (
-        <>
-          <input
-            id={styles.menu_toggle}
-            type="checkbox"
-            checked={checked()}
-            onClick={() => {
-              setChecked(!checked());
-            }}
-          />
-          <label class={styles.menu_button_container} for={styles.menu_toggle}>
-            <div class={styles.menu_button} />
-          </label>
+      <div>
+        {is_mobile_view() && (
+          <>
+            <input
+              id={styles.menu_toggle}
+              type="checkbox"
+              checked={checked()}
+              onClick={() => {
+                setChecked(!checked());
+              }}
+            />
+            {login_information.is_logged_in && (
+              <label
+                class={styles.menu_button_container}
+                for={styles.menu_toggle}
+              >
+                <div class={styles.menu_button} />
+              </label>
+            )}
+          </>
+        )}
+        <ul class={styles.menu}>
+          {!is_mobile_view() && (
+            <li>
+              <a href="/" class={styles.logo}>
+                <AppIcon />
+              </a>
+            </li>
+          )}
+          {login_information.is_logged_in && (
+            <li
+              onClick={() => {
+                navigate("/reports", { replace: true });
+                setChecked(false);
+              }}
+            >
+              Report
+            </li>
+          )}
+          {login_information.is_logged_in && (
+            <li onClick={logout}> Sign Out</li>
+          )}
+        </ul>
+      </div>
+      <div>
+        {is_mobile_view() && (
           <a href="/" class={styles.logo}>
             <AppIcon />
           </a>
-        </>
-      )}
-      <ul class={styles.menu}>
-        {isDesktop() && (
-          <li>
-            <a href="/" class={styles.logo}>
-              <AppIcon />
-            </a>
-          </li>
         )}
-        {login_information.is_logged_in && (
-          <li
-            onClick={() => {
-              navigate("/reports", { replace: true });
-              setChecked(false);
-            }}
-          >
-            Report
-          </li>
-        )}
-        <li>
-          Theme &nbsp;
-          <ThemeToggle />
-        </li>
-        {login_information.is_logged_in && <li onClick={logout}> Sign Out</li>}
-      </ul>
-      {login_information.is_logged_in ? (
-        <div
-          class={styles.account_header}
-          onClick={() => setshowAccountSwitcher(true)}
-        >
-          <div class={styles.account_wrapper}>
-            <AccountHeader />
-          </div>
-        </div>
-      ) : (
-        !login_information.is_logging_in && (
+      </div>
+      <div class={styles.theme}>
+        <ThemeToggle />
+        {login_information.is_logged_in ? (
           <div
-            onClick={() =>
-              (window.location.href = loginUrl({ language: "en" }))
-            }
+            class={styles.account_header}
+            onClick={() => setshowAccountSwitcher(true)}
           >
-            <b>Log In</b>
+            <div class={styles.account_wrapper}>
+              <AccountHeader />
+            </div>
           </div>
-        )
-      )}
+        ) : (
+          !login_information.is_logging_in && (
+            <div
+              onClick={() =>
+                (window.location.href = loginUrl({ language: "en" }))
+              }
+            >
+              <b class={styles.loginText}>Log In</b>
+            </div>
+          )
+        )}
+      </div>
     </section>
   );
 };
@@ -162,7 +175,7 @@ const ThemeToggle = () => {
         checked={is_light_theme()}
         onChange={toggleThemeHandler}
       />
-      <span class={classNames(styles["slider"], styles["round"])} />
+      {is_light_theme() ? <DarkThemeIcon /> : <LightThemeIcon size={40} />}
     </label>
   );
 };

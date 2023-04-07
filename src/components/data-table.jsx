@@ -3,6 +3,9 @@ import classNames from "classnames";
 import { detectTouch } from "../utils/responsive";
 import styles from "../styles/data-table.module.scss";
 import { swipe_direction } from "../stores/ui-store";
+import { login_information } from "Stores/base-store";
+import { setBannerMessage } from "Stores/trade-store";
+import { ERROR_MESSAGE } from "Constants/error-codes";
 
 const DataTable = (props) => {
   const [active_index, setActiveIndex] = createSignal(null);
@@ -12,6 +15,14 @@ const DataTable = (props) => {
       setActiveIndex(null);
     }
   });
+
+  const handleRowClick = (cell_value) => {
+    if (!login_information.is_logged_in) {
+      setBannerMessage(ERROR_MESSAGE.login_error);
+    } else {
+      props.onRowClick(cell_value);
+    }
+  };
 
   return (
     <div style={{ position: "relative" }}>
@@ -43,7 +54,7 @@ const DataTable = (props) => {
                         swipe_direction() === "LEFT" &&
                         cell_value.tick === active_index(),
                     })}
-                    onClick={() => props.onRowClick(cell_value)}
+                    onClick={() => handleRowClick(cell_value)}
                   >
                     <For each={props.headers}>
                       {(header) =>

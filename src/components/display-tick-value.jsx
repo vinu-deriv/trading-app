@@ -1,5 +1,6 @@
 import { Match, Show, Switch, createEffect, createSignal } from "solid-js";
 
+import { CountDownTimer } from "Components";
 import Loader from "./loader";
 import classNames from "classnames";
 import { market_ticks } from "../stores";
@@ -19,7 +20,7 @@ const DisplayTickValue = (props) => {
         market_ticks()[props.data];
       if (is_closed) {
         setDifference({
-          value: `Open in ${opens_at.days}D:${opens_at.hours}h`,
+          value: opens_at,
           status: "same",
         });
       } else if (isNaN(previous) && isNaN(current)) {
@@ -30,6 +31,8 @@ const DisplayTickValue = (props) => {
           setDifference({ value: rate_change, status: "decrease" });
         } else if (current > previous) {
           setDifference({ value: rate_change, status: "increase" });
+        } else {
+          setDifference({ value: rate_change, status: "same" });
         }
       }
     }
@@ -41,6 +44,9 @@ const DisplayTickValue = (props) => {
       fallback={<Loader class={shared["spinner"]} type="1" size="1.5rem" />}
     >
       <Switch>
+        <Match when={market_ticks()[props.data]["opens_at"] !== null}>
+          <CountDownTimer opens_at={difference()["value"]} />
+        </Match>
         <Match when={market_ticks()[props.data]["is_closed"] === true}>
           <span class={shared["market-closed"]}>
             <b>{difference()["value"]}</b>

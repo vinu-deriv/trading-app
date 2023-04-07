@@ -1,33 +1,41 @@
-import { Route, Routes, useLocation, useNavigate } from "solid-app-router";
-import { Show, createEffect, lazy } from "solid-js";
+import { Route, Routes, useLocation } from "@solidjs/router";
+import {
+  Show,
+  createEffect,
+  lazy,
+  createSignal,
+  onCleanup,
+  ErrorBoundary,
+} from "solid-js";
 import {
   activeSymbols,
   banner_message,
   fetchActiveSymbols,
   is_light_theme,
+  setIsMobileView,
   showAccountSwitcher,
-} from "./stores";
-import { configureEndpoint, getAppId, getSocketUrl } from "./utils/config";
+} from "Stores";
+import { configureEndpoint, getAppId, getSocketUrl } from "Utils/config";
 import { endpoint, init, login_information } from "Stores/base-store";
-import {
-  selected_markets,
-  setBannerMessage,
-  setSelectedMarkets,
-} from "Stores/trade-store";
+import { selected_markets, setSelectedMarkets } from "Stores/trade-store";
 import { loginUrl } from "Constants/deriv-urls";
-import { AccountSwitcher } from "./components";
+import {
+  AccountSwitcher,
+  EmptyView,
+  ErrorBoundaryComponent,
+} from "./components";
 import BannerComponent from "./components/banner-component";
+import { MAX_MOBILE_WIDTH } from "Utils/responsive";
 import NavBar from "./components/nav";
 import { Portal } from "solid-js/web";
+import { banner_category } from "./constants/banner-category";
 import classNames from "classnames";
-import { getFavourites } from "./utils/map-markets";
-import { mapMarket } from "./utils/map-markets";
+import { getFavourites } from "Utils/map-markets";
+import { mapMarket } from "Utils/map-markets";
 import monitorNetwork from "Utils/network-status";
 import { onMount } from "solid-js";
+import { RouteGuard } from "./routes/route-guard.jsx";
 import styles from "./App.module.scss";
-import { banner_category } from "./constants/banner-category";
-import { ERROR_CODE, ERROR_MESSAGE } from "Constants/error-codes";
-import { setActionButtonValues } from "Stores/ui-store";
 
 const Endpoint = lazy(() => import("Routes/endpoint"));
 const MarketList = lazy(() => import("Routes/market-list"));
@@ -38,25 +46,25 @@ function App() {
   const { network_status } = monitorNetwork();
   const isSandbox = () => /dev$/.test(endpoint().server_url);
   const location = useLocation();
-  const navigate = useNavigate();
   const pathname = location.pathname;
-  
-  const onClickHandler = () => navigate("/endpoint", { replace: true });
+  const [isViewSupported, setIsViewSupported] = createSignal(true);
+
+  const handleWindowResize = () => {
+    setIsViewSupported(window.innerWidth < MAX_MOBILE_WIDTH);
+    setIsMobileView(isViewSupported());
+  };
 
   const fetchActiveSymbolsHandler = async () => {
-    try {
-      await fetchActiveSymbols();
-    } catch (error) {
-      if (error?.error?.code === ERROR_CODE.invalid_app_id) {
-        setBannerMessage(ERROR_MESSAGE.endpoint_redirect);
-        setActionButtonValues({ text: "Set AppId", action: onClickHandler });
-      } else {
-        setBannerMessage(error?.error?.message ?? ERROR_MESSAGE.general_error);
-      }
-    }
+    await fetchActiveSymbols();
   };
 
   onMount(async () => {
+    handleWindowResize();
+    window.addEventListener("resize", handleWindowResize);
+    // Remove lastpass iframe that prevents users from interacting with app
+    const lastpass_iframe = document.querySelector("[data-lastpass-root]");
+    if (lastpass_iframe) lastpass_iframe.remove();
+
     configureEndpoint(getAppId(), getSocketUrl());
     await fetchActiveSymbolsHandler();
     const map_market = mapMarket(activeSymbols());
@@ -83,6 +91,10 @@ function App() {
     });
   });
 
+  onCleanup(() => {
+    window.removeEventListener("resize", handleWindowResize);
+  });
+
   return (
     <div
       class={classNames(styles.App, {
@@ -98,27 +110,32 @@ function App() {
         />
       </Show>
       <NavBar />
-      <section
-        class={classNames(styles.content, {
-          [styles["is-acc-switcher-open"]]: showAccountSwitcher(),
-        })}
-      >
-        <Portal>
-          {network_status.is_disconnected && (
-            <div class={styles.banner}>
-              <div class={styles.caret} />
-              <div class={styles.disconnected}>You seem to be offline.</div>
-            </div>
-          )}
-        </Portal>
-        {showAccountSwitcher() && <AccountSwitcher />}
-        <Routes>
-          <Route element={<Endpoint />} path="/endpoint" />
-          <Route path="/" element={<MarketList />} />
-          <Route path="/trade" element={<Trade />} />
-          <Route path="/reports" element={<Reports />} />
-        </Routes>
-      </section>
+      <ErrorBoundary fallback={<ErrorBoundaryComponent />}>
+        <section
+          class={classNames(styles.content, {
+            [styles["is-acc-switcher-open"]]: showAccountSwitcher(),
+          })}
+        >
+          <Portal>
+            {network_status.is_disconnected && (
+              <div class={styles.banner}>
+                <div class={styles.caret} />
+                <div class={styles.disconnected}>You seem to be offline.</div>
+              </div>
+            )}
+          </Portal>
+          {showAccountSwitcher() && <AccountSwitcher />}
+          <Routes>
+            <Route path="/endpoint" component={Endpoint} />
+            <Route path="/" component={RouteGuard}>
+              <Route path="/home" component={MarketList} />
+              <Route path="/trade" component={Trade} />
+              <Route path="/reports" component={Reports} />
+            </Route>
+            <Route path="*" component={MarketList} />
+          </Routes>
+        </section>
+      </ErrorBoundary>
       <footer>
         <Show when={isSandbox()} fallback={<div>Connected to Prod</div>}>
           <div>
@@ -127,6 +144,9 @@ function App() {
           </div>
         </Show>
       </footer>
+      <Show when={!isViewSupported()}>
+        <EmptyView />
+      </Show>
     </div>
   );
 }

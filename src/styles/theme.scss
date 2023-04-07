@@ -39,6 +39,9 @@
     --payout-fall-background: #{$color-red-1};
     --fall-background: #{$color-red-2};
     --placeholder-text: #{$brand-disabled-2};
+    --slider-progress-bg: #{$slider-progress-bg-1};
+    --slider-progress-red: #{$brand-red-coral};
+    --slider-progress-green: #{$brand-green};
   }
 
   .theme-dark {
@@ -70,6 +73,9 @@
     --payout-fall-background: #{$color-red-1};
     --fall-background: #{$color-red-2};
     --placeholder-text: #{$brand-disabled-1};
+    --slider-progress-bg: #{$slider-progress-bg-2};
+    --slider-progress-red: #{$brand-red-coral};
+    --slider-progress-green: #{$brand-green};
   }
 }
 

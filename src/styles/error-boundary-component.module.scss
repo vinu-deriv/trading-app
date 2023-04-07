@@ -1,0 +1,9 @@
+.wrapper {
+    display: flex;
+    background: var(--section-background-1);
+    color: var(--text-main);
+    height: 100%;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}

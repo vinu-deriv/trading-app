@@ -11,7 +11,7 @@ import {
   setTradeTypes,
 } from "../../stores";
 import { createEffect, createSignal, onCleanup, batch } from "solid-js";
-import { useNavigate } from "solid-app-router";
+import { useNavigate } from "@solidjs/router";
 
 import { Show } from "solid-js";
 import classNames from "classnames";
@@ -30,10 +30,12 @@ const [duration_value, setDurationValue] = createSignal(0);
 const [allow_equal, setAllowEqual] = createSignal(false);
 const [amount, setAmountValue] = createSignal(10);
 const [hide_equal, setHideEqual] = createSignal(false);
+const [barrier_value, setBarrierValue] = createSignal("");
 const [duration_text, setDurationText] = createSignal("");
 const [form_validation, setFormValidation] = createSignal({});
 
 let duration = { min: 0, max: 0 };
+let barrier = "";
 let unsubscribe_buy;
 let unsubscribe_sell;
 
@@ -60,6 +62,7 @@ const getProposal = async (
   is_stake,
   slider_value,
   duration_value,
+  barrier_value,
   currency
 ) => {
   await forgetProposal();
@@ -76,26 +79,34 @@ const getProposal = async (
           duration: duration_unit === "t" ? slider_value : duration_value,
           duration_unit: duration_unit,
           symbol: symbol,
+          barrier: barrier_value ? barrier_value : undefined,
           subscribe: 1,
         },
         (response) => {
           if (response.proposal) {
-            const { id, ask_price, payout } = response.proposal;
+            const { id, ask_price, payout, barrier } = response.proposal;
 
             if (id) {
               setProposalErrorMessage((error) => ({
                 ...error,
                 amount_message: "",
+                barrier_message: "",
               }));
               setProposalBuy({
                 id,
                 ask_price,
                 payout,
+                barrier,
                 subscriptionId: response.subscription.id,
               });
             }
           }
-          if (!proposal_error_message()?.amount_message && response.error)
+          if (!proposal_error_message()?.barrier_message && response.error)
+            setProposalErrorMessage((error) => ({
+              ...error,
+              barrier_message: response.error.message,
+            }));
+          else if (!proposal_error_message()?.amount_message && response.error)
             setProposalErrorMessage((error) => ({
               ...error,
               amount_message: response.error.message,
@@ -113,11 +124,12 @@ const getProposal = async (
           duration: duration_unit === "t" ? slider_value : duration_value,
           duration_unit: duration_unit,
           symbol: symbol,
+          barrier: barrier_value ? barrier_value : undefined,
           subscribe: 1,
         },
         (response) => {
           if (response.proposal) {
-            const { id, ask_price, payout } = response.proposal;
+            const { id, ask_price, payout, barrier } = response.proposal;
 
             if (id) {
               setProposalErrorMessage((error) => ({
@@ -128,6 +140,7 @@ const getProposal = async (
                 id,
                 ask_price,
                 payout,
+                barrier,
                 subscriptionId: response.subscription.id,
               });
             }
@@ -191,6 +204,7 @@ const OptionsTrade = (props) => {
       batch(() => {
         setDurationMinMax(duration_unit);
         setDurationValue(duration.min);
+        setBarrierConfigValue(duration_unit);
         setDurationText(props.durations_list[0].text);
         setProposalErrorMessage((response) => ({
           ...response,
@@ -221,6 +235,7 @@ const OptionsTrade = (props) => {
       is_stake(),
       slider_value(),
       duration_value(),
+      barrier_value(),
       currency
     );
   });
@@ -241,6 +256,18 @@ const OptionsTrade = (props) => {
 
     duration.min = convertDurationLimit(duration.min, duration_unit);
     duration.max = convertDurationLimit(duration.max, duration_unit);
+  };
+
+  const setBarrierConfigValue = (duration_unit) => {
+    barrier = ContractType.getBarriers(
+      props.selected_contract_type,
+      duration_unit === "d"
+        ? "daily"
+        : duration_unit === "t"
+        ? "tick"
+        : "intraday"
+    ).barrier_1;
+    setBarrierValue(barrier);
   };
 
   const handleBuyContractClicked = async (id) => {
@@ -269,14 +296,19 @@ const OptionsTrade = (props) => {
         is_stake(),
         slider_value(),
         duration_value(),
+        barrier_value(),
         currency
       );
     }
   };
 
+  const handleBarrierChange = (event) => {
+    setBarrierValue(event.target.value);
+  };
   const handleDurationChange = (selected_item) => {
     setDurationMinMax(selected_item?.value);
     setDurationText(selected_item?.text);
+    setBarrierConfigValue(selected_item.value);
     setProposalErrorMessage((response) => ({
       ...response,
       duration_message: `Should be between ${duration.min} and ${duration.max}`,
@@ -379,6 +411,29 @@ const OptionsTrade = (props) => {
             {proposal_error_message()?.duration_message}
           </span>
         </div>
+        <Show when={props.selected_contract_type === "high_low"}>
+          <div class={styles["amount"]}>
+            <div>Barriers</div>
+            <input
+              class={styles["amount__input"]}
+              value={barrier_value()}
+              onInput={(event) => handleBarrierChange(event)}
+              required
+            />
+          </div>
+        </Show>
+        <Show when={props.selected_contract_type === "touch"}>
+          <div class={styles["amount"]}>
+            <div>Barriers</div>
+            <input
+              class={styles["amount__input"]}
+              value={barrier_value()}
+              onInput={(event) => handleBarrierChange(event)}
+              required
+            />
+          </div>
+        </Show>
+
         <div class={`${classNames(styles["button"], styles["stake-payout"])}`}>
           <button
             class={`${classNames(
@@ -418,6 +473,7 @@ const OptionsTrade = (props) => {
             />
             <p>{currency}</p>
           </div>
+
           <Show
             when={
               form_validation()?.amount_touched &&
@@ -477,5 +533,4 @@ const OptionsTrade = (props) => {
     </Show>
   );
 };
-
 export default OptionsTrade;
