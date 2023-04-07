@@ -2,6 +2,7 @@ import { ERROR_CODE, ERROR_MESSAGE } from "Constants/error-codes";
 import { logout } from "Stores/base-store";
 import { setBannerMessage } from "Stores/trade-store";
 import { setActionButtonValues } from "Stores/ui-store";
+import { routes } from "Constants/routes";
 
 const onClickHandler = (action) => {
   if (action === "reload") {
@@ -10,7 +11,7 @@ const onClickHandler = (action) => {
     if (/endpoint/.test(window.location.href)) {
       setBannerMessage(null);
     } else {
-      window.location.assign("/endpoint");
+      window.location.assign(routes.ENDPOINT);
     }
   }
 };

@@ -19,6 +19,7 @@ import { configureEndpoint, getAppId, getSocketUrl } from "Utils/config";
 import { endpoint, init, login_information } from "Stores/base-store";
 import { selected_markets, setSelectedMarkets } from "Stores/trade-store";
 import { loginUrl } from "Constants/deriv-urls";
+import { routes } from "Constants/routes";
 import {
   AccountSwitcher,
   EmptyView,
@@ -126,11 +127,11 @@ function App() {
           </Portal>
           {showAccountSwitcher() && <AccountSwitcher />}
           <Routes>
-            <Route path="/endpoint" component={Endpoint} />
-            <Route path="/" component={RouteGuard}>
-              <Route path="/home" component={MarketList} />
-              <Route path="/trade" component={Trade} />
-              <Route path="/reports" component={Reports} />
+            <Route path={routes.ENDPOINT} component={Endpoint} />
+            <Route path={routes.ROOT} component={RouteGuard}>
+              <Route path={routes.HOME} component={MarketList} />
+              <Route path={routes.TRADE} component={Trade} />
+              <Route path={routes.REPORTS} component={Reports} />
             </Route>
             <Route path="*" component={MarketList} />
           </Routes>
@@ -139,7 +140,7 @@ function App() {
       <footer>
         <Show when={isSandbox()} fallback={<div>Connected to Prod</div>}>
           <div>
-            The server <a href="/endpoint">endpoint</a> is: &nbsp;
+            The server <a href={routes.ENDPOINT}>endpoint</a> is: &nbsp;
             <span>{endpoint().server_url}</span>
           </div>
         </Show>

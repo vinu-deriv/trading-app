@@ -25,6 +25,7 @@ import {
   setSelectedTradeType,
 } from "Stores";
 import { checkWhenMarketOpens, generateTickData } from "Utils/format-value";
+import { routes } from "Constants/routes";
 
 import StarIcon from "Assets/svg/action/star.svg";
 import classNames from "classnames";
@@ -212,7 +213,7 @@ const MarketList = () => {
                         display_name: trade_type.display_name,
                         symbol: trade_type.tick,
                       });
-                      navigate("/trade", { replace: true });
+                      navigate(routes.TRADE);
                     }}
                     config={{
                       watchlist: watchlist(),
