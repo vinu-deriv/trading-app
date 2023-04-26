@@ -1,5 +1,5 @@
 import { For, Show, onCleanup, onMount } from "solid-js";
-import { forgetAll, wait } from "../utils/socket-base";
+import { forgetAll, sendRequest, wait } from "../utils/socket-base";
 import {
   open_contract_ids,
   open_contract_info,
@@ -7,7 +7,7 @@ import {
   setOpenContractId,
   setOpenContractInfo,
 } from "Stores";
-
+import Button from "./button";
 import Loader from "./loader";
 import classNames from "classnames";
 import { login_information } from "Stores/base-store";
@@ -28,6 +28,7 @@ const formatActivePositionData = (proposal_open_contract) => ({
   expiry_time_epoc: proposal_open_contract.date_expiry,
   has_expired: proposal_open_contract.is_expired,
   currency: proposal_open_contract.currency,
+  valid_sell: proposal_open_contract.is_valid_to_sell,
   tick_count: proposal_open_contract.tick_count ?? null,
   tick_stream: proposal_open_contract.tick_stream ?? [],
 });
@@ -36,7 +37,7 @@ const filterActivePositions = (contract_info) => {
   if (!open_contract_ids().includes(contract_info.contract_id)) {
     setOpenContractId([...open_contract_ids(), contract_info.contract_id]);
   }
-  if (contract_info.is_expired) {
+  if (contract_info.is_expired || contract_info.is_sold) {
     const new_set = open_contract_ids().filter(
       (ctd_id) => contract_info.contract_id !== ctd_id
     );
@@ -63,6 +64,21 @@ const getOpenContractsInfo = () => {
         filterActivePositions(proposal_open_contract);
     }, 500)
   );
+};
+
+const onClickSell = async (contract_id, indicative_price, currency) => {
+  try {
+    const resp = await sendRequest({
+      sell: contract_id,
+      price: indicative_price,
+    });
+    if (resp.error) {
+      throw new Error(resp.error);
+    }
+    setBannerMessage(`Contract was sold for ${resp.sell.sold_for} ${currency}`);
+  } catch (error) {
+    setBannerMessage(error?.error?.message ?? ERROR_MESSAGE.general_error);
+  }
 };
 
 const OpenPosition = () => {
@@ -111,6 +127,7 @@ const OpenPosition = () => {
             pay_limit={open_contract_info()[contract_id]?.pay_limit}
             profit={open_contract_info()[contract_id]?.profit}
             currency={open_contract_info()[contract_id]?.currency}
+            sell={open_contract_info()[contract_id]?.valid_sell}
           />
         )}
       </For>
@@ -138,7 +155,7 @@ const OpenPositionItem = (props) => (
       </div>
       <div>{props.ref_id}</div>
     </div>
-    <div class={styles["currency"]}>
+    <div class={styles["currency_open_positions"]}>
       <div>
         <strong>Currency</strong>
       </div>
@@ -174,6 +191,24 @@ const OpenPositionItem = (props) => (
       >
         {props.profit}
       </div>
+    </div>{" "}
+    <div>
+      {props.sell && (
+        <div class={styles["sell"]}>
+          <Button
+            category="secondary"
+            onClick={() =>
+              onClickSell(
+                props.contract_id,
+                props.indicative_price,
+                props.currency
+              )
+            }
+          >
+            Sell
+          </Button>
+        </div>
+      )}
     </div>
   </div>
 );
