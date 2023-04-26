@@ -112,11 +112,7 @@ function App() {
       </Show>
       <NavBar />
       <ErrorBoundary fallback={<ErrorBoundaryComponent />}>
-        <section
-          class={classNames(styles.content, {
-            [styles["is-acc-switcher-open"]]: showAccountSwitcher(),
-          })}
-        >
+        <section class={classNames(styles.content)}>
           <Portal>
             {network_status.is_disconnected && (
               <div class={styles.banner}>
