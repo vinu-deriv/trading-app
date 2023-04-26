@@ -75,7 +75,9 @@ const onClickSell = async (contract_id, indicative_price, currency) => {
     if (resp.error) {
       throw new Error(resp.error);
     }
-    setBannerMessage(`Contract was sold for  ${resp.sell.sold_for}${currency}`);
+    setBannerMessage(
+      `Contract was sold for  ${resp.sell.sold_for} ${currency}`
+    );
   } catch (error) {
     setBannerMessage(error?.error?.message ?? ERROR_MESSAGE.general_error);
   }
