@@ -7,8 +7,11 @@ import classNames from "classnames";
 import { Show } from "solid-js";
 import { For } from "solid-js";
 import { addComma } from "../utils/format-value";
+import { getMarketInformation } from "../utils/map-markets";
 import { login_information } from "../stores/base-store";
 import Loader from "./loader";
+import { activeSymbols } from "../stores";
+import { getContractConfig, isHighLow } from "../utils/contract";
 
 const Statements = () => {
   const [statement_count, setStatementCount] = createSignal(null);
@@ -18,15 +21,42 @@ const Statements = () => {
     if (active_account) {
       sendRequest({
         statement: 1,
+        description: 1,
         limit: 100,
         offset: 0,
       }).then((resp) => {
         const { transactions, count } = resp.statement;
+        transactions.forEach((transaction) => {
+          const shortcode = ["buy", "sell"].includes(transaction.action_type)
+            ? transaction.shortcode
+            : null;
+          if (shortcode) {
+            const { category, underlying } = getMarketInformation(shortcode);
+            transaction.display_name = underlying
+              ? getDisplayName(underlying, activeSymbols())
+              : null;
+            transaction.contract_type = getContractConfig(
+              isHighLow({ shortcode })
+            )[category.toUpperCase()];
+          }
+        });
         setStatements(transactions);
         setStatementCount(count);
       });
     }
   });
+
+  const getDisplayName = (symbol, activeSymbols) => {
+    if (symbol && activeSymbols.length) {
+      const required_symbol = activeSymbols.find((active_symbol) => {
+        return active_symbol.symbol === symbol;
+      });
+      if (required_symbol) {
+        return required_symbol.display_name;
+      }
+    }
+    return null;
+  };
 
   return (
     <Show
@@ -45,6 +75,8 @@ const Statements = () => {
         {(statement) => (
           <StatementItems
             action_type={statement.action_type}
+            display_name={statement.display_name}
+            contract_type={statement.contract_type}
             transaction_id={statement.transaction_id}
             contract_id={statement.contract_id}
             transaction_time={new Date(
@@ -65,6 +97,14 @@ export default Statements;
 const StatementItems = (props) => {
   return (
     <div class={classNames(styles["open-position"], styles["statement"])}>
+      <div class={styles["market"]}>
+        <strong>Market</strong>
+        <div>{props.display_name}</div>
+      </div>
+      <div class={styles["trade-type"]}>
+        <strong>Type</strong>
+        <div>{props.contract_type}</div>
+      </div>
       <div class={styles["trans-id"]}>
         <strong>Ref. Id</strong>
         <div>{props.transaction_id}</div>
