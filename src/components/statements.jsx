@@ -25,7 +25,7 @@ const Statements = () => {
         limit: 100,
         offset: 0,
       }).then((resp) => {
-        const { transactions, count } = resp.statement;
+        const { transactions = [], count= 0 } = resp.statement;
         transactions.forEach((transaction) => {
           const shortcode = ["buy", "sell"].includes(transaction.action_type)
             ? transaction.shortcode
@@ -48,9 +48,9 @@ const Statements = () => {
 
   const getDisplayName = (symbol, activeSymbols) => {
     if (symbol && activeSymbols.length) {
-      const required_symbol = activeSymbols.find((active_symbol) => {
-        return active_symbol.symbol === symbol;
-      });
+      const required_symbol = activeSymbols.find(
+        (active_symbol) => active_symbol.symbol === symbol
+      );
       if (required_symbol) {
         return required_symbol.display_name;
       }
