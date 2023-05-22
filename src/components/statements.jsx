@@ -25,7 +25,7 @@ const Statements = () => {
         limit: 100,
         offset: 0,
       }).then((resp) => {
-        const { transactions = [], count= 0 } = resp.statement;
+        const { transactions = [], count = 0 } = resp.statement;
         transactions.forEach((transaction) => {
           const shortcode = ["buy", "sell"].includes(transaction.action_type)
             ? transaction.shortcode
