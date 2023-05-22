@@ -3,6 +3,7 @@ import {
   DisplayChangePercent,
   DisplayTickValue,
   Loader,
+  MarkFavourites,
   Tab,
   Tabs,
 } from "Components";
@@ -27,12 +28,9 @@ import {
 import { checkWhenMarketOpens, generateTickData } from "Utils/format-value";
 import { routes } from "Constants/routes";
 
-import StarIcon from "Assets/svg/action/star.svg";
-import classNames from "classnames";
 import { forgetAll } from "Utils/socket-base";
-import { getFavourites } from "Utils/map-markets";
+import { getFavourites, isFavourites } from "Utils/map-markets";
 import { segregateMarkets } from "Utils/map-markets";
-import { setSwipeDirection } from "Stores/ui-store";
 import shared from "Styles/shared.module.scss";
 import styles from "Styles/accordion.module.scss";
 import throttle from "lodash.throttle";
@@ -44,6 +42,7 @@ const MarketList = () => {
     { title: "Name", ref: "display_name" },
     { title: "Change %", ref: "change", cell_content: DisplayChangePercent },
     { title: "Price", ref: "tick", cell_content: DisplayTickValue },
+    { title: "", ref: "selected", cell_content: MarkFavourites },
   ];
 
   const default_tab = {
@@ -79,14 +78,8 @@ const MarketList = () => {
       display_name: markets.display_name,
       change: markets.symbol,
       tick: markets.symbol,
+      selected: watchlist().find((mkt) => mkt === markets.symbol),
     }));
-  };
-
-  const fetchAvailableMarketSymbols = (market_type) => {
-    const requiredMarkets = available_markets().filter(
-      (market_data) => market_data.market === market_type
-    );
-    return requiredMarkets.map((market) => market.symbol);
   };
 
   const setTabList = (abvl_markets) => [
@@ -154,8 +147,7 @@ const MarketList = () => {
       getWatchList();
     } else {
       getAvailableMarkets(id);
-      const symbol_list = fetchAvailableMarketSymbols(id);
-      getMarketData(symbol_list);
+      setMarketData(generateDataSet());
     }
   };
 
@@ -167,16 +159,23 @@ const MarketList = () => {
     getMarketData(watchlist());
   };
 
-  const updateWatchlist = (row_data) => {
-    const new_list = watchlist().includes(row_data.tick)
-      ? watchlist().filter((sym) => sym !== row_data.tick)
-      : [...watchlist(), row_data.tick];
+  const updateWatchlist = (symbol) => {
+    const new_list = watchlist().includes(symbol)
+      ? watchlist().filter((sym) => sym !== symbol)
+      : [...watchlist(), symbol];
     localStorage.setItem("favourites", JSON.stringify(new_list));
     setWatchlist(new_list);
     if (active_tab() === 0) {
       getWatchList();
     }
   };
+
+  const getTableHeaders = (ref) =>
+    isFavourites(ref)
+      ? header_config
+      : header_config.filter((header) =>
+          ["display_name", "selected"].includes(header.ref)
+        );
 
   return (
     <>
@@ -196,7 +195,7 @@ const MarketList = () => {
           <For each={setTabList(all_markets())}>
             {(tabs) => (
               <Tab label={tabs.title} id={tabs.ref}>
-                <Show when={tabs.ref === FAVOURITES && !market_data()?.length}>
+                <Show when={isFavourites(tabs.ref) && !market_data()?.length}>
                   <p class={styles["add-favourites-message"]}>
                     To add to <strong>Favourites</strong>, swipe left at the
                     asset you like and hit the star.
@@ -204,10 +203,15 @@ const MarketList = () => {
                 </Show>
                 <Show when={market_data().length}>
                   <DataTable
-                    headers={header_config}
+                    headers={getTableHeaders(tabs.ref)}
                     data={market_data()}
                     show_header={true}
                     table_class={styles["market-list"]}
+                    table_header_class={
+                      isFavourites(tabs.ref)
+                        ? styles["favorites-header"]
+                        : styles["market-header"]
+                    }
                     onRowClick={(trade_type) => {
                       setSelectedTradeType({
                         display_name: trade_type.display_name,
@@ -216,8 +220,8 @@ const MarketList = () => {
                       navigate(routes.TRADE);
                     }}
                     config={{
+                      ref: tabs.ref,
                       watchlist: watchlist(),
-                      action_component: MarketListAction,
                       onAction: (data) => updateWatchlist(data),
                     }}
                   />
@@ -228,37 +232,6 @@ const MarketList = () => {
         </Tabs>
       </Show>
     </>
-  );
-};
-
-const MarketListAction = (props) => {
-  return (
-    <div
-      id="action"
-      onClick={() => {
-        setSwipeDirection("RIGHT");
-        props.onAction();
-      }}
-      class={classNames(styles["action-cell"], [styles.add])}
-    >
-      <Show
-        when={props.data.find((mkt) => mkt === props.selected)}
-        fallback={
-          <StarIcon
-            height="24"
-            stroke="white"
-            id={`watch-icon-${props.index}`}
-          />
-        }
-      >
-        <StarIcon
-          id={`watch-icon-${props.index}`}
-          stroke="white"
-          fill="white"
-          height="24"
-        />
-      </Show>
-    </div>
   );
 };
 

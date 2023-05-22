@@ -38,7 +38,6 @@ table {
 
   thead {
     tr {
-      grid-template-columns: 1.5fr 1fr 1fr;
       th:first-child {
         text-align: start;
       }
@@ -50,7 +49,7 @@ table {
     padding: unset;
   }
 
-  tbody{
+  tbody {
     overflow: auto;
     height: calc(100vh - 18.2rem);
   }
@@ -59,7 +58,6 @@ table {
     z-index: 1;
     position: relative;
     display: grid;
-    grid-template-columns: 1.5fr 1fr 1fr;
     background-color: var(--section-background-1);
     gap: 0.8rem;
     padding: 16px;
@@ -73,9 +71,12 @@ table {
       display: flex;
       justify-content: end;
     }
-  }
-}
 
-.slider--active {
-  transform: translate(-56px);
+    &--fav{
+          grid-template-columns: 1.5fr 1fr 1fr auto;
+    }
+    &--market{
+          grid-template-columns: repeat(2,auto)
+    }
+  }
 }
