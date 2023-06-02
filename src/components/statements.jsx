@@ -1,17 +1,14 @@
-import { createSignal } from "solid-js";
-import { onMount } from "solid-js";
-import { setStatements, statements } from "../stores";
-import { sendRequest } from "../utils/socket-base";
-import styles from "Styles/open-position.module.scss";
+import { createSignal, For, onMount, Show  } from "solid-js";
 import classNames from "classnames";
-import { Show } from "solid-js";
-import { For } from "solid-js";
-import { addComma } from "../utils/format-value";
-import { getMarketInformation } from "../utils/map-markets";
+import { activeSymbols, setStatements, statements } from "../stores";
 import { login_information } from "../stores/base-store";
 import Loader from "./loader";
-import { activeSymbols } from "../stores";
 import { getContractConfig, isHighLow } from "../utils/contract";
+import { sendRequest } from "../utils/socket-base";
+import { addComma } from "../utils/format-value";
+import { getMarketInformation } from "../utils/map-markets";
+
+import styles from "Styles/open-position.module.scss";
 
 const Statements = () => {
   const [statement_count, setStatementCount] = createSignal(null);
