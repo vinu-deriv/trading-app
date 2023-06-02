@@ -4,8 +4,8 @@ import { activeSymbols, setStatements, statements } from "../stores";
 import { login_information } from "../stores/base-store";
 import Loader from "./loader";
 import { getContractConfig, isHighLow } from "../utils/contract";
-import { sendRequest } from "../utils/socket-base";
 import { addComma } from "../utils/format-value";
+import { sendRequest } from "../utils/socket-base";
 import { getMarketInformation } from "../utils/map-markets";
 
 import styles from "Styles/open-position.module.scss";
