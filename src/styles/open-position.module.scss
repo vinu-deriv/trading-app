@@ -35,6 +35,21 @@
   @extend .card-alignment;
 }
 
+.market {
+  grid-area: market;
+  @extend .card-alignment;
+}
+
+.trade-type {
+  grid-area: trade-type;
+  @extend .card-alignment;
+}
+
+.ref-id {
+  grid-area: ref;
+  @extend .card-alignment;
+}
+
 .currency_open_positions{
   grid-area: currency;
   display: flex;
@@ -83,6 +98,7 @@
 
 .statement {
   grid-template-areas:
+    "market trade-type"
     "trans currency"
     "date credit"
     "btext bvalue";
