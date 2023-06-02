@@ -1,4 +1,4 @@
-import { createSignal, For, onMount, Show  } from "solid-js";
+import { createSignal, For, onMount, Show } from "solid-js";
 import classNames from "classnames";
 import { activeSymbols, setStatements, statements } from "../stores";
 import { login_information } from "../stores/base-store";
