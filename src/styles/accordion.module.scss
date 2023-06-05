@@ -101,12 +101,6 @@
   color: var(--text-main);
 }
 
-.market-list {
-  th:not(:first-child),
-  td:not(:first-child) {
-    text-align: end;
-  }
-}
 
 .add {
   background-color: var(--button-green);
@@ -125,7 +119,7 @@
 
 .favorites-header {
   tr {
-    grid-template-columns: 1.5fr 1fr 1fr auto;
+    grid-template-columns: 1.5fr 0.9fr 1fr 0.3fr;
   }
 }
 
