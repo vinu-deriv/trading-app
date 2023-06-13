@@ -36,19 +36,14 @@ const DataTable = (props) => {
               <tr>
                 <td>
                   <div
-                    class={classNames(
-                      styles["data-layout"],
-                      {
-                        [styles["data-layout--fav"]]: isFavourites(
-                          props.config.ref
-                        ),
-                      },
-                      {
-                        [styles["data-layout--market"]]: !isFavourites(
-                          props.config.ref
-                        ),
-                      }
-                    )}
+                    class={classNames(styles["data-layout"], {
+                      [styles["data-layout--fav"]]: isFavourites(
+                        props.config.ref
+                      ),
+                      [styles["data-layout--market"]]: !isFavourites(
+                        props.config.ref
+                      ),
+                    })}
                     onClick={() => handleRowClick(cell_value)}
                   >
                     <For each={props.headers}>
