@@ -17,6 +17,7 @@ import CountDownTimer from "./count-down-timer";
 import SkeletonLoader from "./skeleton-loader";
 import ErrorBoundaryComponent from "./error-boundary-component";
 import EmptyView from "./empty-view";
+import MarkFavourites from "./mark-favourites";
 
 export {
   NavBar,
@@ -39,4 +40,5 @@ export {
   SkeletonLoader,
   ErrorBoundaryComponent,
   EmptyView,
+  MarkFavourites,
 };

@@ -1,3 +1,5 @@
+import { FAVOURITES } from "Constants/trade-config";
+
 export const mapMarket = (active_symbols) => {
   return (
     active_symbols?.reduce((symbol_map, symbol) => {
@@ -20,6 +22,8 @@ export const segregateMarkets = (active_symbols) =>
     }),
     {}
   ) ?? [];
+
+export const isFavourites = (ref) => ref === FAVOURITES;
 
 export const getMarketInformation = (shortcode) => {
   const market_info = {

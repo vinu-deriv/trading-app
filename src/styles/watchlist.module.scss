@@ -59,6 +59,8 @@
   padding: 4px 8px;
   text-align: center;
   border-radius: 5px;
+display: block;
+word-break: break-all;
 
   &--increase {
     background-color: var(--button-green);
@@ -113,7 +115,7 @@
 
 .market-closed {
   display: flex;
-  justify-content: space-between;
+  justify-content: center !important;
   gap: 1rem;
   align-items: center;
 

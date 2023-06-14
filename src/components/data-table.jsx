@@ -1,21 +1,12 @@
-import { For, Show, createEffect, createSignal } from "solid-js";
+import { For, Show } from "solid-js";
 import classNames from "classnames";
-import { detectTouch } from "../utils/responsive";
 import styles from "../styles/data-table.module.scss";
-import { swipe_direction } from "../stores/ui-store";
 import { login_information } from "Stores/base-store";
 import { setBannerMessage } from "Stores/trade-store";
 import { ERROR_MESSAGE } from "Constants/error-codes";
+import { isFavourites } from "Utils/map-markets";
 
 const DataTable = (props) => {
-  const [active_index, setActiveIndex] = createSignal(null);
-
-  createEffect(() => {
-    if (swipe_direction() === "RIGHT") {
-      setActiveIndex(null);
-    }
-  });
-
   const handleRowClick = (cell_value) => {
     if (!login_information.is_logged_in) {
       setBannerMessage(ERROR_MESSAGE.login_error);
@@ -42,17 +33,16 @@ const DataTable = (props) => {
         <tbody class={classNames(styles["table-body"], props.table_body_class)}>
           <For each={props.data}>
             {(cell_value, index) => (
-              <tr
-                draggable="true"
-                onTouchStart={() => setActiveIndex(cell_value.tick)}
-                ref={(el) => detectTouch(el)}
-              >
+              <tr>
                 <td>
                   <div
                     class={classNames(styles["data-layout"], {
-                      [styles["slider--active"]]:
-                        swipe_direction() === "LEFT" &&
-                        cell_value.tick === active_index(),
+                      [styles["data-layout--fav"]]: isFavourites(
+                        props.config.ref
+                      ),
+                      [styles["data-layout--market"]]: !isFavourites(
+                        props.config.ref
+                      ),
                     })}
                     onClick={() => handleRowClick(cell_value)}
                   >
@@ -62,6 +52,10 @@ const DataTable = (props) => {
                           <div>
                             <header.cell_content
                               data={cell_value[header.ref]}
+                              config={{
+                                ...props.config,
+                                symbol: cell_value.tick,
+                              }}
                             />
                           </div>
                         ) : (
@@ -70,12 +64,6 @@ const DataTable = (props) => {
                       }
                     </For>
                   </div>
-                  <props.config.action_component
-                    data={props.config.watchlist}
-                    selected={cell_value.tick}
-                    index={index()}
-                    onAction={() => props.config.onAction(cell_value)}
-                  />
                 </td>
               </tr>
             )}
