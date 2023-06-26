@@ -174,7 +174,7 @@ const Trade = () => {
                   onClick={() => navigate(-1)}
                   class={styles["instrument-btn"]}
                 >
-                  <BackArrow height="24" />
+                  <BackArrow height="24" fill="var(--text-main)" />
                 </div>
                 <h4 class={styles["tick-text"]}>
                   <b>{selectedTradeType()?.display_name}</b>
