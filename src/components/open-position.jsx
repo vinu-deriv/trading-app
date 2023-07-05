@@ -18,7 +18,7 @@ import { timePeriod, getCurrentTick } from "Utils/format-value";
 import { ERROR_MESSAGE } from "Constants/error-codes";
 
 const formatActivePositionData = (proposal_open_contract) => ({
-  type: proposal_open_contract.underlying,
+  type: proposal_open_contract.display_name,
   ref_id: proposal_open_contract.contract_id,
   buy_price: proposal_open_contract.buy_price,
   indicative_price: proposal_open_contract.bid_price,
