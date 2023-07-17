@@ -294,3 +294,20 @@
   width: 100%;
   position: relative;
 }
+
+.instrument {
+  &-title {
+    display: grid;
+    align-items: center;
+    grid-template-columns: 0.5fr 1fr;
+
+    .tick-text {
+      text-align: left;
+    }
+  }
+
+  &-btn {
+    display: flex;
+    justify-content: left;
+  }
+}

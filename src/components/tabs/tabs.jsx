@@ -17,13 +17,13 @@ const Tabs = (props) => {
 
   onMount(() => {
     props.onTabItemClick({
-      index: props.active_index,
-      id: props.default_selected,
+      index: props.active_index?.index ?? 0,
+      id: props.active_index?.id ?? props.default_selected,
     });
   });
 
   createEffect(() => {
-    setSelectedTab(props.active_index ?? 0);
+    setSelectedTab(props.active_index.index ?? 0);
   });
 
   return (

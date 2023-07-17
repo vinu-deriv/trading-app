@@ -1,4 +1,3 @@
-import { ERROR_CODE, ERROR_MESSAGE } from "Constants/error-codes";
 import {
   For,
   Match,
@@ -9,6 +8,9 @@ import {
   onCleanup,
   onMount,
 } from "solid-js";
+import { useNavigate } from "@solidjs/router";
+import BackArrow from "Assets/svg/action/back-arrow.svg";
+import { ERROR_CODE, ERROR_MESSAGE } from "Constants/error-codes";
 import {
   calculateTimeLeft,
   checkWhenMarketOpens,
@@ -28,9 +30,8 @@ import {
 } from "Stores/trade-store";
 
 import { ContractType } from "Utils/contract-type";
-import { Loader } from "Components";
+import { Loader, Slider } from "Components";
 import OptionsTrade from "./options-trade";
-import { Slider } from "Components";
 import classNames from "classnames";
 import dashboardStyles from "Styles/watchlist.module.scss";
 import { getContractTypesConfig } from "Constants/trade-config";
@@ -68,6 +69,7 @@ const Trade = () => {
       );
     }
   };
+
   const fetchMarketValues = async (symbol, getOHLC) => {
     await subscribe(
       {
@@ -82,6 +84,8 @@ const Trade = () => {
       getOHLC
     );
   };
+
+  const navigate = useNavigate();
 
   const getOHLC = (resp) => {
     const { msg_type, ohlc } = resp;
@@ -165,9 +169,17 @@ const Trade = () => {
             }
           >
             <Show when={selectedTradeType()?.display_name}>
-              <h4 class={styles["tick-text"]}>
-                <b>{selectedTradeType()?.display_name}</b>
-              </h4>
+              <div class={styles["instrument-title"]}>
+                <div
+                  onClick={() => navigate(-1)}
+                  class={styles["instrument-btn"]}
+                >
+                  <BackArrow height="24" fill="var(--text-main)" />
+                </div>
+                <h4 class={styles["tick-text"]}>
+                  <b>{selectedTradeType()?.display_name}</b>
+                </h4>
+              </div>
             </Show>
             <section
               class={classNames(

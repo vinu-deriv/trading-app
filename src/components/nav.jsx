@@ -6,7 +6,12 @@ import {
   login_information,
   logout,
 } from "Stores/base-store";
-import { is_light_theme, is_mobile_view, setIsLightTheme } from "Stores";
+import {
+  is_light_theme,
+  is_mobile_view,
+  setIsLightTheme,
+  setActiveTab,
+} from "Stores";
 
 import AppIcon from "Assets/svg/app-logo/dtrader.svg";
 import DarkThemeIcon from "Assets/svg/action/dark-theme.svg";
@@ -75,6 +80,14 @@ const NavBar = () => {
     );
   };
 
+  const navigateToHome = () => {
+    setActiveTab({
+      index: 0,
+      id: "favs",
+    });
+    navigate(routes.HOME);
+  };
+
   return (
     <section
       id="app_navbar"
@@ -104,7 +117,7 @@ const NavBar = () => {
         <ul class={styles.menu}>
           {!is_mobile_view() && (
             <li>
-              <a class={styles.logo} onClick={() => navigate(routes.HOME)}>
+              <a class={styles.logo} onClick={navigateToHome}>
                 <AppIcon />
               </a>
             </li>
@@ -126,7 +139,7 @@ const NavBar = () => {
       </div>
       <div>
         {is_mobile_view() && (
-          <a class={styles.logo} onClick={() => navigate(routes.HOME)}>
+          <a class={styles.logo} onClick={navigateToHome}>
             <AppIcon />
           </a>
         )}

@@ -11,6 +11,7 @@ import { ERROR_CODE, ERROR_MESSAGE } from "Constants/error-codes";
 import { FAVOURITES, MARKET_TYPES } from "Constants/trade-config";
 import {
   For,
+  on,
   Show,
   createEffect,
   createSignal,
@@ -24,6 +25,8 @@ import {
   setBannerMessage,
   setMarketTicks,
   setSelectedTradeType,
+  active_tab,
+  setActiveTab,
 } from "Stores";
 import { checkWhenMarketOpens, generateTickData } from "Utils/format-value";
 import { routes } from "Constants/routes";
@@ -53,21 +56,30 @@ const MarketList = () => {
   const [all_markets, setAllMarkets] = createSignal([]);
   const [available_markets, setAvailableMarkets] = createSignal([]);
   const [market_data, setMarketData] = createSignal(null);
-  const [active_tab, setActiveTab] = createSignal(0);
   const [watchlist, setWatchlist] = createSignal([]);
   const [already_subscribed, setAlreadySubscribed] = createSignal([]);
 
   const navigate = useNavigate();
 
   onMount(() => {
-    setActiveTab(0);
     setWatchlist(getFavourites());
-    getWatchList();
+    setAllMarkets(segregateMarkets(activeSymbols()));
+    fetchSelectedMarket(active_tab());
   });
 
   createEffect(() => {
     setAllMarkets(segregateMarkets(activeSymbols()));
   });
+
+  createEffect(
+    on(
+      active_tab,
+      (active_tab) => {
+        fetchSelectedMarket(active_tab);
+      },
+      { defer: true }
+    )
+  );
 
   onCleanup(() => {
     forgetAll("ticks");
@@ -138,15 +150,13 @@ const MarketList = () => {
     }
   };
 
-  const getAvailableMarkets = (market_type) =>
-    setAvailableMarkets(all_markets()[market_type]);
-
   const fetchSelectedMarket = (tab_ref) => {
+    setMarketData([]);
     const { id } = tab_ref;
     if (id === FAVOURITES) {
       getWatchList();
     } else {
-      getAvailableMarkets(id);
+      setAvailableMarkets(all_markets()[id]);
       setMarketData(generateDataSet());
     }
   };
@@ -165,7 +175,7 @@ const MarketList = () => {
       : [...watchlist(), symbol];
     localStorage.setItem("favourites", JSON.stringify(new_list));
     setWatchlist(new_list);
-    if (active_tab() === 0) {
+    if (active_tab().index === 0) {
       getWatchList();
     }
   };
@@ -186,8 +196,7 @@ const MarketList = () => {
       >
         <Tabs
           onTabItemClick={(tab_ref) => {
-            fetchSelectedMarket(tab_ref);
-            setActiveTab(tab_ref.index);
+            setActiveTab(tab_ref);
           }}
           active_index={active_tab()}
           default_selected={default_tab.ref}
@@ -201,7 +210,7 @@ const MarketList = () => {
                     asset you like and hit the star.
                   </p>
                 </Show>
-                <Show when={market_data().length}>
+                <Show when={market_data()?.length}>
                   <DataTable
                     headers={getTableHeaders(tabs.ref)}
                     data={market_data()}

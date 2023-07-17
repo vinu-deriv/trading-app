@@ -37,7 +37,12 @@ import {
   symbol,
   trade_types,
 } from "./trade-store";
-import { is_light_theme, setIsLightTheme } from "./client-store";
+import {
+  is_light_theme,
+  setIsLightTheme,
+  active_tab,
+  setActiveTab,
+} from "./client-store";
 
 export {
   activeSymbols,
@@ -77,4 +82,6 @@ export {
   setActionButtonValues,
   is_mobile_view,
   setIsMobileView,
+  active_tab,
+  setActiveTab,
 };
